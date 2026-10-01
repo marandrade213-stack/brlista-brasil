@@ -2,116 +2,110 @@
 
 import { useMemo, useState } from 'react'
 import {
-  ArrowDownRight,
   ArrowUpRight,
-  Check,
   Clock3,
   HeartPulse,
-  LocateFixed,
   MapPin,
   MessageCircle,
+  Navigation,
   Phone,
   Search,
-  ShieldAlert,
+  ShieldCheck,
+  Siren,
+  Sparkles,
   Star,
   Truck,
   Wrench,
 } from 'lucide-react'
 
 type Category = 'Guincho' | 'Borracharia' | 'Mecânica Pesada' | 'Lava Jato'
-type FeatureFilter = 'all' | 'sos' | 'vida'
-
-type Listing = {
+type Place = {
   name: string
   category: Category
   city: string
-  state: string
-  highway: string
+  road: string
   phone: string
-  phoneLink: string
   whatsapp: string
   rating: string
-  reviews: number
-  hours: string
-  description: string
-  open: boolean
-  sos: boolean
-  vida: boolean
-  icon: 'truck' | 'wrench'
+  distance: string
+  open: string
+  icon: typeof Truck
+  featured?: boolean
 }
 
-const listings: Listing[] = [
+const places: Place[] = [
   {
     name: 'Auto Socorro Ipanema',
     category: 'Guincho',
-    city: 'Catalão',
-    state: 'GO',
-    highway: 'BR-050 · km 278',
-    phone: '(64) 3442-1919',
-    phoneLink: '+556434421919',
-    whatsapp: '5564991234567',
+    city: 'Catalão, GO',
+    road: 'BR-050 · km 282',
+    phone: '(64) 99999-0101',
+    whatsapp: '5564999990101',
     rating: '4,9',
-    reviews: 128,
-    hours: 'Atendimento 24 horas',
-    description: 'Guincho leve e pesado, com atendimento em toda a região.',
-    open: true,
-    sos: true,
-    vida: false,
-    icon: 'truck',
+    distance: '2,4 km',
+    open: '24 horas',
+    icon: Truck,
+    featured: true,
   },
   {
-    name: 'Borracharia do Trevo',
+    name: 'Borracharia Dois Irmãos',
     category: 'Borracharia',
-    city: 'Araguari',
-    state: 'MG',
-    highway: 'BR-050 · km 37',
-    phone: '(34) 3242-8080',
-    phoneLink: '+553432428080',
-    whatsapp: '5534998765432',
+    city: 'Uberlândia, MG',
+    road: 'BR-365 · km 612',
+    phone: '(34) 99999-0102',
+    whatsapp: '5534999990102',
     rating: '4,8',
-    reviews: 86,
-    hours: 'Aberto até 22h',
-    description: 'Pneus, consertos e socorro para carros e caminhões.',
-    open: true,
-    sos: true,
-    vida: true,
-    icon: 'wrench',
+    distance: '5,1 km',
+    open: 'Aberto agora',
+    icon: Wrench,
   },
   {
-    name: 'Diesel Forte Serviços',
+    name: 'Mecânica Estradão',
     category: 'Mecânica Pesada',
-    city: 'Uberlândia',
-    state: 'MG',
-    highway: 'BR-365 · km 612',
-    phone: '(34) 3233-4567',
-    phoneLink: '+553432334567',
-    whatsapp: '5534991122334',
+    city: 'Ribeirão Preto, SP',
+    road: 'BR-050 · km 52',
+    phone: '(16) 99999-0103',
+    whatsapp: '5516999990103',
     rating: '4,7',
-    reviews: 64,
-    hours: 'Aberto até 18h',
-    description: 'Mecânica diesel, elétrica e revisão de veículos pesados.',
-    open: true,
-    sos: false,
-    vida: true,
-    icon: 'wrench',
+    distance: '8,6 km',
+    open: 'Aberto agora',
+    icon: Wrench,
   },
   {
-    name: 'Lava Jato Estradão',
+    name: 'Lava Jato Ponto de Parada',
     category: 'Lava Jato',
-    city: 'Ribeirão Preto',
-    state: 'SP',
-    highway: 'BR-050 · km 1205',
-    phone: '(16) 3625-7070',
-    phoneLink: '+551636257070',
-    whatsapp: '5516991234567',
+    city: 'Cristalina, GO',
+    road: 'BR-040 · km 95',
+    phone: '(61) 99999-0104',
+    whatsapp: '5561999990104',
     rating: '4,6',
-    reviews: 52,
-    hours: 'Aberto até 20h',
-    description: 'Lavagem completa e espaço de descanso para sua parada.',
-    open: true,
-    sos: false,
-    vida: true,
-    icon: 'wrench',
+    distance: '12 km',
+    open: 'Até 20h',
+    icon: Sparkles,
+  },
+  {
+    name: 'Resgate 24h Triângulo',
+    category: 'Guincho',
+    city: 'Araguari, MG',
+    road: 'BR-050 · km 36',
+    phone: '(34) 99999-0105',
+    whatsapp: '5534999990105',
+    rating: '4,9',
+    distance: '18 km',
+    open: '24 horas',
+    icon: Truck,
+  },
+  {
+    name: 'Borracharia Rota 40',
+    category: 'Borracharia',
+    city: 'Luziânia, GO',
+    road: 'BR-040 · km 24',
+    phone: '(61) 99999-0106',
+    whatsapp: '5561999990106',
+    rating: '4,5',
+    distance: '21 km',
+    open: 'Aberto agora',
+    icon: Wrench,
   },
 ]
 
@@ -119,217 +113,204 @@ const categories = ['Todas', 'Guincho', 'Borracharia', 'Mecânica Pesada', 'Lava
 
 type CategoryFilter = (typeof categories)[number]
 
-function ListingCard({ listing }: { listing: Listing }) {
-  const Icon = listing.icon === 'truck' ? Truck : Wrench
-
-  return (
-    <article className="listing-card">
-      <div className="listing-card-top">
-        <div className="listing-icon" aria-hidden="true">
-          <Icon size={21} strokeWidth={1.8} />
-        </div>
-        <div className="listing-category">{listing.category}</div>
-        <div className="listing-rating" aria-label={`Nota ${listing.rating} de 5, ${listing.reviews} avaliações`}>
-          <Star size={14} fill="currentColor" strokeWidth={0} />
-          <span>{listing.rating}</span>
-          <span className="rating-count">({listing.reviews})</span>
-        </div>
-      </div>
-
-      <div className="listing-main">
-        <div className="listing-heading-row">
-          <h3>{listing.name}</h3>
-          <ArrowUpRight className="listing-arrow" size={18} aria-hidden="true" />
-        </div>
-        <p className="listing-description">{listing.description}</p>
-        <div className="listing-meta">
-          <span><MapPin size={14} aria-hidden="true" />{listing.city}, {listing.state}</span>
-          <span><span className="meta-dot" aria-hidden="true" />{listing.highway}</span>
-        </div>
-        <div className="listing-hours">
-          <span className={`open-indicator${listing.open ? '' : ' closed'}`} aria-hidden="true" />
-          <Clock3 size={14} aria-hidden="true" />
-          {listing.hours}
-        </div>
-      </div>
-
-      <div className="listing-contact">
-        <a className="listing-phone" href={`tel:${listing.phoneLink}`} aria-label={`Ligar para ${listing.name}: ${listing.phone}`}>
-          {listing.phone}
-        </a>
-        <div className="listing-actions">
-          <a className="action-call" href={`tel:${listing.phoneLink}`}>
-            <Phone size={15} aria-hidden="true" />
-            Ligar agora
-          </a>
-          <a className="action-whatsapp" href={`https://wa.me/${listing.whatsapp}`} target="_blank" rel="noreferrer" aria-label={`Conversar com ${listing.name} pelo WhatsApp`}>
-            <MessageCircle size={15} aria-hidden="true" />
-            WhatsApp
-          </a>
-        </div>
-      </div>
-    </article>
-  )
-}
-
 export function BrlistaDirectory() {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<CategoryFilter>('Todas')
-  const [feature, setFeature] = useState<FeatureFilter>('all')
-  const [locationMessage, setLocationMessage] = useState('')
-  const [locationActive, setLocationActive] = useState(false)
+  const [nearbyMessage, setNearbyMessage] = useState('')
+  const [showTravelTip, setShowTravelTip] = useState(false)
+  const [sosActive, setSosActive] = useState(false)
 
-  const filteredListings = useMemo(() => {
+  const filteredPlaces = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase('pt-BR')
-
-    return listings.filter((listing) => {
-      const matchesCategory = category === 'Todas' || listing.category === category
-      const matchesFeature = feature === 'all' || listing[feature]
-      const searchableText = `${listing.name} ${listing.category} ${listing.city} ${listing.state} ${listing.highway}`.toLocaleLowerCase('pt-BR')
-      return matchesCategory && matchesFeature && (!normalizedQuery || searchableText.includes(normalizedQuery))
+    return places.filter((place) => {
+      const matchesCategory = category === 'Todas' || place.category === category
+      const matchesSos = !sosActive || place.category === 'Guincho'
+      const searchableText = `${place.name} ${place.category} ${place.city} ${place.road}`.toLocaleLowerCase('pt-BR')
+      return matchesCategory && matchesSos && searchableText.includes(normalizedQuery)
     })
-  }, [category, feature, query])
+  }, [category, query, sosActive])
 
-  function locateMe() {
+  function requestLocation() {
     if (!navigator.geolocation) {
-      setLocationMessage('A localização não está disponível neste navegador.')
+      setNearbyMessage('A localização não está disponível neste navegador.')
       return
     }
-
+    setNearbyMessage('Solicitando acesso à sua localização…')
     navigator.geolocation.getCurrentPosition(
-      () => {
-        setLocationActive(true)
-        setLocationMessage('Localização ativada para esta sessão.')
-      },
-      () => setLocationMessage('Não foi possível acessar sua localização. Confira a permissão do navegador.'),
-      { enableHighAccuracy: false, timeout: 8000, maximumAge: 60000 },
+      () => setNearbyMessage('Localização autorizada. Os resultados de demonstração não usam distância real.'),
+      () => setNearbyMessage('Não foi possível acessar a localização. Você pode buscar por cidade ou rodovia.'),
+      { timeout: 8000 },
     )
   }
 
-  function toggleFeature(nextFeature: Exclude<FeatureFilter, 'all'>) {
-    setFeature((current) => current === nextFeature ? 'all' : nextFeature)
+  function selectSos() {
+    setSosActive((active) => !active)
     setCategory('Todas')
+    setShowTravelTip(false)
   }
 
   return (
-    <main className="brlista-shell">
-      <header className="site-header">
-        <a className="brand" href="#inicio" aria-label="BRLista Brasil, início">
-          <span className="brand-mark"><span /></span>
-          <span className="brand-name">BR<span>LISTA</span><small>BRASIL</small></span>
-        </a>
-        <nav className="desktop-nav" aria-label="Navegação principal">
-          <a className="nav-link active" href="#servicos">Encontrar serviços</a>
-          <a className="nav-link" href="#como-funciona">Como funciona</a>
-        </nav>
-        <a className="header-cta" href="#servicos">Explorar diretório <ArrowUpRight size={15} aria-hidden="true" /></a>
+    <main className="min-h-screen bg-[#10110f] text-[#f6f4ed]">
+      <header className="border-b border-white/[0.08]">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
+          <a href="#inicio" className="flex items-center gap-3" aria-label="BRLista Brasil, início">
+            <span className="flex size-10 items-center justify-center rounded-xl bg-[#ffd43b] text-[#171711]">
+              <Navigation className="size-5" strokeWidth={2.7} />
+            </span>
+            <span className="leading-tight">
+              <span className="block text-lg font-black tracking-[-0.06em]">BRLISTA <span className="text-[#ffd43b]">BRASIL</span></span>
+              <span className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">Seu apoio na estrada</span>
+            </span>
+          </a>
+          <a href="#estabelecimentos" className="hidden items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-white/75 transition hover:border-[#ffd43b]/50 hover:text-[#ffd43b] sm:flex">
+            Explorar serviços <ArrowUpRight className="size-3.5" />
+          </a>
+        </div>
       </header>
 
-      <section className="hero-section" id="inicio" aria-labelledby="hero-title">
-        <div className="hero-copy">
-          <div className="eyebrow"><span className="eyebrow-line" /> GUIA DE SERVIÇOS NA ESTRADA</div>
-          <h1 id="hero-title">Na estrada,<br />ninguém precisa <span>parar sozinho.</span></h1>
-          <p className="hero-description">Encontre ajuda confiável para seguir viagem com mais tranquilidade pelas rodovias do Brasil.</p>
-          <div className="search-panel" role="search">
-            <Search size={19} aria-hidden="true" />
-            <label className="sr-only" htmlFor="directory-search">Buscar por cidade, rodovia ou serviço</label>
-            <input
-              id="directory-search"
-              type="search"
-              placeholder="Cidade, rodovia ou serviço..."
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-            />
-            <button className={`nearby-button${locationActive ? ' is-active' : ''}`} type="button" onClick={locateMe}>
-              {locationActive ? <Check size={15} aria-hidden="true" /> : <LocateFixed size={15} aria-hidden="true" />}
-              <span>{locationActive ? 'Localização ativa' : 'Perto de mim'}</span>
+      <section id="inicio" className="relative overflow-hidden border-b border-white/[0.07]">
+        <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-28 size-80 rounded-full bg-[#ffd43b]/[0.07] blur-3xl" />
+        <div className="relative mx-auto max-w-6xl px-5 pb-9 pt-11 sm:px-8 sm:pb-12 sm:pt-16">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#ffd43b]/20 bg-[#ffd43b]/[0.07] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.17em] text-[#ffd43b]">
+            <span className="size-1.5 rounded-full bg-[#ffd43b]" /> Guia de serviços rodoviários
+          </div>
+          <h1 className="max-w-2xl text-[2.5rem] font-black leading-[0.98] tracking-[-0.065em] sm:text-6xl">
+            A estrada não espera.<br /> <span className="text-[#ffd43b]">Encontre ajuda.</span>
+          </h1>
+          <p className="mt-4 max-w-lg text-sm leading-6 text-white/55 sm:text-base">
+            Serviços e pontos de apoio para seguir viagem com mais tranquilidade pelas rodovias do Brasil.
+          </p>
+
+          <div className="mt-7 flex max-w-3xl flex-col gap-3 sm:flex-row">
+            <label className="flex min-h-14 flex-1 items-center gap-3 rounded-2xl border border-white/10 bg-[#191a17] px-4 transition focus-within:border-[#ffd43b]/60">
+              <Search className="size-5 shrink-0 text-[#ffd43b]" aria-hidden="true" />
+              <span className="sr-only">Buscar por cidade, rodovia ou serviço</span>
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Cidade, rodovia ou serviço..."
+                className="min-w-0 flex-1 bg-transparent text-sm text-white outline-none placeholder:text-white/35"
+              />
+              <kbd className="hidden rounded-md border border-white/10 px-2 py-1 text-[10px] text-white/30 sm:inline">BUSCAR</kbd>
+            </label>
+            <button
+              type="button"
+              onClick={requestLocation}
+              className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-[#3578f6] px-5 text-sm font-bold text-white transition hover:bg-[#4b87fa] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ffd43b]"
+            >
+              <MapPin className="size-4" /> Perto de mim
             </button>
           </div>
-          <div className="search-footnote">
-            <span className="privacy-dot" /> Busca simples, contato direto. Sem complicação.
+          {nearbyMessage && <p role="status" className="mt-2 text-xs text-white/55">{nearbyMessage}</p>}
+
+          <div className="mt-7 grid max-w-3xl grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={selectSos}
+              aria-pressed={sosActive}
+              className={`group flex min-h-[76px] items-center gap-3 rounded-2xl border px-4 text-left transition ${sosActive ? 'border-[#ff704f]/60 bg-[#ff704f]/15' : 'border-[#ff704f]/25 bg-[#ff704f]/[0.07] hover:bg-[#ff704f]/[0.13]'}`}
+            >
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#ff704f]/15 text-[#ff8064]"><Siren className="size-5" /></span>
+              <span className="min-w-0"><span className="block text-xs font-black tracking-wide text-[#ff8064] sm:text-sm">SOS ESTRADA</span><span className="mt-1 block text-[10px] text-white/45 sm:text-xs">Guinchos e resgate 24h</span></span>
+              <ArrowUpRight className="ml-auto size-4 shrink-0 text-white/35 transition group-hover:text-[#ff8064]" />
+            </button>
+            <button
+              type="button"
+              onClick={() => { setShowTravelTip((show) => !show); setSosActive(false) }}
+              aria-expanded={showTravelTip}
+              className={`group flex min-h-[76px] items-center gap-3 rounded-2xl border px-4 text-left transition ${showTravelTip ? 'border-[#ffd43b]/50 bg-[#ffd43b]/[0.12]' : 'border-[#ffd43b]/20 bg-[#ffd43b]/[0.05] hover:bg-[#ffd43b]/[0.1]'}`}
+            >
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#ffd43b]/10 text-[#ffd43b]"><HeartPulse className="size-5" /></span>
+              <span className="min-w-0"><span className="block text-xs font-black tracking-wide text-[#ffd43b] sm:text-sm">VIDA NA BR</span><span className="mt-1 block text-[10px] text-white/45 sm:text-xs">Dicas para uma viagem segura</span></span>
+              <ArrowUpRight className="ml-auto size-4 shrink-0 text-white/35 transition group-hover:text-[#ffd43b]" />
+            </button>
           </div>
-          {locationMessage && <p className="location-message" role="status">{locationMessage}</p>}
+          {showTravelTip && (
+            <aside className="mt-3 flex max-w-3xl gap-3 rounded-2xl border border-[#ffd43b]/15 bg-[#ffd43b]/[0.06] p-4 text-sm leading-6 text-white/70" aria-live="polite">
+              <ShieldCheck className="mt-0.5 size-5 shrink-0 text-[#ffd43b]" />
+              <p><strong className="text-white">Antes de pegar a estrada:</strong> confira pneus, combustível e documentação; programe pausas e compartilhe seu trajeto com alguém de confiança.</p>
+            </aside>
+          )}
         </div>
-        <div className="hero-art" aria-hidden="true">
-          <div className="art-grid" />
-          <div className="route-marker marker-one"><MapPin size={17} fill="currentColor" /><span>BR-050</span></div>
-          <div className="route-marker marker-two"><MapPin size={17} fill="currentColor" /><span>BR-365</span></div>
-          <div className="route-line"><span className="route-node node-a" /><span className="route-node node-b" /><span className="route-node node-c" /></div>
-          <div className="route-sign"><span className="sign-shield">BR</span><span><strong>Seu próximo destino</strong><small>mais perto do que parece</small></span><ArrowDownRight size={19} /></div>
-          <div className="art-caption"><span>16°39' S</span><span>RODOVIAS DO BRASIL</span></div>
-        </div>
-        <div className="hero-bottomline"><span>01 / 04</span><span>INFORMAÇÃO QUE ACOMPANHA SUA VIAGEM</span><span className="bottomline-rule" /></div>
       </section>
 
-      <section className="quick-actions" aria-label="Atalhos de serviços">
-        <button className={`quick-card quick-sos${feature === 'sos' ? ' selected' : ''}`} type="button" onClick={() => toggleFeature('sos')} aria-pressed={feature === 'sos'}>
-          <span className="quick-icon"><ShieldAlert size={22} aria-hidden="true" /></span>
-          <span className="quick-text"><small>PRECISA DE AJUDA?</small><strong>SOS ESTRADA</strong><span>Guincho e socorro rápido</span></span>
-          <ArrowUpRight className="quick-arrow" size={19} aria-hidden="true" />
-        </button>
-        <button className={`quick-card quick-vida${feature === 'vida' ? ' selected' : ''}`} type="button" onClick={() => toggleFeature('vida')} aria-pressed={feature === 'vida'}>
-          <span className="quick-icon"><HeartPulse size={22} aria-hidden="true" /></span>
-          <span className="quick-text"><small>PARA SEGUIR BEM</small><strong>VIDA NA BR</strong><span>Serviços para a sua jornada</span></span>
-          <ArrowUpRight className="quick-arrow" size={19} aria-hidden="true" />
-        </button>
-      </section>
-
-      <section className="directory-section" id="servicos" aria-labelledby="directory-title">
-        <div className="section-heading">
+      <section id="estabelecimentos" className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-10">
+        <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>
-            <div className="eyebrow"><span className="eyebrow-line" /> DIRETÓRIO DE SERVIÇOS</div>
-            <h2 id="directory-title">Sua viagem, <span>mais segura.</span></h2>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#ffd43b]/75">Diretório de apoio</p>
+            <h2 className="mt-2 text-2xl font-extrabold tracking-[-0.045em] sm:text-3xl">Encontre o que precisa</h2>
+            <p className="mt-1.5 text-xs text-white/45">{filteredPlaces.length} {filteredPlaces.length === 1 ? 'local encontrado' : 'locais encontrados'} <span className="px-1">·</span> dados ilustrativos</p>
           </div>
-          <p>Gente pronta para ajudar<br />quando você mais precisa.</p>
-        </div>
-        <div className="directory-controls">
-          <div className="category-list" role="group" aria-label="Filtrar por categoria">
+          <div className="flex gap-2 overflow-x-auto pb-1" aria-label="Filtrar por categoria">
             {categories.map((item) => (
               <button
-                className={`category-chip${category === item && feature === 'all' ? ' active' : ''}`}
-                key={item}
                 type="button"
-                onClick={() => { setCategory(item); setFeature('all') }}
-                aria-pressed={category === item && feature === 'all'}
-              >
-                {item}
-              </button>
+                key={item}
+                onClick={() => { setCategory(item); setSosActive(false) }}
+                aria-pressed={category === item && !sosActive}
+                className={`shrink-0 rounded-full border px-3.5 py-2 text-xs font-semibold transition ${category === item && !sosActive ? 'border-[#ffd43b] bg-[#ffd43b] text-[#191a17]' : 'border-white/10 bg-transparent text-white/55 hover:border-white/25 hover:text-white'}`}
+              >{item}</button>
             ))}
           </div>
-          <span className="results-count"><strong>{filteredListings.length.toString().padStart(2, '0')}</strong> resultados</span>
         </div>
 
-        {filteredListings.length > 0 ? (
-          <div className="listing-grid">
-            {filteredListings.map((listing) => <ListingCard key={listing.name} listing={listing} />)}
+        {filteredPlaces.length > 0 ? (
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            {filteredPlaces.map((place) => {
+              const Icon = place.icon
+              return (
+                <article key={place.name} className="rounded-[20px] border border-white/[0.09] bg-[#171815] p-4 transition hover:border-white/[0.16] sm:p-5">
+                  <div className="flex items-start gap-3">
+                    <span className="flex size-11 shrink-0 items-center justify-center rounded-[14px] border border-[#ffd43b]/15 bg-[#ffd43b]/[0.07] text-[#ffd43b]"><Icon className="size-5" /></span>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="text-sm font-bold tracking-[-0.02em] text-white sm:text-base">{place.name}</h3>
+                        {place.featured && <span className="rounded-full bg-[#ffd43b]/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#ffd43b]">Destaque</span>}
+                      </div>
+                      <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.15em] text-[#ffd43b]/80">{place.category}</p>
+                    </div>
+                    <span className="inline-flex items-center gap-1 pt-0.5 text-xs font-semibold text-white/75"><Star className="size-3.5 fill-[#ffd43b] text-[#ffd43b]" />{place.rating}</span>
+                  </div>
+                  <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-white/[0.07] pt-3 text-xs text-white/50">
+                    <span className="inline-flex items-center gap-1.5"><MapPin className="size-3.5 text-white/35" />{place.city}</span>
+                    <span>{place.road}</span>
+                  </div>
+                  <div className="mt-3 flex items-center justify-between gap-3">
+                    <span className="inline-flex items-center gap-1.5 text-[11px] text-white/45"><Clock3 className="size-3.5" />{place.open}</span>
+                    <span className="text-[11px] font-semibold text-[#86c99a]">{place.distance} <span className="font-normal text-white/35">(exemplo)</span></span>
+                  </div>
+                  <a href={`tel:${place.phone.replace(/[^\d+]/g, '')}`} className="mt-4 block rounded-xl bg-[#20211d] px-3 py-3 text-center text-lg font-black tracking-wide text-[#ffd43b] transition hover:bg-[#272821] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ffd43b]">{place.phone}</a>
+                  <div className="mt-2 grid grid-cols-2 gap-2">
+                    <a href={`tel:${place.phone.replace(/[^\d+]/g, '')}`} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#ffd43b] px-3 text-[10px] font-black tracking-[0.07em] text-[#191a17] transition hover:bg-[#ffe06a] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"><Phone className="size-4" /> LIGAR AGORA</a>
+                    <a href={`https://wa.me/${place.whatsapp}`} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[#ffd43b]/35 bg-[#ffd43b]/[0.07] px-3 text-[10px] font-black tracking-[0.07em] text-[#ffd43b] transition hover:bg-[#ffd43b]/[0.14] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"><MessageCircle className="size-4" /> WHATSAPP</a>
+                  </div>
+                </article>
+              )
+            })}
           </div>
         ) : (
-          <div className="empty-results">
-            <Search size={22} aria-hidden="true" />
-            <strong>Nenhum serviço encontrado</strong>
-            <span>Tente outra cidade, rodovia ou categoria.</span>
-            <button type="button" onClick={() => { setQuery(''); setCategory('Todas'); setFeature('all') }}>Limpar filtros</button>
+          <div className="mt-6 rounded-[20px] border border-dashed border-white/15 px-5 py-12 text-center">
+            <Search className="mx-auto size-7 text-white/25" />
+            <h3 className="mt-3 font-bold">Nenhum serviço encontrado</h3>
+            <p className="mt-1 text-sm text-white/45">Tente outro termo ou escolha uma categoria diferente.</p>
+            <button type="button" onClick={() => { setQuery(''); setCategory('Todas'); setSosActive(false) }} className="mt-4 rounded-full border border-white/15 px-4 py-2 text-xs font-semibold text-white/70 hover:border-[#ffd43b]/50 hover:text-[#ffd43b]">Limpar filtros</button>
           </div>
         )}
-        <p className="demo-note">Demonstração: estabelecimentos e contatos são ilustrativos.</p>
+
+        <p className="mt-6 flex items-start gap-2 rounded-xl border border-white/[0.06] bg-white/[0.025] p-3 text-[10px] leading-5 text-white/40 sm:text-xs">
+          <ShieldCheck className="mt-0.5 size-4 shrink-0" /> Protótipo demonstrativo: estabelecimentos, telefones, avaliações e distâncias são fictícios e não representam serviços reais.
+        </p>
       </section>
 
-      <section className="roadside-banner" id="como-funciona">
-        <div className="banner-icon"><HeartPulse size={22} aria-hidden="true" /></div>
-        <div><span>VAI PEGAR A ESTRADA?</span><h2>Salve este guia. Viaje mais tranquilo.</h2></div>
-        <a href="#servicos">Encontrar serviços <ArrowUpRight size={16} aria-hidden="true" /></a>
-      </section>
-
-      <footer className="site-footer">
-        <a className="brand footer-brand" href="#inicio" aria-label="BRLista Brasil, voltar ao início">
-          <span className="brand-mark"><span /></span>
-          <span className="brand-name">BR<span>LISTA</span><small>BRASIL</small></span>
-        </a>
-        <span>Feito para quem vive a estrada.</span>
-        <span className="footer-copyright">© 2026 BRLista Brasil</span>
+      <footer className="border-t border-white/[0.08]">
+        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-5 text-[10px] text-white/35 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+          <span>© 2026 BRLista Brasil <span className="px-1">·</span> Guia demonstrativo de apoio rodoviário</span>
+          <a href="#inicio" className="inline-flex items-center gap-1 font-semibold text-white/50 hover:text-[#ffd43b]">Voltar ao topo <ArrowUpRight className="size-3" /></a>
+        </div>
       </footer>
     </main>
   )
 }
 
 export default BrlistaDirectory
+
