@@ -11,6 +11,7 @@ import {
   Search,
   ShieldCheck,
   Wrench,
+  X,
 } from 'lucide-react'
 
 type Category = 'Borracharia' | 'Mecânica' | 'Auto Elétrica' | 'Mecânica Pesada'
@@ -164,9 +165,17 @@ export function BrlistaDirectory() {
             </button>
           </div>
           {showTravelTip && (
-            <aside className="mt-3 flex max-w-3xl gap-3 rounded-2xl border border-[#ffd43b]/15 bg-[#ffd43b]/[0.06] p-4 text-sm leading-6 text-white/70" aria-live="polite">
+            <aside className="mt-3 flex max-w-3xl items-start gap-3 rounded-2xl border border-[#ffd43b]/15 bg-[#ffd43b]/[0.06] p-4 text-sm leading-6 text-white/70" aria-live="polite">
               <ShieldCheck className="mt-0.5 size-5 shrink-0 text-[#ffd43b]" />
-              <p><strong className="text-white">Antes de pegar a estrada:</strong> confira pneus, combustível e documentação; programe pausas e compartilhe seu trajeto com alguém de confiança.</p>
+              <p className="min-w-0 flex-1"><strong className="text-white">Antes de pegar a estrada:</strong> confira pneus, combustível e documentação; programe pausas e compartilhe seu trajeto com alguém de confiança.</p>
+              <button
+                type="button"
+                onClick={() => setShowTravelTip(false)}
+                aria-label="Fechar dica para viagem"
+                className="-mr-1 -mt-1 inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-white/55 transition hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ffd43b]"
+              >
+                <X className="size-4" />
+              </button>
             </aside>
           )}
         </div>
