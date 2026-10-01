@@ -3,8 +3,8 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'BRLista Brasil | Apoio na estrada',
-  description: 'Encontre serviços de apoio rodoviário, como guincho, borracharia e mecânica pesada, em um diretório demonstrativo.',
+  title: 'BRLista Brasil | Serviços rodoviários em Goiânia, Catalão e Uberlândia',
+  description: 'Encontre borracharias, mecânicos e socorro rodoviário em Goiânia/GO, Catalão/GO e Uberlândia/MG.',
   generator: 'v0.app',
   icons: {
     icon: [
