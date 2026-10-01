@@ -13,7 +13,7 @@ import {
   Wrench,
 } from 'lucide-react'
 
-type Category = 'Borracharia'
+type Category = 'Borracharia' | 'Mecânica' | 'Auto Elétrica' | 'Mecânica Pesada'
 type Place = {
   name: string
   category: Category
@@ -47,9 +47,24 @@ const places: Place[] = [
   { name: 'Borracharia Móvel Magrão', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 99637-1380', icon: Wrench },
   { name: 'Borracharia Móvel do RAFFA', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 99316-4535', icon: Wrench },
   { name: 'Borracharia Kometa Móvel', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 98837-4438', icon: Wrench },
+  { name: 'Euro Car Jardim Guanabara', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 98635-9905', icon: Wrench },
+  { name: 'Curinga dos Pneus', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 3291-7090', icon: Wrench },
+  { name: 'Borracharia do Boca 24 Horas', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 3274-2323', icon: Wrench },
+  { name: 'Borracharia 24 Horas Móvel Dia e Noite', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 99331-1571', icon: Wrench },
+  { name: 'Borracharia J.A. V', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 98234-3162', icon: Wrench },
+  { name: 'Borracharia Pitstop 24HR', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 99294-5939', icon: Wrench },
+  { name: 'Borracharia J.A. III', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 98234-3162', icon: Wrench },
+  { name: '2 Irmãos Auto Elétrica e Mecânica', category: 'Mecânica', city: 'Goiânia, GO', phone: '(62) 99820-8546', icon: Wrench },
+  { name: 'Mecânica e Elétrica Índio (Socorro 24h Goiânia)', category: 'Mecânica', city: 'Goiânia, GO', phone: '(62) 99863-0815', icon: Wrench },
+  { name: 'Gel Mecânico 24hs', category: 'Mecânica', city: 'Goiânia, GO', phone: '(62) 98141-4277', icon: Wrench },
+  { name: 'Auto Mecânica 24 Horas Divair', category: 'Mecânica', city: 'Goiânia, GO', phone: '(62) 98574-2567', icon: Wrench },
+  { name: 'Auto Elétrica Móvel 24hs (Carro e Caminhões)', category: 'Auto Elétrica', city: 'Goiânia, GO', phone: '(62) 99904-9641', icon: Wrench },
+  { name: 'Mecânico de Caminhão 24 Horas', category: 'Mecânica Pesada', city: 'Goiânia, GO', phone: '(62) 99929-1447', icon: Wrench },
+  { name: 'Socorro Mecânico de Embreagem de Caminhão 24 Horas', category: 'Mecânica Pesada', city: 'Goiânia, GO', phone: '(62) 99969-8702', icon: Wrench },
+  { name: 'Mecânico de Automóveis e Caminhões (Assistência na Estrada 24h)', category: 'Mecânica Pesada', city: 'Goiânia, GO', phone: '(62) 99316-3637', icon: Wrench },
 ]
 
-const categories = ['Todas', 'Borracharia'] as const
+const categories = ['Todas', 'Borracharia', 'Mecânica', 'Auto Elétrica', 'Mecânica Pesada'] as const
 
 type CategoryFilter = (typeof categories)[number]
 
@@ -96,7 +111,7 @@ export function BrlistaDirectory() {
             A estrada não espera.<br /> <span className="text-[#ffd43b]">Encontre ajuda.</span>
           </h1>
           <p className="mt-4 max-w-lg text-sm leading-6 text-white/55 sm:text-base">
-            Encontre borracharias em Catalão/GO e Uberlândia/MG e fale diretamente com o estabelecimento.
+            Encontre borracharias, mecânicos e socorro rodoviário em Catalão/GO, Uberlândia/MG e Goiânia/GO.
           </p>
 
           <div className="mt-7 flex max-w-3xl flex-col gap-3 sm:flex-row">
@@ -125,7 +140,7 @@ export function BrlistaDirectory() {
               className="group flex min-h-[76px] items-center gap-3 rounded-2xl border border-[#ff704f]/25 bg-[#ff704f]/[0.07] px-4 text-left transition hover:bg-[#ff704f]/[0.13]"
             >
               <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#ff704f]/15 text-[#ff8064]"><Wrench className="size-5" /></span>
-              <span className="min-w-0"><span className="block text-xs font-black tracking-wide text-[#ff8064] sm:text-sm">BORRACHARIAS</span><span className="mt-1 block text-[10px] text-white/45 sm:text-xs">Catalão/GO e Uberlândia/MG</span></span>
+              <span className="min-w-0"><span className="block text-xs font-black tracking-wide text-[#ff8064] sm:text-sm">SERVIÇOS NA ESTRADA</span><span className="mt-1 block text-[10px] text-white/45 sm:text-xs">Catalão, Uberlândia e Goiânia</span></span>
               <ArrowUpRight className="ml-auto size-4 shrink-0 text-white/35 transition group-hover:text-[#ff8064]" />
             </a>
             <button
@@ -210,7 +225,7 @@ export function BrlistaDirectory() {
 
       <footer className="border-t border-white/[0.08]">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-5 text-[10px] text-white/35 sm:flex-row sm:items-center sm:justify-between sm:px-8">
-          <span>© 2026 BRLista Brasil <span className="px-1">·</span> Diretório de borracharias · Catalão/GO e Uberlândia/MG</span>
+          <span>© 2026 BRLista Brasil <span className="px-1">·</span> Serviços rodoviários · Catalão/GO, Uberlândia/MG e Goiânia/GO</span>
           <a href="#inicio" className="inline-flex items-center gap-1 font-semibold text-white/50 hover:text-[#ffd43b]">Voltar ao topo <ArrowUpRight className="size-3" /></a>
         </div>
       </footer>

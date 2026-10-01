@@ -3,8 +3,8 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'BRLista Brasil | Borracharias em Catalão e Uberlândia',
-  description: 'Encontre borracharias e serviços móveis em Catalão/GO e Uberlândia/MG.',
+  title: 'BRLista Brasil | Serviços rodoviários em Goiânia, Catalão e Uberlândia',
+  description: 'Encontre borracharias, mecânicos e socorro rodoviário em Goiânia/GO, Catalão/GO e Uberlândia/MG.',
   generator: 'v0.app',
   icons: {
     icon: [
