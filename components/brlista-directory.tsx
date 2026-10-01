@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useRef, useState, type FormEvent } from 'react'
+import { useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from 'react'
 import {
   ArrowUpRight,
   HeartPulse,
@@ -77,7 +77,12 @@ export function BrlistaDirectory() {
   function handleSearchSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     searchInputRef.current?.blur()
-    document.getElementById('estabelecimentos')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  function handleSearchKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key !== 'Enter' || event.nativeEvent.isComposing || event.keyCode === 229) return
+    event.preventDefault()
+    searchInputRef.current?.blur()
   }
 
   const filteredPlaces = useMemo(() => {
@@ -118,11 +123,11 @@ export function BrlistaDirectory() {
             A estrada não espera.<br /> <span className="text-[#ffd43b]">Encontre ajuda.</span>
           </h1>
           <p className="mt-4 max-w-lg text-sm leading-6 text-white/55 sm:text-base">
-            Encontre borracharias, mecânicos e socorro rodoviário em Catalão/GO, Uberlândia/MG e Goiânia/GO.
+            Encontre borracharias, mecânicos, guinchos e socorro rodoviário 24h nas principais rodovias e cidades do Brasil.
           </p>
 
-          <form onSubmit={handleSearchSubmit} className="mt-7 flex max-w-3xl flex-col gap-3 sm:flex-row">
-            <label className="flex min-h-14 flex-1 items-center gap-3 rounded-2xl border border-white/10 bg-[#191a17] px-4 transition focus-within:border-[#ffd43b]/60">
+          <form onSubmit={handleSearchSubmit} className="mt-7 max-w-xl">
+            <label className="flex min-h-14 items-center gap-3 rounded-2xl border border-white/10 bg-[#191a17] px-4 transition focus-within:border-[#ffd43b]/60">
               <Search className="size-5 shrink-0 text-[#ffd43b]" aria-hidden="true" />
               <span className="sr-only">Buscar por cidade, rodovia ou serviço</span>
               <input
@@ -131,27 +136,21 @@ export function BrlistaDirectory() {
                 enterKeyHint="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
+                onKeyDown={handleSearchKeyDown}
                 placeholder="Cidade, rodovia ou serviço..."
                 className="min-w-0 flex-1 bg-transparent text-sm text-white outline-none placeholder:text-white/35"
               />
-              <kbd className="hidden rounded-md border border-white/10 px-2 py-1 text-[10px] text-white/30 sm:inline">BUSCAR</kbd>
             </label>
-            <button
-              type="submit"
-              className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-[#3578f6] px-5 text-sm font-bold text-white transition hover:bg-[#4b87fa] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ffd43b]"
-            >
-              <MapPin className="size-4" /> Ver estabelecimentos
-            </button>
           </form>
 
           <div className="mt-7 grid max-w-3xl grid-cols-2 gap-3">
             <a
               href="#estabelecimentos"
-              className="group flex min-h-[76px] items-center gap-3 rounded-2xl border border-[#ff704f]/25 bg-[#ff704f]/[0.07] px-4 text-left transition hover:bg-[#ff704f]/[0.13]"
+              className="group flex min-h-[76px] items-center gap-3 rounded-2xl border border-[#ffcc00]/20 bg-[#121212] px-4 text-left transition hover:border-[#ffcc00]/40 hover:bg-[#121212]"
             >
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#ff704f]/15 text-[#ff8064]"><Wrench className="size-5" /></span>
-              <span className="min-w-0"><span className="block text-xs font-black tracking-wide text-[#ff8064] sm:text-sm">SERVIÇOS NA ESTRADA</span><span className="mt-1 block text-[10px] text-white/45 sm:text-xs">Catalão, Uberlândia e Goiânia</span></span>
-              <ArrowUpRight className="ml-auto size-4 shrink-0 text-white/35 transition group-hover:text-[#ff8064]" />
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#ffcc00]/10 text-[#ffcc00]"><Wrench className="size-5" /></span>
+              <span className="min-w-0"><span className="block text-xs font-black tracking-wide text-[#ffcc00] sm:text-sm">SERVIÇOS NA ESTRADA</span><span className="mt-1 block text-[10px] text-white/45 sm:text-xs">Catalão, Uberlândia e Goiânia</span></span>
+              <ArrowUpRight className="ml-auto size-4 shrink-0 text-[#ffcc00]/55 transition group-hover:text-[#ffcc00]" />
             </a>
             <button
               type="button"
