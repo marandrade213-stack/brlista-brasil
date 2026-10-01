@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState, type FormEvent } from 'react'
 import {
   ArrowUpRight,
   HeartPulse,
@@ -72,6 +72,13 @@ export function BrlistaDirectory() {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<CategoryFilter>('Todas')
   const [showTravelTip, setShowTravelTip] = useState(false)
+  const searchInputRef = useRef<HTMLInputElement>(null)
+
+  function handleSearchSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    searchInputRef.current?.blur()
+    document.getElementById('estabelecimentos')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   const filteredPlaces = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase('pt-BR')
@@ -114,11 +121,14 @@ export function BrlistaDirectory() {
             Encontre borracharias, mecânicos e socorro rodoviário em Catalão/GO, Uberlândia/MG e Goiânia/GO.
           </p>
 
-          <div className="mt-7 flex max-w-3xl flex-col gap-3 sm:flex-row">
+          <form onSubmit={handleSearchSubmit} className="mt-7 flex max-w-3xl flex-col gap-3 sm:flex-row">
             <label className="flex min-h-14 flex-1 items-center gap-3 rounded-2xl border border-white/10 bg-[#191a17] px-4 transition focus-within:border-[#ffd43b]/60">
               <Search className="size-5 shrink-0 text-[#ffd43b]" aria-hidden="true" />
               <span className="sr-only">Buscar por cidade, rodovia ou serviço</span>
               <input
+                ref={searchInputRef}
+                type="search"
+                enterKeyHint="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Cidade, rodovia ou serviço..."
@@ -126,13 +136,13 @@ export function BrlistaDirectory() {
               />
               <kbd className="hidden rounded-md border border-white/10 px-2 py-1 text-[10px] text-white/30 sm:inline">BUSCAR</kbd>
             </label>
-            <a
-              href="#estabelecimentos"
+            <button
+              type="submit"
               className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-[#3578f6] px-5 text-sm font-bold text-white transition hover:bg-[#4b87fa] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ffd43b]"
             >
               <MapPin className="size-4" /> Ver estabelecimentos
-            </a>
-          </div>
+            </button>
+          </form>
 
           <div className="mt-7 grid max-w-3xl grid-cols-2 gap-3">
             <a
