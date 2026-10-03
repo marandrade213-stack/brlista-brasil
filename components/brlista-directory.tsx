@@ -1,8 +1,9 @@
 'use client'
 
-import { useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from 'react'
+import { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from 'react'
 import {
   ArrowUpRight,
+  Download,
   HeartPulse,
   MapPin,
   MessageCircle,
@@ -10,6 +11,7 @@ import {
   Phone,
   Plus,
   Search,
+  Smartphone,
   X,
   ShieldCheck,
   Wrench,
@@ -82,14 +84,68 @@ const places: Place[] = [
 const categories = ['Todas', 'Borracharia', 'Mecânica', 'Auto Elétrica', 'Mecânica Pesada', 'Guincho / Socorro', 'Lavador de Carreta'] as const
 
 type CategoryFilter = (typeof categories)[number]
+type BeforeInstallPromptEvent = Event & {
+  prompt: () => Promise<void>
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>
+}
 
 export function BrlistaDirectory() {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<CategoryFilter>('Todas')
   const [showTravelTip, setShowTravelTip] = useState(false)
   const [submissionState, setSubmissionState] = useState<'idle' | 'opened'>('idle')
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null)
+  const [isInstalled, setIsInstalled] = useState(false)
+  const [showInstallInstructions, setShowInstallInstructions] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const submissionDialogRef = useRef<HTMLDialogElement>(null)
+
+  useEffect(() => {
+    const standaloneMedia = window.matchMedia('(display-mode: standalone)')
+    const navigatorStandalone = 'standalone' in window.navigator && Boolean((window.navigator as Navigator & { standalone?: boolean }).standalone)
+    setIsInstalled(standaloneMedia.matches || navigatorStandalone)
+
+    const handleBeforeInstallPrompt = (event: Event) => {
+      event.preventDefault()
+      setInstallPrompt(event as BeforeInstallPromptEvent)
+    }
+    const handleAppInstalled = () => {
+      setIsInstalled(true)
+      setInstallPrompt(null)
+    }
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+    window.addEventListener('appinstalled', handleAppInstalled)
+    if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
+      void navigator.serviceWorker.register('/sw.js').catch(() => undefined)
+    }
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+      window.removeEventListener('appinstalled', handleAppInstalled)
+    }
+  }, [])
+
+  async function handleInstallClick() {
+    if (!installPrompt) {
+      setShowInstallInstructions((show) => !show)
+      return
+    }
+
+    try {
+      await installPrompt.prompt()
+      const choice = await installPrompt.userChoice
+      setInstallPrompt(null)
+      if (choice.outcome === 'accepted') {
+        setIsInstalled(true)
+      } else {
+        setShowInstallInstructions(true)
+      }
+    } catch {
+      setInstallPrompt(null)
+      setShowInstallInstructions(true)
+    }
+  }
 
   function handleSearchSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -188,7 +244,35 @@ export function BrlistaDirectory() {
             </label>
           </form>
 
-          <div className="mt-7 grid max-w-3xl grid-cols-2 gap-3">
+          {!isInstalled && (
+            <aside aria-label="Instale o app do BRLista na sua tela inicial" className="mt-4 max-w-xl rounded-2xl border border-[#ffd43b]/15 bg-[#171815] p-3">
+              <div className="flex items-center gap-3">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#ffd43b]/10 text-[#ffd43b]">
+                  <Smartphone className="size-5" aria-hidden="true" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-bold text-white">Instale o app do BRLista na sua tela inicial</p>
+                  <p className="mt-1 text-[10px] text-white/45">Acesso rápido ao diretório, onde estiver.</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleInstallClick}
+                  aria-expanded={showInstallInstructions}
+                  aria-controls="install-instructions"
+                  className="inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-full border border-[#ffd43b]/30 px-3 text-[11px] font-bold text-[#ffd43b] transition hover:border-[#ffd43b]/60 hover:bg-[#ffd43b]/[0.08]"
+                >
+                  <Download className="size-3.5" aria-hidden="true" />
+                  {installPrompt ? 'Instalar' : 'Como instalar'}
+                </button>
+              </div>
+              <div id="install-instructions" hidden={!showInstallInstructions} role="status" className="mt-3 border-t border-white/[0.08] pt-3 text-[11px] leading-5 text-white/60">
+                  <p><strong className="text-white/80">Android:</strong> abra o menu do navegador e escolha “Instalar app” ou “Adicionar à tela inicial”.</p>
+                  <p className="mt-1"><strong className="text-white/80">iPhone ou iPad:</strong> toque em Compartilhar no Safari e escolha “Adicionar à Tela de Início”.</p>
+              </div>
+            </aside>
+          )}
+
+          <div className="mt-5 grid max-w-3xl grid-cols-2 gap-3">
             <a
               href="#estabelecimentos"
               className="group flex min-h-[76px] items-center gap-3 rounded-2xl border border-[#ffcc00]/20 bg-[#121212] px-4 text-left transition hover:border-[#ffcc00]/40 hover:bg-[#121212]"
