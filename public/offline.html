@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#10110f">
+    <title>Você está offline | BRLista Brasil</title>
+    <style>
+      :root { color-scheme: dark; font-family: Arial, sans-serif; background: #10110f; color: #f6f4ed; }
+      body { display: grid; min-height: 100vh; margin: 0; place-items: center; padding: 24px; box-sizing: border-box; }
+      main { width: min(100%, 420px); text-align: center; }
+      .mark { display: grid; width: 64px; height: 64px; margin: 0 auto 24px; place-items: center; border-radius: 20px; background: #ffd43b; color: #171711; font-size: 28px; font-weight: 900; }
+      h1 { margin: 0; font-size: 28px; letter-spacing: -1px; }
+      p { margin: 12px 0 24px; color: #aaa9a0; font-size: 15px; line-height: 1.6; }
+      button { min-height: 46px; padding: 0 20px; border: 0; border-radius: 14px; background: #ffd43b; color: #171711; font-size: 14px; font-weight: 800; cursor: pointer; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="mark" aria-hidden="true">BR</div>
+      <h1>Você está sem conexão</h1>
+      <p>O BRLista precisa de internet para carregar o diretório. Confira sua conexão e tente novamente.</p>
+      <button type="button" onclick="location.reload()">Tentar novamente</button>
+    </main>
+  </body>
+</html>

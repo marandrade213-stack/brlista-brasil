@@ -6,22 +6,21 @@ export const metadata: Metadata = {
   title: 'BRLista Brasil | Serviços rodoviários no Brasil',
   description: 'Encontre borracharias, mecânicos, autoelétricas, guinchos e socorro rodoviário em Catalão, Uberlândia, Goiânia e Santos.',
   generator: 'v0.app',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'BRLista',
+  },
+  other: {
+    'apple-mobile-web-app-capable': 'yes',
+  },
   icons: {
     icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
+      { url: '/brlista-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/brlista-512.png', sizes: '512x512', type: 'image/png' },
     ],
-    apple: '/apple-icon.png',
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
   },
 }
 
