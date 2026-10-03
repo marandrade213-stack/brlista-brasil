@@ -8,12 +8,14 @@ import {
   MessageCircle,
   Navigation,
   Phone,
+  Plus,
   Search,
+  X,
   ShieldCheck,
   Wrench,
 } from 'lucide-react'
 
-type Category = 'Borracharia' | 'Mecânica' | 'Auto Elétrica' | 'Mecânica Pesada'
+type Category = 'Borracharia' | 'Mecânica' | 'Auto Elétrica' | 'Mecânica Pesada' | 'Guincho / Socorro' | 'Lavador de Carreta'
 type Place = {
   name: string
   category: Category
@@ -62,9 +64,22 @@ const places: Place[] = [
   { name: 'Mecânico de Caminhão 24 Horas', category: 'Mecânica Pesada', city: 'Goiânia, GO', phone: '(62) 99929-1447', icon: Wrench },
   { name: 'Socorro Mecânico de Embreagem de Caminhão 24 Horas', category: 'Mecânica Pesada', city: 'Goiânia, GO', phone: '(62) 99969-8702', icon: Wrench },
   { name: 'Mecânico de Automóveis e Caminhões (Assistência na Estrada 24h)', category: 'Mecânica Pesada', city: 'Goiânia, GO', phone: '(62) 99316-3637', icon: Wrench },
+  { name: 'Auto Elétrica Porto de Santos', category: 'Auto Elétrica', city: 'Santos - SP', road: 'Av. Conselheiro Nébias, 120', phone: '(13) 3221-1001', icon: Wrench },
+  { name: 'Borracharia do Valongo', category: 'Borracharia', city: 'Santos - SP', road: 'Rua do Terceiro, 45', phone: '(13) 99712-3456', icon: Wrench },
+  { name: 'Santos Truck Repair', category: 'Mecânica Pesada', city: 'Santos - SP', road: 'Av. Engenheiro Augusto Barata, s/n', phone: '(13) 3232-4000', icon: Wrench },
+  { name: 'Lava Rápido e Ducha Carretas Alemoa', category: 'Lavador de Carreta', city: 'Santos - SP', road: 'Marginal da Anchieta, Km 64', phone: '(13) 3296-1500', icon: Wrench },
+  { name: 'Guincho Litoral 24 Horas', category: 'Guincho / Socorro', city: 'Santos - SP', road: 'Atendimento Anchieta/Imigrantes', phone: '(13) 99123-8899', icon: Wrench },
+  { name: 'Mecânica Diesel Margem Direita', category: 'Mecânica Pesada', city: 'Santos - SP', road: 'Av. Bandeirantes, 800', phone: '(13) 3219-5500', icon: Wrench },
+  { name: 'Auto Elétrica e Baterias Alemoa', category: 'Auto Elétrica', city: 'Santos - SP', road: 'Rua Amador Bueno, 310', phone: '(13) 3223-9090', icon: Wrench },
+  { name: 'Borracharia Ponta da Praia', category: 'Borracharia', city: 'Santos - SP', road: 'Av. Mário Covas, 1500', phone: '(13) 98844-1122', icon: Wrench },
+  { name: 'Wash Truck Porto', category: 'Lavador de Carreta', city: 'Santos - SP', road: 'Av. Ismael Coelho Souza, s/n', phone: '(13) 3299-7070', icon: Wrench },
+  { name: 'Socorro de Pesados Anchieta', category: 'Guincho / Socorro', city: 'Santos - SP', road: 'Rod. Anchieta, Km 60', phone: '(13) 99655-4321', icon: Wrench },
+  { name: 'Centro Automotivo Cais do Porto', category: 'Mecânica Pesada', city: 'Santos - SP', road: 'Rua Xavier da Silveira, 88', phone: '(13) 3234-1122', icon: Wrench },
+  { name: 'Elétrica e Eletrônica Diesel Santos', category: 'Auto Elétrica', city: 'Santos - SP', road: 'Av. Martins Fontes, 1020', phone: '(13) 3291-3344', icon: Wrench },
+  { name: 'Borracharia 24h Saboó', category: 'Borracharia', city: 'Santos - SP', road: 'Av. Marginal Direita, 250', phone: '(13) 99788-6655', icon: Wrench },
 ]
 
-const categories = ['Todas', 'Borracharia', 'Mecânica', 'Auto Elétrica', 'Mecânica Pesada'] as const
+const categories = ['Todas', 'Borracharia', 'Mecânica', 'Auto Elétrica', 'Mecânica Pesada', 'Guincho / Socorro', 'Lavador de Carreta'] as const
 
 type CategoryFilter = (typeof categories)[number]
 
@@ -72,7 +87,10 @@ export function BrlistaDirectory() {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<CategoryFilter>('Todas')
   const [showTravelTip, setShowTravelTip] = useState(false)
+  const [submissionState, setSubmissionState] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
+  const [submissionError, setSubmissionError] = useState('')
   const searchInputRef = useRef<HTMLInputElement>(null)
+  const submissionDialogRef = useRef<HTMLDialogElement>(null)
 
   function handleSearchSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -83,6 +101,34 @@ export function BrlistaDirectory() {
     if (event.key !== 'Enter' || event.nativeEvent.isComposing || event.keyCode === 229) return
     event.preventDefault()
     searchInputRef.current?.blur()
+  }
+
+  async function handleServiceSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setSubmissionState('submitting')
+    setSubmissionError('')
+
+    const form = event.currentTarget
+    try {
+      const response = await fetch('/api/services', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.fromEntries(new FormData(form).entries())),
+      })
+      const result = await response.json()
+
+      if (!response.ok) {
+        setSubmissionError(result.error ?? 'Não foi possível enviar o cadastro.')
+        setSubmissionState('error')
+        return
+      }
+
+      form.reset()
+      setSubmissionState('success')
+    } catch {
+      setSubmissionError('Não foi possível enviar agora. Tente novamente em instantes.')
+      setSubmissionState('error')
+    }
   }
 
   const filteredPlaces = useMemo(() => {
@@ -107,9 +153,18 @@ export function BrlistaDirectory() {
               <span className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">Seu apoio na estrada</span>
             </span>
           </a>
-          <a href="#estabelecimentos" className="hidden items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-white/75 transition hover:border-[#ffd43b]/50 hover:text-[#ffd43b] sm:flex">
-            Explorar serviços <ArrowUpRight className="size-3.5" />
-          </a>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => { setSubmissionState('idle'); setSubmissionError(''); submissionDialogRef.current?.showModal() }}
+              className="inline-flex min-h-10 items-center gap-1.5 rounded-full bg-[#ffd43b] px-3.5 text-xs font-bold text-[#171711] transition hover:bg-[#ffe06a] sm:px-4"
+            >
+              <Plus className="size-4" /> Cadastrar Serviço
+            </button>
+            <a href="#estabelecimentos" className="hidden items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-white/75 transition hover:border-[#ffd43b]/50 hover:text-[#ffd43b] sm:flex">
+              Explorar serviços <ArrowUpRight className="size-3.5" />
+            </a>
+          </div>
         </div>
       </header>
 
@@ -149,7 +204,7 @@ export function BrlistaDirectory() {
               className="group flex min-h-[76px] items-center gap-3 rounded-2xl border border-[#ffcc00]/20 bg-[#121212] px-4 text-left transition hover:border-[#ffcc00]/40 hover:bg-[#121212]"
             >
               <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#ffcc00]/10 text-[#ffcc00]"><Wrench className="size-5" /></span>
-              <span className="min-w-0"><span className="block text-xs font-black tracking-wide text-[#ffcc00] sm:text-sm">SERVIÇOS NA ESTRADA</span><span className="mt-1 block text-[10px] text-white/45 sm:text-xs">Catalão, Uberlândia e Goiânia</span></span>
+              <span className="min-w-0"><span className="block text-xs font-black tracking-wide text-[#ffcc00] sm:text-sm">SERVIÇOS NA ESTRADA</span><span className="mt-1 block text-[10px] text-white/45 sm:text-xs">Catalão, Uberlândia, Goiânia e Santos</span></span>
               <ArrowUpRight className="ml-auto size-4 shrink-0 text-[#ffcc00]/55 transition group-hover:text-[#ffcc00]" />
             </a>
             <button
@@ -232,9 +287,73 @@ export function BrlistaDirectory() {
         </p>
       </section>
 
+      <dialog
+        ref={submissionDialogRef}
+        aria-labelledby="submission-title"
+        onClick={(event) => { if (event.target === event.currentTarget) event.currentTarget.close() }}
+        onClose={() => { setSubmissionState('idle'); setSubmissionError('') }}
+        className="m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-lg overflow-y-auto rounded-3xl border border-white/10 bg-[#171815] p-0 text-[#f6f4ed] shadow-2xl backdrop:bg-black/80"
+      >
+        <div className="flex items-start justify-between gap-4 border-b border-white/[0.08] px-5 py-5 sm:px-6">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#ffd43b]/75">Ajude quem está na estrada</p>
+            <h2 id="submission-title" className="mt-1 text-xl font-extrabold tracking-tight">Cadastrar Serviço</h2>
+            <p className="mt-1 text-xs leading-5 text-white/50">Compartilhe os dados de um estabelecimento para análise.</p>
+          </div>
+          <button type="button" onClick={() => submissionDialogRef.current?.close()} aria-label="Fechar formulário" className="flex size-9 shrink-0 items-center justify-center rounded-full border border-white/10 text-white/65 transition hover:border-white/25 hover:text-white">
+            <X className="size-4" />
+          </button>
+        </div>
+
+        {submissionState === 'success' ? (
+          <div className="px-5 py-8 text-center sm:px-6">
+            <span className="mx-auto flex size-12 items-center justify-center rounded-full bg-[#ffd43b]/10 text-[#ffd43b]"><ShieldCheck className="size-6" /></span>
+            <h3 className="mt-4 text-lg font-bold">Cadastro enviado</h3>
+            <p role="status" className="mt-2 text-sm leading-6 text-white/55">Obrigado por contribuir. Os dados serão revisados antes de aparecer no diretório.</p>
+            <button type="button" onClick={() => submissionDialogRef.current?.close()} className="mt-6 min-h-11 rounded-xl bg-[#ffd43b] px-5 text-sm font-bold text-[#171711] transition hover:bg-[#ffe06a]">Concluir</button>
+          </div>
+        ) : (
+          <form onSubmit={handleServiceSubmit} className="flex flex-col gap-4 px-5 py-5 sm:px-6 sm:py-6">
+            <div aria-hidden="true" className="absolute -left-[9999px] size-px overflow-hidden">
+              <label htmlFor="service-website">Site</label>
+              <input id="service-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+            </div>
+            <label className="flex flex-col gap-1.5 text-xs font-semibold text-white/75" htmlFor="service-name">
+              Nome do estabelecimento
+              <input id="service-name" name="name" required minLength={2} maxLength={120} autoComplete="organization" placeholder="Ex.: Borracharia da Estrada" className="min-h-11 rounded-xl border border-white/10 bg-[#10110f] px-3 text-sm text-white outline-none placeholder:text-white/30 focus:border-[#ffd43b]/60" />
+            </label>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="flex flex-col gap-1.5 text-xs font-semibold text-white/75" htmlFor="service-category">
+                Categoria
+                <select id="service-category" name="category" required defaultValue="Borracharia" className="min-h-11 rounded-xl border border-white/10 bg-[#10110f] px-3 text-sm text-white outline-none focus:border-[#ffd43b]/60">
+                  {categories.filter((item) => item !== 'Todas').map((item) => <option key={item} value={item}>{item}</option>)}
+                </select>
+              </label>
+              <label className="flex flex-col gap-1.5 text-xs font-semibold text-white/75" htmlFor="service-city">
+                Cidade e estado
+                <input id="service-city" name="city" required minLength={2} maxLength={100} autoComplete="address-level2" placeholder="Ex.: Santos - SP" className="min-h-11 rounded-xl border border-white/10 bg-[#10110f] px-3 text-sm text-white outline-none placeholder:text-white/30 focus:border-[#ffd43b]/60" />
+              </label>
+            </div>
+            <label className="flex flex-col gap-1.5 text-xs font-semibold text-white/75" htmlFor="service-address">
+              Endereço ou rodovia
+              <input id="service-address" name="address" required minLength={3} maxLength={240} autoComplete="street-address" placeholder="Rua, número, rodovia ou ponto de referência" className="min-h-11 rounded-xl border border-white/10 bg-[#10110f] px-3 text-sm text-white outline-none placeholder:text-white/30 focus:border-[#ffd43b]/60" />
+            </label>
+            <label className="flex flex-col gap-1.5 text-xs font-semibold text-white/75" htmlFor="service-phone">
+              Telefone
+              <input id="service-phone" name="phone" type="tel" inputMode="tel" required maxLength={32} autoComplete="tel" placeholder="(13) 99999-9999" className="min-h-11 rounded-xl border border-white/10 bg-[#10110f] px-3 text-sm text-white outline-none placeholder:text-white/30 focus:border-[#ffd43b]/60" />
+            </label>
+            <p className="text-[11px] leading-5 text-white/40">Ao enviar, você confirma que os dados estão corretos e autoriza a publicação após revisão.</p>
+            {submissionState === 'error' && <p role="alert" className="rounded-xl border border-red-400/20 bg-red-400/[0.07] px-3 py-2 text-xs leading-5 text-red-200">{submissionError}</p>}
+            <button type="submit" disabled={submissionState === 'submitting'} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#ffd43b] px-4 text-sm font-black text-[#171711] transition hover:bg-[#ffe06a] disabled:cursor-wait disabled:opacity-60">
+              {submissionState === 'submitting' ? 'Enviando...' : 'Enviar para revisão'}
+            </button>
+          </form>
+        )}
+      </dialog>
+
       <footer className="border-t border-white/[0.08]">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-5 text-[10px] text-white/35 sm:flex-row sm:items-center sm:justify-between sm:px-8">
-          <span>© 2026 BRLista Brasil <span className="px-1">·</span> Serviços rodoviários · Catalão/GO, Uberlândia/MG e Goiânia/GO</span>
+          <span>© 2026 BRLista Brasil <span className="px-1">·</span> Serviços rodoviários · Catalão/GO, Uberlândia/MG, Goiânia/GO e Santos/SP</span>
           <a href="#inicio" className="inline-flex items-center gap-1 font-semibold text-white/50 hover:text-[#ffd43b]">Voltar ao topo <ArrowUpRight className="size-3" /></a>
         </div>
       </footer>
