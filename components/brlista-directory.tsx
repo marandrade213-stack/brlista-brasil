@@ -90,6 +90,19 @@ const places: Place[] = [
   { name: 'Borracharia do Bruninho', category: 'Borracharia', city: 'Ribeirão Preto, SP', phone: '(16) 99400-1329', service: 'Borracharia', icon: Wrench },
   { name: 'IMPAR Borracharia Móvel', category: 'Borracharia', city: 'Ribeirão Preto, SP', phone: '(16) 98199-5756', service: 'Socorro móvel', icon: Wrench },
   { name: 'Borracharia Ponto do Pneu', category: 'Borracharia', city: 'Ribeirão Preto, SP', phone: '(16) 99422-7029', service: 'Borracharia', icon: Wrench },
+  { name: 'JP Borracharia Móvel 24 Horas', category: 'Borracharia', city: 'Araxá, MG', phone: '(34) 99828-6914', service: '24h / Móvel', icon: Wrench },
+  { name: 'BORRACHARIA MÓVEL EXPRESS', category: 'Borracharia', city: 'Araxá, MG', phone: '(34) 99812-1032', service: 'Móvel', icon: Wrench },
+  { name: 'Borracharia Móvel e Fixa do Tiago', category: 'Borracharia', city: 'Araxá, MG', phone: '(34) 99817-3240', service: 'Móvel', icon: Wrench },
+  { name: 'Tiãozinho Borracharia Móvel', category: 'Borracharia', city: 'Araxá, MG', phone: '(34) 99878-2758', service: 'Móvel', icon: Wrench },
+  { name: 'Borracharia móvel 2 irmãos', category: 'Borracharia', city: 'Araxá, MG', phone: '(34) 99872-6635', service: 'Móvel', icon: Wrench },
+  { name: 'Borracharia Barreiro', category: 'Borracharia', city: 'Araxá, MG', phone: '(34) 99985-5652', icon: Wrench },
+  { name: 'Mecânico Araxá MG', category: 'Mecânica', city: 'Araxá, MG', phone: '(34) 99254-1478', icon: Wrench },
+  { name: 'S.O.S CAMINHONEIRO OFICINA MOVEL', category: 'Mecânica', city: 'Araxá, MG', phone: '(34) 98422-9597', service: 'Móvel / Linha Pesada', icon: Wrench },
+  { name: 'Tecno Diesel RP Auto Mecânica', category: 'Mecânica', city: 'Araxá, MG', phone: '(34) 98843-5441', service: 'Linha Pesada', icon: Wrench },
+  { name: 'Flavio Mecanica Diesel', category: 'Mecânica', city: 'Araxá, MG', phone: '(34) 98810-5079', service: 'Linha Pesada', icon: Wrench },
+  { name: 'Sandal Diesel Araxá', category: 'Mecânica', city: 'Araxá, MG', phone: '(34) 3662-6620', service: 'Linha Pesada', icon: Wrench },
+  { name: 'PHDiesel araxa', category: 'Mecânica', city: 'Araxá, MG', phone: '(34) 99231-6669', service: 'Linha Pesada', icon: Wrench },
+  { name: 'T - Car Diesel', category: 'Mecânica', city: 'Araxá, MG', phone: '(34) 99773-9133', service: 'Linha Pesada', icon: Wrench },
 ]
 
 const categories = ['Todas', 'Borracharia', 'Mecânica', 'Auto Elétrica', 'Mecânica Pesada', 'Guincho / Socorro', 'Lavador de Carreta'] as const
