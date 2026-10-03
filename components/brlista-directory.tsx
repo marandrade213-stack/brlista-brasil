@@ -96,9 +96,10 @@ export function BrlistaDirectory() {
   const [submissionState, setSubmissionState] = useState<'idle' | 'opened'>('idle')
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [isInstalled, setIsInstalled] = useState(false)
-  const [showInstallInstructions, setShowInstallInstructions] = useState(false)
+  const [installHelpPlatform, setInstallHelpPlatform] = useState<'ios' | 'android' | 'browser' | null>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const submissionDialogRef = useRef<HTMLDialogElement>(null)
+  const installInstructionsDialogRef = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {
     const standaloneMedia = window.matchMedia('(display-mode: standalone)')
@@ -126,25 +127,33 @@ export function BrlistaDirectory() {
     }
   }, [])
 
-  async function handleInstallClick() {
-    if (!installPrompt) {
-      setShowInstallInstructions((show) => !show)
+  function handleInstallClick() {
+    const userAgent = window.navigator.userAgent
+    const isAppleMobileDevice = /iPhone|iPad|iPod/i.test(userAgent)
+      || (window.navigator.platform === 'MacIntel' && window.navigator.maxTouchPoints > 1)
+
+    if (isAppleMobileDevice) {
+      setInstallHelpPlatform('ios')
+      installInstructionsDialogRef.current?.showModal()
       return
     }
 
-    try {
-      await installPrompt.prompt()
-      const choice = await installPrompt.userChoice
-      setInstallPrompt(null)
+    if (!installPrompt) {
+      setInstallHelpPlatform(/Android/i.test(userAgent) ? 'android' : 'browser')
+      installInstructionsDialogRef.current?.showModal()
+      return
+    }
+
+    const promptEvent = installPrompt
+    setInstallPrompt(null)
+    void promptEvent.prompt().then(() => promptEvent.userChoice).then((choice) => {
       if (choice.outcome === 'accepted') {
         setIsInstalled(true)
-      } else {
-        setShowInstallInstructions(true)
       }
-    } catch {
-      setInstallPrompt(null)
-      setShowInstallInstructions(true)
-    }
+    }).catch(() => {
+      setInstallHelpPlatform(/Android/i.test(userAgent) ? 'android' : 'browser')
+      installInstructionsDialogRef.current?.showModal()
+    })
   }
 
   function handleSearchSubmit(event: FormEvent<HTMLFormElement>) {
@@ -257,17 +266,13 @@ export function BrlistaDirectory() {
                 <button
                   type="button"
                   onClick={handleInstallClick}
-                  aria-expanded={showInstallInstructions}
+                  aria-haspopup="dialog"
                   aria-controls="install-instructions"
                   className="inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-full border border-[#ffd43b]/30 px-3 text-[11px] font-bold text-[#ffd43b] transition hover:border-[#ffd43b]/60 hover:bg-[#ffd43b]/[0.08]"
                 >
                   <Download className="size-3.5" aria-hidden="true" />
-                  {installPrompt ? 'Instalar' : 'Como instalar'}
+                  {installPrompt ? 'Instalar Agora' : 'Baixar App'}
                 </button>
-              </div>
-              <div id="install-instructions" hidden={!showInstallInstructions} role="status" className="mt-3 border-t border-white/[0.08] pt-3 text-[11px] leading-5 text-white/60">
-                  <p><strong className="text-white/80">Android:</strong> abra o menu do navegador e escolha “Instalar app” ou “Adicionar à tela inicial”.</p>
-                  <p className="mt-1"><strong className="text-white/80">iPhone ou iPad:</strong> toque em Compartilhar no Safari e escolha “Adicionar à Tela de Início”.</p>
               </div>
             </aside>
           )}
@@ -418,6 +423,46 @@ export function BrlistaDirectory() {
             </button>
           </form>
         )}
+      </dialog>
+
+      <dialog
+        ref={installInstructionsDialogRef}
+        aria-labelledby="install-instructions-title"
+        onClick={(event) => {
+          if (event.target === installInstructionsDialogRef.current) {
+            installInstructionsDialogRef.current?.close()
+          }
+        }}
+        className="m-auto w-[calc(100%-2rem)] max-w-sm rounded-3xl border border-white/10 bg-[#171815] p-0 text-white shadow-2xl backdrop:bg-black/70 backdrop:backdrop-blur-sm"
+      >
+        <div className="flex items-start justify-between gap-4 border-b border-white/[0.08] px-5 py-5">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#ffd43b]/75">BRLista Brasil</p>
+            <h2 id="install-instructions-title" className="mt-1 text-lg font-extrabold tracking-tight">
+              {installHelpPlatform === 'ios' ? 'Instale no iPhone ou iPad' : 'Instale o app BRLista'}
+            </h2>
+          </div>
+          <button type="button" onClick={() => installInstructionsDialogRef.current?.close()} aria-label="Fechar instruções" className="flex size-9 shrink-0 items-center justify-center rounded-full border border-white/10 text-white/65 transition hover:border-white/25 hover:text-white">
+            <X className="size-4" />
+          </button>
+        </div>
+        <div id="install-instructions" className="flex flex-col gap-4 px-5 py-5 text-sm leading-6 text-white/70">
+          {installHelpPlatform === 'ios' ? (
+            <>
+              <p>A Apple não permite abrir a instalação diretamente. No Safari:</p>
+              <ol className="flex flex-col gap-3">
+                <li className="flex gap-3"><span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#ffd43b]/10 text-xs font-bold text-[#ffd43b]">1</span><span>Toque em <strong className="text-white">Compartilhar</strong>, na barra do Safari.</span></li>
+                <li className="flex gap-3"><span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#ffd43b]/10 text-xs font-bold text-[#ffd43b]">2</span><span>Role o menu e escolha <strong className="text-white">Adicionar à Tela de Início</strong>.</span></li>
+                <li className="flex gap-3"><span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#ffd43b]/10 text-xs font-bold text-[#ffd43b]">3</span><span>Toque em <strong className="text-white">Adicionar</strong> para concluir.</span></li>
+              </ol>
+            </>
+          ) : installHelpPlatform === 'android' ? (
+            <p>Abra o menu do Chrome e toque em <strong className="text-white">Instalar app</strong> ou <strong className="text-white">Adicionar à tela inicial</strong>.</p>
+          ) : (
+            <p>Abra o menu de compartilhamento ou do navegador e procure <strong className="text-white">Instalar app</strong> ou <strong className="text-white">Adicionar à tela inicial</strong>.</p>
+          )}
+          <button type="button" onClick={() => installInstructionsDialogRef.current?.close()} className="mt-1 min-h-11 rounded-xl bg-[#ffd43b] px-5 text-sm font-bold text-[#171711] transition hover:bg-[#ffe06a]">Entendi</button>
+        </div>
       </dialog>
 
       <footer className="border-t border-white/[0.08]">
