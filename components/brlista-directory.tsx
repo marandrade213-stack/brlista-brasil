@@ -92,6 +92,7 @@ type BeforeInstallPromptEvent = Event & {
 export function BrlistaDirectory() {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<CategoryFilter>('Todas')
+  const [currentPage, setCurrentPage] = useState(1)
   const [showTravelTip, setShowTravelTip] = useState(false)
   const [submissionState, setSubmissionState] = useState<'idle' | 'opened'>('idle')
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null)
@@ -156,6 +157,22 @@ export function BrlistaDirectory() {
     })
   }
 
+  function handleSearchChange(value: string) {
+    setQuery(value)
+    setCurrentPage(1)
+  }
+
+  function handleCategoryChange(value: CategoryFilter) {
+    setCategory(value)
+    setCurrentPage(1)
+  }
+
+  function handleClearFilters() {
+    setQuery('')
+    setCategory('Todas')
+    setCurrentPage(1)
+  }
+
   function handleSearchSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     searchInputRef.current?.blur()
@@ -194,6 +211,10 @@ export function BrlistaDirectory() {
       return matchesCategory && searchableText.includes(normalizedQuery)
     })
   }, [category, query])
+
+  const itemsPerPage = 10
+  const totalPages = Math.ceil(filteredPlaces.length / itemsPerPage)
+  const paginatedPlaces = filteredPlaces.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
 
   return (
     <main className="min-h-screen bg-[#10110f] text-[#f6f4ed]">
@@ -245,7 +266,7 @@ export function BrlistaDirectory() {
                 type="search"
                 enterKeyHint="search"
                 value={query}
-                onChange={(event) => setQuery(event.target.value)}
+                onChange={(event) => handleSearchChange(event.target.value)}
                 onKeyDown={handleSearchKeyDown}
                 placeholder="Cidade, rodovia ou serviço..."
                 className="min-w-0 flex-1 bg-transparent text-sm text-white outline-none placeholder:text-white/35"
@@ -318,7 +339,7 @@ export function BrlistaDirectory() {
               <button
                 type="button"
                 key={item}
-                onClick={() => setCategory(item)}
+                onClick={() => handleCategoryChange(item)}
                 aria-pressed={category === item}
                 className={`shrink-0 rounded-full border px-3.5 py-2 text-xs font-semibold transition ${category === item ? 'border-[#ffd43b] bg-[#ffd43b] text-[#191a17]' : 'border-white/10 bg-transparent text-white/55 hover:border-white/25 hover:text-white'}`}
               >{item}</button>
@@ -328,7 +349,7 @@ export function BrlistaDirectory() {
 
         {filteredPlaces.length > 0 ? (
           <div className="mt-6 grid gap-4 md:grid-cols-2">
-            {filteredPlaces.map((place) => {
+            {paginatedPlaces.map((place) => {
               const Icon = place.icon
               return (
                 <article key={place.name} className="rounded-[20px] border border-white/[0.09] bg-[#171815] p-4 transition hover:border-white/[0.16] sm:p-5">
@@ -357,8 +378,44 @@ export function BrlistaDirectory() {
             <Search className="mx-auto size-7 text-white/25" />
             <h3 className="mt-3 font-bold">Nenhum serviço encontrado</h3>
             <p className="mt-1 text-sm text-white/45">Tente outro termo ou escolha uma categoria diferente.</p>
-            <button type="button" onClick={() => { setQuery(''); setCategory('Todas') }} className="mt-4 rounded-full border border-white/15 px-4 py-2 text-xs font-semibold text-white/70 hover:border-[#ffd43b]/50 hover:text-[#ffd43b]">Limpar filtros</button>
+            <button type="button" onClick={handleClearFilters} className="mt-4 rounded-full border border-white/15 px-4 py-2 text-xs font-semibold text-white/70 hover:border-[#ffd43b]/50 hover:text-[#ffd43b]">Limpar filtros</button>
           </div>
+        )}
+
+        {totalPages > 1 && (
+          <nav aria-label="Paginação dos estabelecimentos" className="mt-7 flex flex-wrap items-center justify-center gap-2">
+            <button
+              type="button"
+              onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+              disabled={currentPage === 1}
+              className="min-h-10 rounded-full border border-white/10 px-4 text-xs font-semibold text-white/75 transition hover:border-[#ffd43b]/50 hover:text-[#ffd43b] disabled:cursor-not-allowed disabled:opacity-35"
+            >
+              Anterior
+            </button>
+            <div className="flex items-center gap-1" aria-label="Páginas">
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                <button
+                  key={page}
+                  type="button"
+                  onClick={() => setCurrentPage(page)}
+                  aria-label={`Página ${page}`}
+                  aria-current={currentPage === page ? 'page' : undefined}
+                  className={`size-10 rounded-full text-xs font-bold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ffd43b] ${currentPage === page ? 'bg-[#ffd43b] text-[#191a17]' : 'border border-white/10 text-white/65 hover:border-[#ffd43b]/50 hover:text-[#ffd43b]'}`}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+              disabled={currentPage === totalPages}
+              className="min-h-10 rounded-full border border-white/10 px-4 text-xs font-semibold text-white/75 transition hover:border-[#ffd43b]/50 hover:text-[#ffd43b] disabled:cursor-not-allowed disabled:opacity-35"
+            >
+              Próxima
+            </button>
+            <span className="sr-only" aria-live="polite">Página {currentPage} de {totalPages}</span>
+          </nav>
         )}
 
         <p className="mt-6 flex items-start gap-2 rounded-xl border border-white/[0.06] bg-white/[0.025] p-3 text-[10px] leading-5 text-white/40 sm:text-xs">
