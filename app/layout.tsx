@@ -3,8 +3,8 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'BRLista Brasil | Serviços rodoviários em Goiânia, Catalão e Uberlândia',
-  description: 'Encontre borracharias, mecânicos e socorro rodoviário em Goiânia/GO, Catalão/GO e Uberlândia/MG.',
+  title: 'BRLista Brasil | Serviços rodoviários no Brasil',
+  description: 'Encontre borracharias, mecânicos, autoelétricas, guinchos e socorro rodoviário em Catalão, Uberlândia, Goiânia e Santos.',
   generator: 'v0.app',
   icons: {
     icon: [
