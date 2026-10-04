@@ -464,11 +464,12 @@ export function BrlistaDirectory() {
           </>
         ) : (
           <div className="mt-8 rounded-2xl border border-white/10 bg-[#171815] p-8 text-center">
-            <p className="text-sm text-white/60">Nenhum estabelecimento encontrado com os filtros atuais.</p>
+            <p className="text-base font-bold text-white">Nenhum resultado encontrado</p>
+            <p className="mt-1 text-xs text-white/50">Tente buscar por termos diferentes ou limpar os filtros aplicados.</p>
             <button
               type="button"
               onClick={handleClearFilters}
-              className="mt-4 rounded-full bg-[#ffd43b] px-4 py-2 text-xs font-bold text-[#171711]"
+              className="mt-4 inline-flex min-h-10 items-center gap-2 rounded-full bg-[#ffd43b] px-4 text-xs font-bold text-[#171711] transition hover:bg-[#ffe06a]"
             >
               Limpar Filtros
             </button>
@@ -476,48 +477,97 @@ export function BrlistaDirectory() {
         )}
       </section>
 
-      {/* Modal de Cadastro de Serviços */}
-      <dialog ref={submissionDialogRef} className="rounded-2xl border border-white/10 bg-[#171815] p-6 text-white backdrop:bg-black/70 max-w-md w-full">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-bold">Cadastrar Serviço</h3>
-          <button type="button" onClick={() => submissionDialogRef.current?.close()} className="text-white/50 hover:text-white"><X className="size-5" /></button>
+      {/* Modal: Cadastrar Empresa */}
+      <dialog ref={submissionDialogRef} className="rounded-2xl border border-white/10 bg-[#171815] p-6 text-[#f6f4ed] backdrop:bg-black/75 max-w-lg w-full">
+        <div className="flex items-center justify-between pb-4 border-b border-white/10">
+          <h3 className="text-lg font-bold">Cadastrar Empresa ou Serviço</h3>
+          <button
+            type="button"
+            onClick={() => submissionDialogRef.current?.close()}
+            className="rounded-lg p-1 text-white/50 hover:bg-white/10 hover:text-white"
+          >
+            <X className="size-5" />
+          </button>
         </div>
         {submissionState === 'opened' ? (
-          <div className="mt-4 text-center">
-            <p className="text-sm text-white/70">O WhatsApp foi aberto com as informações do seu negócio!</p>
-            <button type="button" onClick={() => submissionDialogRef.current?.close()} className="mt-4 w-full rounded-xl bg-[#ffd43b] py-2 text-xs font-bold text-[#171711]">Fechar</button>
+          <div className="py-6 text-center">
+            <p className="text-sm text-white/80">O seu pedido foi aberto no WhatsApp!</p>
+            <p className="mt-2 text-xs text-white/50">Envie a mensagem gerada para concluirmos o seu cadastro.</p>
+            <button
+              type="button"
+              onClick={() => submissionDialogRef.current?.close()}
+              className="mt-6 w-full rounded-xl bg-[#ffd43b] py-2.5 text-xs font-bold text-[#171711]"
+            >
+              Fechar
+            </button>
           </div>
         ) : (
-          <form onSubmit={handleServiceSubmit} className="mt-4 space-y-3">
-            <input required name="name" placeholder="Nome da empresa/serviço" className="w-full rounded-xl border border-white/10 bg-[#10110f] p-3 text-xs outline-none focus:border-[#ffd43b]" />
-            <input required name="category" placeholder="Categoria (ex: Borracharia)" className="w-full rounded-xl border border-white/10 bg-[#10110f] p-3 text-xs outline-none focus:border-[#ffd43b]" />
-            <input required name="city" placeholder="Cidade / Estado" className="w-full rounded-xl border border-[#white/10] bg-[#10110f] p-3 text-xs outline-none focus:border-[#ffd43b]" />
-            <input required name="phone" placeholder="Telefone com DDD / WhatsApp" className="w-full rounded-xl border border-white/10 bg-[#10110f] p-3 text-xs outline-none focus:border-[#ffd43b]" />
-            <textarea name="description" placeholder="Breve descrição dos serviços prestados" className="w-full rounded-xl border border-white/10 bg-[#10110f] p-3 text-xs outline-none focus:border-[#ffd43b]" />
-            <button type="submit" className="w-full rounded-xl bg-[#ffd43b] py-3 text-xs font-bold text-[#171711]">Enviar para Validação via WhatsApp</button>
+          <form onSubmit={handleServiceSubmit} className="mt-4 space-y-4">
+            <div>
+              <label className="block text-xs font-medium text-white/70 mb-1">Nome do Negócio / Estabelecimento</label>
+              <input required name="name" type="text" className="w-full rounded-xl border border-white/10 bg-[#10110f] px-3 py-2 text-sm text-white outline-none focus:border-[#ffd43b]" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-white/70 mb-1">Categoria</label>
+              <select required name="category" className="w-full rounded-xl border border-white/10 bg-[#10110f] px-3 py-2 text-sm text-white outline-none focus:border-[#ffd43b]">
+                {categories.filter((c) => c !== 'Todas').map((cat) => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-white/70 mb-1">Cidade / Estado</label>
+              <input required name="city" type="text" placeholder="Ex: Araguari, MG" className="w-full rounded-xl border border-white/10 bg-[#10110f] px-3 py-2 text-sm text-white outline-none focus:border-[#ffd43b]" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-white/70 mb-1">Telefone / WhatsApp</label>
+              <input required name="phone" type="tel" placeholder="(00) 00000-0000" className="w-full rounded-xl border border-white/10 bg-[#10110f] px-3 py-2 text-sm text-white outline-none focus:border-[#ffd43b]" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-white/70 mb-1">Descrição do Serviço (opcional)</label>
+              <textarea name="description" rows={3} className="w-full rounded-xl border border-white/10 bg-[#10110f] px-3 py-2 text-sm text-white outline-none focus:border-[#ffd43b]" />
+            </div>
+            <button type="submit" className="w-full rounded-xl bg-[#ffd43b] py-3 text-xs font-bold text-[#171711] transition hover:bg-[#ffe06a]">
+              Enviar via WhatsApp
+            </button>
           </form>
         )}
       </dialog>
 
-      {/* Modal de Ajuda na Instalação do PWA */}
-      <dialog id="install-instructions" ref={installInstructionsDialogRef} className="rounded-2xl border border-white/10 bg-[#171815] p-6 text-white backdrop:bg-black/70 max-w-md w-full">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-bold">Como instalar o app</h3>
-          <button type="button" onClick={() => installInstructionsDialogRef.current?.close()} className="text-white/50 hover:text-white"><X className="size-5" /></button>
+      {/* Modal: Instruções de Instalação PWA */}
+      <dialog id="install-instructions" ref={installInstructionsDialogRef} className="rounded-2xl border border-white/10 bg-[#171815] p-6 text-[#f6f4ed] backdrop:bg-black/75 max-w-md w-full">
+        <div className="flex items-center justify-between pb-4 border-b border-white/10">
+          <h3 className="text-lg font-bold">Como Instalar o App</h3>
+          <button
+            type="button"
+            onClick={() => installInstructionsDialogRef.current?.close()}
+            className="rounded-lg p-1 text-white/50 hover:bg-white/10 hover:text-white"
+          >
+            <X className="size-5" />
+          </button>
         </div>
-        <div className="mt-4 text-xs text-white/70 space-y-2">
+        <div className="mt-4 space-y-3 text-sm text-white/80">
           {installHelpPlatform === 'ios' ? (
-            <>
-              <p>1. Toque no botão de <strong>Partilhar</strong> no fundo do Safari.</p>
-              <p>2. Selecione a opção <strong>"Adicionar ao Ecrã Principal"</strong>.</p>
-            </>
+            <ol className="list-decimal list-inside space-y-2">
+              <li>Toque no botão de <strong>Compartilhar</strong> no Safari.</li>
+              <li>Role para baixo e selecione <strong>Adicionar à Tela de Início</strong>.</li>
+              <li>Toque em <strong>Adicionar</strong> no canto superior direito.</li>
+            </ol>
           ) : (
-            <>
-              <p>1. Abra o menu de opções do navegador (três pontos no canto superior direito).</p>
-              <p>2. Toque em <strong>"Adicionar ao ecrã principal"</strong> ou <strong>"Instalar aplicação"</strong>.</p>
-            </>
+            <ol className="list-decimal list-inside space-y-2">
+              <li>Toque no menu do navegador (três pontos no canto superior).</li>
+              <li>Selecione <strong>Instalar aplicativo</strong> ou <strong>Adicionar à tela inicial</strong>.</li>
+              <li>Confirme para adicionar o atalho ao seu telemóvel.</li>
+            </ol>
           )}
         </div>
+        <button
+          type="button"
+          onClick={() => installInstructionsDialogRef.current?.close()}
+          className="mt-6 w-full rounded-xl bg-[#ffd43b] py-2.5 text-xs font-bold text-[#171711]"
+        >
+          Entendido
+        </button>
       </dialog>
     </main>
   )
