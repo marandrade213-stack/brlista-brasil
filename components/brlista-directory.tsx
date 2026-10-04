@@ -28,7 +28,39 @@ type Place = {
   icon: typeof Wrench
 }
 
-const places: Place[] = [
+const places: Place[] = [// Araguari MG - Mecânica, Auto Elétrica e Guinchos
+  { name: 'GF Mecânica', category: 'Mecânica', city: 'Araguari', phone: '+55 34 99265-6094', service: 'Serviços mecânicos em geral' },
+  { name: 'MR Auto Elétrica', category: 'Auto Elétrica', city: 'Araguari', phone: '+55 34 99796-9161', service: 'Socorro elétrico' },
+  { name: 'Auto Mecânica Magayver', category: 'Mecânica', city: 'Araguari', phone: '+55 34 99186-6883', service: 'Mecânica geral' },
+  { name: 'Auto Mecânica Juninho', category: 'Mecânica', city: 'Araguari', phone: '+55 34 99208-1333', service: 'Manutenção e consertos' },
+  { name: 'Mauá Guinchos', category: 'Guincho', city: 'Araguari', phone: '+55 34 98810-6577', service: 'Serviço de guincho e reboque' },
+  { name: 'Guincho Auto Socorro Baixinho', category: 'Guincho', city: 'Araguari', phone: '+55 34 99185-0890', service: 'Auto socorro e reboque' },
+  { name: 'Independência Serviço de Guincho', category: 'Guincho', city: 'Araguari', phone: '+55 34 98845-0049', service: 'Serviço de guincho 24h' },
+
+  // Araguari MG - Borracharias e Lava Jato
+  { name: 'Borracharia Móvel Clevin', category: 'Borracharia', city: 'Araguari', phone: '+55 34 99714-8795', service: 'Atendimento móvel de borracharia' },
+  { name: 'Borracharia Móvel Araguari Original', category: 'Borracharia', city: 'Araguari', phone: '+55 34 99709-0090', service: 'Socorro de pneus móvel' },
+  { name: 'Borracharia do Bryan', category: 'Borracharia', city: 'Araguari', phone: '+55 34 99733-3410', service: 'Conserto de pneus e socorro' },
+  { name: 'Borracharia do Ceará', category: 'Borracharia', city: 'Araguari', phone: '+55 34 98825-3999', service: 'Serviços de borracharia' },
+  { name: 'Lava Jato de Caminhões BR-050', category: 'Lava Jato', city: 'Araguari', road: 'BR-050', phone: '+55 34 3246-0709', service: 'Lavagem de carretas e caminhões' },
+  { name: 'Lava Jato Carrerinha', category: 'Lava Jato', city: 'Araguari', phone: '+55 34 99197-2181', service: 'Lavagem técnica de veículos pesados' },
+  { name: 'Machado\'s Lavajato', category: 'Lava Jato', city: 'Araguari', phone: '+55 34 3242-0131', service: 'Lava jato especializado' },
+
+  // Uberaba MG - Borracharias
+  { name: 'Nunes Borracharia Móvel', category: 'Borracharia', city: 'Uberaba', phone: '+55 34 99630-7576', service: 'Borracharia móvel socorro' },
+  { name: 'Borracharia Móvel do Flavim', category: 'Borracharia', city: 'Uberaba', phone: '+55 34 99680-4931', service: 'Atendimento móvel 24h' },
+  { name: 'Borracharia Móvel Irmãos Silva', category: 'Borracharia', city: 'Uberaba', phone: '+55 34 99272-5190', service: 'Socorro de pneus para veículos' },
+  { name: 'Borracharia do Gil', category: 'Borracharia', city: 'Uberaba', phone: '+55 34 98819-5286', service: 'Conserto e troca de pneus' },
+  { name: 'Chaveiro e Borracharia PRIME', category: 'Borracharia', city: 'Uberaba', phone: '+55 34 99637-0669', service: 'Serviço de chaveiro e borracharia' },
+
+  // Uberaba MG - Mecânica, Auto Elétrica e Guinchos
+  { name: 'Auto Mecânica Chumbrega', category: 'Mecânica', city: 'Uberaba', phone: '+55 34 99105-0053', service: 'Oficina mecânica' },
+  { name: 'Auto Elétrica Robinho', category: 'Auto Elétrica', city: 'Uberaba', phone: '+55 34 99196-1502', service: 'Serviços elétricos automotivos' },
+  { name: 'M Tec Mecatrônica', category: 'Mecânica', city: 'Uberaba', phone: '+55 34 99912-3020', service: 'Mecatrônica e injeção' },
+  { name: 'Mecânica Diesel Ribeiro', category: 'Mecânica', city: 'Uberaba', phone: '+55 34 99636-8153', service: 'Mecânica diesel pesada' },
+  { name: 'JK Auto Socorro', category: 'Guincho', city: 'Uberaba', phone: '+55 34 99952-2007', service: 'Guincho e resgate' },
+  { name: 'Auto Socorro Danilo', category: 'Guincho', city: 'Uberaba', phone: '+55 34 99723-9633', service: 'Socorro e reboque' },
+  { name: 'Guincho Equipe Auto Socorro', category: 'Guincho', city: 'Uberaba', phone: '+55 34 99888-1746', service: 'Equipe de guincho e suporte' },
   { name: 'Borracharia São João', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 99627-2006', icon: Wrench },
   { name: 'Borracharia Móvel Pit Stop', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 99934-9057', icon: Wrench },
   { name: 'Borracharia Araguaia', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 99972-5734', icon: Wrench },
