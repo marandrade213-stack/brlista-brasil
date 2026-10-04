@@ -180,6 +180,13 @@ export function BrlistaDirectory() {
     return digits.startsWith('55')? digits : `55${digits}`
   }
 
+  function formatPhoneForDisplay(phone: string) {
+    const d = phone.replace(/\D/g, '').replace(/^55/, '')
+    if (d.length === 11) return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`
+    if (d.length === 10) return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`
+    return phone
+  }
+
   function safeShowModal(ref: React.RefObject<HTMLDialogElement | null>) {
     if (ref.current &&!ref.current.open) {
       ref.current.showModal()
@@ -424,7 +431,7 @@ export function BrlistaDirectory() {
                       {place.road && <span>{place.road}</span>}
                       {place.service && <span>{place.service}</span>}
                     </div>
-                    <a href={`tel:+${phoneDigits}`} className="mt-4 block rounded-xl bg-[#20211d] px-3 py-3 text-center text-lg font-black tracking-wide text-[#ffd43b] transition hover:bg-[#272821]">{place.phone}</a>
+                    <a href={`tel:+${phoneDigits}`} className="mt-4 block rounded-xl bg-[#20211d] px-3 py-3 text-center text-lg font-black tracking-wide text-[#ffd43b] transition hover:bg-[#272821]">{formatPhoneForDisplay(place.phone)}</a>
                     <div className="mt-2 grid grid-cols-2 gap-2">
                       <a href={`tel:+${phoneDigits}`} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#ffd43b] px-3 text-[10px] font-black tracking-[0.07em] text-[#191a17] transition hover:bg-[#ffe06a]"><Phone className="size-4" /> LIGAR AGORA</a>
                       <a href={`https://wa.me/${phoneDigits}`} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[#ffd43b]/35 bg-[#ffd43b]/[0.07] px-3 text-[10px] font-black tracking-[0.07em] text-[#ffd43b] transition hover:bg-[#ffd43b]/[0.14]"><MessageCircle className="size-4" /> WHATSAPP</a>
