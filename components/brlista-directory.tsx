@@ -17,7 +17,7 @@ import {
   Wrench,
 } from 'lucide-react'
 
-type Category = 'Borracharia' | 'Mecânica' | 'Auto Elétrica' | 'Mecânica Pesada' | 'Guincho / Socorro' | 'Lavador de Carreta'
+type Category = 'Borracharia' | 'Mecânica' | 'Auto Elétrica' | 'Mecânica Pesada' | 'Guincho' | 'Lava Jato'
 type Place = {
   name: string
   category: Category
@@ -44,7 +44,7 @@ const places: Place[] = [// Araguari MG - Mecânica, Auto Elétrica e Guinchos
   { name: 'Borracharia do Ceará', category: 'Borracharia', city: 'Araguari', phone: '+55 34 98825-3999', service: 'Serviços de borracharia' },
   { name: 'Lava Jato de Caminhões BR-050', category: 'Lava Jato', city: 'Araguari', road: 'BR-050', phone: '+55 34 3246-0709', service: 'Lavagem de carretas e caminhões' },
   { name: 'Lava Jato Carrerinha', category: 'Lava Jato', city: 'Araguari', phone: '+55 34 99197-2181', service: 'Lavagem técnica de veículos pesados' },
-  { name: 'Machado\'s Lavajato', category: 'Lava Jato', city: 'Araguari', phone: '+55 34 3242-0131', service: 'Lava jato especializado' },
+  { name: 'Machado Lavajato', category: 'Lava Jato', city: 'Araguari', phone: '+55 34 3242-0131', service: 'Lava jato especializado' },
 
   // Uberaba MG - Borracharias
   { name: 'Nunes Borracharia Móvel', category: 'Borracharia', city: 'Uberaba', phone: '+55 34 99630-7576', service: 'Borracharia móvel socorro' },
