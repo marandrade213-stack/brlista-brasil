@@ -17,7 +17,10 @@ import {
   Wrench,
 } from 'lucide-react'
 
-type Category = string
+const categories = ['Todas', 'Borracharia', 'Mecânica', 'Auto Elétrica', 'Mecânica Pesada', 'Guincho / Socorro', 'Lavador de Carreta'] as const
+type CategoryFilter = typeof categories[number]
+type Category = Exclude<CategoryFilter, 'Todas'> | 'Guincho' | 'Lava Jato'
+
 type Place = {
   name: string
   category: Category
@@ -29,7 +32,6 @@ type Place = {
 }
 
 const places: Place[] = [
-  // Araguari MG - Mecânica, Auto Elétrica e Guinchos
   { name: 'GF Mecânica', category: 'Mecânica', city: 'Araguari', phone: '+55 34 99265-6094', service: 'Serviços mecânicos em geral' },
   { name: 'MR Auto Elétrica', category: 'Auto Elétrica', city: 'Araguari', phone: '+55 34 99796-9161', service: 'Socorro elétrico' },
   { name: 'Auto Mecânica Magayver', category: 'Mecânica', city: 'Araguari', phone: '+55 34 99186-6883', service: 'Mecânica geral' },
@@ -37,8 +39,6 @@ const places: Place[] = [
   { name: 'Mauá Guinchos', category: 'Guincho / Socorro', city: 'Araguari', phone: '+55 34 98810-6577', service: 'Serviço de guincho e reboque' },
   { name: 'Guincho Auto Socorro Baixinho', category: 'Guincho / Socorro', city: 'Araguari', phone: '+55 34 99185-0890', service: 'Auto socorro e reboque' },
   { name: 'Independência Serviço de Guincho', category: 'Guincho / Socorro', city: 'Araguari', phone: '+55 34 98845-0049', service: 'Serviço de guincho 24h' },
-
-  // Araguari MG - Borracharias e Lava Jato
   { name: 'Borracharia Móvel Clevin', category: 'Borracharia', city: 'Araguari', phone: '+55 34 99714-8795', service: 'Atendimento móvel de borracharia' },
   { name: 'Borracharia Móvel Araguari Original', category: 'Borracharia', city: 'Araguari', phone: '+55 34 99709-0090', service: 'Socorro de pneus móvel' },
   { name: 'Borracharia do Bryan', category: 'Borracharia', city: 'Araguari', phone: '+55 34 99733-3410', service: 'Conserto de pneus e socorro' },
@@ -46,15 +46,11 @@ const places: Place[] = [
   { name: 'Lava Jato de Caminhões BR-050', category: 'Lavador de Carreta', city: 'Araguari', road: 'BR-050', phone: '+55 34 3246-0709', service: 'Lavagem de carretas e caminhões' },
   { name: 'Lava Jato Carrerinha', category: 'Lavador de Carreta', city: 'Araguari', phone: '+55 34 99197-2181', service: 'Lavagem técnica de veículos pesados' },
   { name: 'Machado Lavajato', category: 'Lavador de Carreta', city: 'Araguari', phone: '+55 34 3242-0131', service: 'Lava jato especializado' },
-
-  // Uberaba MG - Borracharias
   { name: 'Nunes Borracharia Móvel', category: 'Borracharia', city: 'Uberaba', phone: '+55 34 99630-7576', service: 'Borracharia móvel socorro' },
   { name: 'Borracharia Móvel do Flavim', category: 'Borracharia', city: 'Uberaba', phone: '+55 34 99680-4931', service: 'Atendimento móvel 24h' },
   { name: 'Borracharia Móvel Irmãos Silva', category: 'Borracharia', city: 'Uberaba', phone: '+55 34 99272-5190', service: 'Socorro de pneus para veículos' },
   { name: 'Borracharia do Gil', category: 'Borracharia', city: 'Uberaba', phone: '+55 34 98819-5286', service: 'Conserto e troca de pneus' },
   { name: 'Chaveiro e Borracharia PRIME', category: 'Borracharia', city: 'Uberaba', phone: '+55 34 99637-0669', service: 'Serviço de chaveiro e borracharia' },
-
-  // Uberaba MG - Mecânica, Auto Elétrica e Guinchos
   { name: 'Auto Mecânica Chumbrega', category: 'Mecânica', city: 'Uberaba', phone: '+55 34 99105-0053', service: 'Oficina mecânica' },
   { name: 'Auto Elétrica Robinho', category: 'Auto Elétrica', city: 'Uberaba', phone: '+55 34 99196-1502', service: 'Serviços elétricos automotivos' },
   { name: 'M Tec Mecatrônica', category: 'Mecânica', city: 'Uberaba', phone: '+55 34 99912-3020', service: 'Mecatrônica e injeção' },
@@ -138,9 +134,6 @@ const places: Place[] = [
   { name: 'T - Car Diesel', category: 'Mecânica Pesada', city: 'Araxá, MG', phone: '(34) 99773-9133', service: 'Linha Pesada' },
 ]
 
-const categories = ['Todas', 'Borracharia', 'Mecânica', 'Auto Elétrica', 'Mecânica Pesada', 'Guincho / Socorro', 'Lavador de Carreta'] as const
-
-type CategoryFilter = (typeof categories)[number]
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>
@@ -175,9 +168,6 @@ export function BrlistaDirectory() {
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
     window.addEventListener('appinstalled', handleAppInstalled)
-    if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
-      void navigator.serviceWorker.register('/sw.js').catch(() => undefined)
-    }
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
@@ -187,7 +177,13 @@ export function BrlistaDirectory() {
 
   function formatPhoneForUrl(phone: string) {
     const digits = phone.replace(/\D/g, '')
-    return digits.startsWith('55') ? digits : `55${digits}`
+    return digits.startsWith('55')? digits : `55${digits}`
+  }
+
+  function safeShowModal(ref: React.RefObject<HTMLDialogElement | null>) {
+    if (ref.current &&!ref.current.open) {
+      ref.current.showModal()
+    }
   }
 
   function handleInstallClick() {
@@ -197,13 +193,13 @@ export function BrlistaDirectory() {
 
     if (isAppleMobileDevice) {
       setInstallHelpPlatform('ios')
-      installInstructionsDialogRef.current?.showModal()
+      safeShowModal(installInstructionsDialogRef)
       return
     }
 
     if (!installPrompt) {
-      setInstallHelpPlatform(/Android/i.test(userAgent) ? 'android' : 'browser')
-      installInstructionsDialogRef.current?.showModal()
+      setInstallHelpPlatform(/Android/i.test(userAgent)? 'android' : 'browser')
+      safeShowModal(installInstructionsDialogRef)
       return
     }
 
@@ -214,8 +210,8 @@ export function BrlistaDirectory() {
         setIsInstalled(true)
       }
     }).catch(() => {
-      setInstallHelpPlatform(/Android/i.test(userAgent) ? 'android' : 'browser')
-      installInstructionsDialogRef.current?.showModal()
+      setInstallHelpPlatform(/Android/i.test(userAgent)? 'android' : 'browser')
+      safeShowModal(installInstructionsDialogRef)
     })
   }
 
@@ -241,16 +237,15 @@ export function BrlistaDirectory() {
   }
 
   function handleSearchKeyDown(event: KeyboardEvent<HTMLInputElement>) {
-    if (event.key !== 'Enter' || event.nativeEvent.isComposing || event.keyCode === 229) return
+    if (event.key!== 'Enter' || event.nativeEvent.isComposing || event.keyCode === 229) return
     event.preventDefault()
     searchInputRef.current?.blur()
   }
 
   function handleServiceSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-
     const formData = new FormData(event.currentTarget)
-    const getValue = (field: string) => String(formData.get(field) ?? '').trim()
+    const getValue = (field: string) => String(formData.get(field)?? '').trim()
     const message = [
       'Olá! Gostaria de cadastrar meu negócio no BRLista Brasil:',
       `• Nome do Negócio: ${getValue('name')}`,
@@ -260,7 +255,6 @@ export function BrlistaDirectory() {
       `• Descrição: ${getValue('description')}`,
     ].join('\n')
     const whatsappUrl = `https://wa.me/5534988171945?text=${encodeURIComponent(message)}`
-
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer')
     setSubmissionState('opened')
   }
@@ -269,7 +263,8 @@ export function BrlistaDirectory() {
     const normalizedQuery = query.trim().toLocaleLowerCase('pt-BR')
     return places.filter((place) => {
       const matchesCategory = category === 'Todas' || place.category === category
-      const searchableText = `${place.name} ${place.category} ${place.city} ${place.road ?? ''}`.toLocaleLowerCase('pt-BR')
+      if (!normalizedQuery) return matchesCategory
+      const searchableText = `${place.name} ${place.category} ${place.city} ${place.road?? ''}`.toLocaleLowerCase('pt-BR')
       return matchesCategory && searchableText.includes(normalizedQuery)
     })
   }, [category, query])
@@ -294,7 +289,7 @@ export function BrlistaDirectory() {
           <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={() => { setSubmissionState('idle'); submissionDialogRef.current?.showModal() }}
+              onClick={() => { setSubmissionState('idle'); safeShowModal(submissionDialogRef) }}
               className="inline-flex min-h-10 items-center gap-1.5 rounded-full bg-[#ffd43b] px-3.5 text-xs font-bold text-[#171711] transition hover:bg-[#ffe06a] sm:px-4"
             >
               <Plus className="size-4" /> Cadastrar Empresa/Serviço
@@ -354,7 +349,7 @@ export function BrlistaDirectory() {
                   className="inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-full border border-[#ffd43b]/30 px-3 text-[11px] font-bold text-[#ffd43b] transition hover:border-[#ffd43b]/60 hover:bg-[#ffd43b]/[0.08]"
                 >
                   <Download className="size-3.5" aria-hidden="true" />
-                  {installPrompt ? 'Instalar Agora' : 'Baixar App'}
+                  {installPrompt? 'Instalar Agora' : 'Baixar App'}
                 </button>
               </div>
             </aside>
@@ -371,9 +366,9 @@ export function BrlistaDirectory() {
             </a>
             <button
               type="button"
-              onClick={() => setShowTravelTip((show) => !show)}
+              onClick={() => setShowTravelTip((show) =>!show)}
               aria-expanded={showTravelTip}
-              className={`group flex min-h-[76px] items-center gap-3 rounded-2xl border px-4 text-left transition ${showTravelTip ? 'border-[#ffd43b]/50 bg-[#ffd43b]/[0.12]' : 'border-[#ffd43b]/20 bg-[#ffd43b]/[0.05] hover:bg-[#ffd43b]/[0.1]'}`}
+              className={`group flex min-h-[76px] items-center gap-3 rounded-2xl border px-4 text-left transition ${showTravelTip? 'border-[#ffd43b]/50 bg-[#ffd43b]/[0.12]' : 'border-[#ffd43b]/20 bg-[#ffd43b]/[0.05] hover:bg-[#ffd43b]/[0.1]'}`}
             >
               <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#ffd43b]/10 text-[#ffd43b]"><HeartPulse className="size-5" /></span>
               <span className="min-w-0"><span className="block text-xs font-black tracking-wide text-[#ffd43b] sm:text-sm">VIDA NA BR</span><span className="mt-1 block text-[10px] text-white/45 sm:text-xs">Dicas para uma viagem segura</span></span>
@@ -394,7 +389,7 @@ export function BrlistaDirectory() {
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#ffd43b]/75">Diretório de apoio</p>
             <h2 className="mt-2 text-2xl font-extrabold tracking-[-0.045em] sm:text-3xl">Encontre o que precisa</h2>
-            <p className="mt-1.5 text-xs text-white/45">{filteredPlaces.length} {filteredPlaces.length === 1 ? 'estabelecimento encontrado' : 'estabelecimentos encontrados'}</p>
+            <p className="mt-1.5 text-xs text-white/45">{filteredPlaces.length} {filteredPlaces.length === 1? 'estabelecimento encontrado' : 'estabelecimentos encontrados'}</p>
           </div>
           <div className="flex gap-2 overflow-x-auto pb-1" aria-label="Filtrar por categoria">
             {categories.map((item) => (
@@ -403,21 +398,20 @@ export function BrlistaDirectory() {
                 key={item}
                 onClick={() => handleCategoryChange(item)}
                 aria-pressed={category === item}
-                className={`shrink-0 rounded-full border px-3.5 py-2 text-xs font-semibold transition ${category === item ? 'border-[#ffd43b] bg-[#ffd43b] text-[#191a17]' : 'border-white/10 bg-transparent text-white/55 hover:border-white/25 hover:text-white'}`}
+                className={`shrink-0 rounded-full border px-3.5 py-2 text-xs font-semibold transition ${category === item? 'border-[#ffd43b] bg-[#ffd43b] text-[#191a17]' : 'border-white/10 bg-transparent text-white/55 hover:border-white/25 hover:text-white'}`}
               >{item}</button>
             ))}
           </div>
         </div>
 
-        {filteredPlaces.length > 0 ? (
+        {filteredPlaces.length > 0? (
           <>
             <div className="mt-6 grid gap-4 md:grid-cols-2">
-              {paginatedPlaces.map((place) => {
-                const IconComponent = place.icon ?? Wrench
+              {paginatedPlaces.map((place, index) => {
+                const IconComponent = place.icon?? Wrench
                 const phoneDigits = formatPhoneForUrl(place.phone)
-
                 return (
-                  <article key={place.name} className="rounded-[20px] border border-white/[0.09] bg-[#171815] p-4 transition hover:border-white/[0.16] sm:p-5">
+                  <article key={`${place.name}-${place.phone}-${index}`} className="rounded-[20px] border border-white/[0.09] bg-[#171815] p-4 transition hover:border-white/[0.16] sm:p-5">
                     <div className="flex items-start gap-3">
                       <span className="flex size-11 shrink-0 items-center justify-center rounded-[14px] border border-[#ffd43b]/15 bg-[#ffd43b]/[0.07] text-[#ffd43b]"><IconComponent className="size-5" /></span>
                       <div className="min-w-0 flex-1">
@@ -430,10 +424,10 @@ export function BrlistaDirectory() {
                       {place.road && <span>{place.road}</span>}
                       {place.service && <span>{place.service}</span>}
                     </div>
-                    <a href={`tel:+${phoneDigits}`} className="mt-4 block rounded-xl bg-[#20211d] px-3 py-3 text-center text-lg font-black tracking-wide text-[#ffd43b] transition hover:bg-[#272821] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ffd43b]">{place.phone}</a>
+                    <a href={`tel:+${phoneDigits}`} className="mt-4 block rounded-xl bg-[#20211d] px-3 py-3 text-center text-lg font-black tracking-wide text-[#ffd43b] transition hover:bg-[#272821]">{place.phone}</a>
                     <div className="mt-2 grid grid-cols-2 gap-2">
-                      <a href={`tel:+${phoneDigits}`} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#ffd43b] px-3 text-[10px] font-black tracking-[0.07em] text-[#191a17] transition hover:bg-[#ffe06a] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"><Phone className="size-4" /> LIGAR AGORA</a>
-                      <a href={`https://wa.me/${phoneDigits}`} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[#ffd43b]/35 bg-[#ffd43b]/[0.07] px-3 text-[10px] font-black tracking-[0.07em] text-[#ffd43b] transition hover:bg-[#ffd43b]/[0.14] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"><MessageCircle className="size-4" /> WHATSAPP</a>
+                      <a href={`tel:+${phoneDigits}`} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#ffd43b] px-3 text-[10px] font-black tracking-[0.07em] text-[#191a17] transition hover:bg-[#ffe06a]"><Phone className="size-4" /> LIGAR AGORA</a>
+                      <a href={`https://wa.me/${phoneDigits}`} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[#ffd43b]/35 bg-[#ffd43b]/[0.07] px-3 text-[10px] font-black tracking-[0.07em] text-[#ffd43b] transition hover:bg-[#ffd43b]/[0.14]"><MessageCircle className="size-4" /> WHATSAPP</a>
                     </div>
                   </article>
                 )
@@ -442,23 +436,9 @@ export function BrlistaDirectory() {
 
             {totalPages > 1 && (
               <div className="mt-8 flex items-center justify-center gap-2">
-                <button
-                  type="button"
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                  className="rounded-xl border border-white/10 px-4 py-2 text-xs font-bold text-white transition hover:border-[#ffd43b]/50 disabled:opacity-40"
-                >
-                  Anterior
-                </button>
+                <button type="button" disabled={currentPage === 1} onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} className="rounded-xl border border-white/10 px-4 py-2 text-xs font-bold text-white transition hover:border-[#ffd43b]/50 disabled:opacity-40">Anterior</button>
                 <span className="text-xs text-white/50">Página {currentPage} de {totalPages}</span>
-                <button
-                  type="button"
-                  disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-                  className="rounded-xl border border-white/10 px-4 py-2 text-xs font-bold text-white transition hover:border-[#ffd43b]/50 disabled:opacity-40"
-                >
-                  Próxima
-                </button>
+                <button type="button" disabled={currentPage === totalPages} onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} className="rounded-xl border border-white/10 px-4 py-2 text-xs font-bold text-white transition hover:border-[#ffd43b]/50 disabled:opacity-40">Próxima</button>
               </div>
             )}
           </>
@@ -466,53 +446,32 @@ export function BrlistaDirectory() {
           <div className="mt-8 rounded-2xl border border-white/10 bg-[#171815] p-8 text-center">
             <p className="text-base font-bold text-white">Nenhum resultado encontrado</p>
             <p className="mt-1 text-xs text-white/50">Tente buscar por termos diferentes ou limpar os filtros aplicados.</p>
-            <button
-              type="button"
-              onClick={handleClearFilters}
-              className="mt-4 inline-flex min-h-10 items-center gap-2 rounded-full bg-[#ffd43b] px-4 text-xs font-bold text-[#171711] transition hover:bg-[#ffe06a]"
-            >
-              Limpar Filtros
-            </button>
+            <button type="button" onClick={handleClearFilters} className="mt-4 inline-flex min-h-10 items-center gap-2 rounded-full bg-[#ffd43b] px-4 text-xs font-bold text-[#171711] transition hover:bg-[#ffe06a]">Limpar Filtros</button>
           </div>
         )}
       </section>
 
-      {/* Modal: Cadastrar Empresa */}
       <dialog ref={submissionDialogRef} className="rounded-2xl border border-white/10 bg-[#171815] p-6 text-[#f6f4ed] backdrop:bg-black/75 max-w-lg w-full">
         <div className="flex items-center justify-between pb-4 border-b border-white/10">
           <h3 className="text-lg font-bold">Cadastrar Empresa ou Serviço</h3>
-          <button
-            type="button"
-            onClick={() => submissionDialogRef.current?.close()}
-            className="rounded-lg p-1 text-white/50 hover:bg-white/10 hover:text-white"
-          >
-            <X className="size-5" />
-          </button>
+          <button type="button" onClick={() => submissionDialogRef.current?.close()} className="rounded-lg p-1 text-white/50 hover:bg-white/10 hover:text-white"><X className="size-5" /></button>
         </div>
-        {submissionState === 'opened' ? (
+        {submissionState === 'opened'? (
           <div className="py-6 text-center">
             <p className="text-sm text-white/80">O seu pedido foi aberto no WhatsApp!</p>
             <p className="mt-2 text-xs text-white/50">Envie a mensagem gerada para concluirmos o seu cadastro.</p>
-            <button
-              type="button"
-              onClick={() => submissionDialogRef.current?.close()}
-              className="mt-6 w-full rounded-xl bg-[#ffd43b] py-2.5 text-xs font-bold text-[#171711]"
-            >
-              Fechar
-            </button>
+            <button type="button" onClick={() => submissionDialogRef.current?.close()} className="mt-6 w-full rounded-xl bg-[#ffd43b] py-2.5 text-xs font-bold text-[#171711]">Fechar</button>
           </div>
         ) : (
           <form onSubmit={handleServiceSubmit} className="mt-4 space-y-4">
             <div>
-              <label className="block text-xs font-medium text-white/70 mb-1">Nome do Negócio / Estabelecimento</label>
+              <label className="block text-xs font-medium text-white/70 mb-1">Nome do Negócio</label>
               <input required name="name" type="text" className="w-full rounded-xl border border-white/10 bg-[#10110f] px-3 py-2 text-sm text-white outline-none focus:border-[#ffd43b]" />
             </div>
             <div>
               <label className="block text-xs font-medium text-white/70 mb-1">Categoria</label>
               <select required name="category" className="w-full rounded-xl border border-white/10 bg-[#10110f] px-3 py-2 text-sm text-white outline-none focus:border-[#ffd43b]">
-                {categories.filter((c) => c !== 'Todas').map((cat) => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
+                {categories.filter((c) => c!== 'Todas').map((cat) => (<option key={cat} value={cat}>{cat}</option>))}
               </select>
             </div>
             <div>
@@ -524,30 +483,21 @@ export function BrlistaDirectory() {
               <input required name="phone" type="tel" placeholder="(00) 00000-0000" className="w-full rounded-xl border border-white/10 bg-[#10110f] px-3 py-2 text-sm text-white outline-none focus:border-[#ffd43b]" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-white/70 mb-1">Descrição do Serviço (opcional)</label>
+              <label className="block text-xs font-medium text-white/70 mb-1">Descrição (opcional)</label>
               <textarea name="description" rows={3} className="w-full rounded-xl border border-white/10 bg-[#10110f] px-3 py-2 text-sm text-white outline-none focus:border-[#ffd43b]" />
             </div>
-            <button type="submit" className="w-full rounded-xl bg-[#ffd43b] py-3 text-xs font-bold text-[#171711] transition hover:bg-[#ffe06a]">
-              Enviar via WhatsApp
-            </button>
+            <button type="submit" className="w-full rounded-xl bg-[#ffd43b] py-3 text-xs font-bold text-[#171711] transition hover:bg-[#ffe06a]">Enviar via WhatsApp</button>
           </form>
         )}
       </dialog>
 
-      {/* Modal: Instruções de Instalação PWA */}
       <dialog id="install-instructions" ref={installInstructionsDialogRef} className="rounded-2xl border border-white/10 bg-[#171815] p-6 text-[#f6f4ed] backdrop:bg-black/75 max-w-md w-full">
         <div className="flex items-center justify-between pb-4 border-b border-white/10">
           <h3 className="text-lg font-bold">Como Instalar o App</h3>
-          <button
-            type="button"
-            onClick={() => installInstructionsDialogRef.current?.close()}
-            className="rounded-lg p-1 text-white/50 hover:bg-white/10 hover:text-white"
-          >
-            <X className="size-5" />
-          </button>
+          <button type="button" onClick={() => installInstructionsDialogRef.current?.close()} className="rounded-lg p-1 text-white/50 hover:bg-white/10 hover:text-white"><X className="size-5" /></button>
         </div>
         <div className="mt-4 space-y-3 text-sm text-white/80">
-          {installHelpPlatform === 'ios' ? (
+          {installHelpPlatform === 'ios'? (
             <ol className="list-decimal list-inside space-y-2">
               <li>Toque no botão de <strong>Compartilhar</strong> no Safari.</li>
               <li>Role para baixo e selecione <strong>Adicionar à Tela de Início</strong>.</li>
@@ -557,17 +507,11 @@ export function BrlistaDirectory() {
             <ol className="list-decimal list-inside space-y-2">
               <li>Toque no menu do navegador (três pontos no canto superior).</li>
               <li>Selecione <strong>Instalar aplicativo</strong> ou <strong>Adicionar à tela inicial</strong>.</li>
-              <li>Confirme para adicionar o atalho ao seu telemóvel.</li>
+              <li>Confirme para adicionar o atalho.</li>
             </ol>
           )}
         </div>
-        <button
-          type="button"
-          onClick={() => installInstructionsDialogRef.current?.close()}
-          className="mt-6 w-full rounded-xl bg-[#ffd43b] py-2.5 text-xs font-bold text-[#171711]"
-        >
-          Entendido
-        </button>
+        <button type="button" onClick={() => installInstructionsDialogRef.current?.close()} className="mt-6 w-full rounded-xl bg-[#ffd43b] py-2.5 text-xs font-bold text-[#171711]">Entendido</button>
       </dialog>
     </main>
   )
