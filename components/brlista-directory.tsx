@@ -17,7 +17,7 @@ import {
   Wrench,
 } from 'lucide-react'
 
-type Category = 'Borracharia' | 'Mecânica' | 'Auto Elétrica' | 'Mecânica Pesada' | 'Guincho' | 'Lava Jato'
+type Category = string 'Borracharia' | 'Mecânica' | 'Auto Elétrica' | 'Mecânica Pesada' | 'Guincho' | 'Lava Jato'
 type Place = {
   name: string
   category: Category
