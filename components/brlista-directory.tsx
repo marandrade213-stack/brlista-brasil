@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { MapPin, MessageCircle, Phone, Search, Wrench, Plus } from 'lucide-react'
 
 const categories = ['Todas', 'Borracharia', 'Mecânica', 'Auto Elétrica', 'Mecânica Pesada', 'Guincho / Socorro', 'Lavador de Carreta'] as const
@@ -9,6 +9,7 @@ type Category = Exclude<CategoryFilter, 'Todas'> | 'Guincho' | 'Lava Jato'
 type Place = { name: string; category: Category; city: string; road?: string; phone: string; service?: string }
 
 const places: Place[] = [
+  // === BASE ANTIGA 102 ===
   { name: 'GF Mecânica', category: 'Mecânica', city: 'Araguari', phone: '+55 34 99265-6094', service: 'Serviços mecânicos em geral' },
   { name: 'MR Auto Elétrica', category: 'Auto Elétrica', city: 'Araguari', phone: '+55 34 99796-9161', service: 'Socorro elétrico' },
   { name: 'Auto Mecânica Magayver', category: 'Mecânica', city: 'Araguari', phone: '+55 34 99186-6883', service: 'Mecânica geral' },
@@ -109,6 +110,65 @@ const places: Place[] = [
   { name: 'Sandal Diesel Araxá', category: 'Mecânica Pesada', city: 'Araxá, MG', phone: '(34) 3662-6620', service: 'Linha Pesada' },
   { name: 'PHDiesel araxa', category: 'Mecânica Pesada', city: 'Araxá, MG', phone: '(34) 99231-6669', service: 'Linha Pesada' },
   { name: 'T - Car Diesel', category: 'Mecânica Pesada', city: 'Araxá, MG', phone: '(34) 99773-9133', service: 'Linha Pesada' },
+
+  // === NOVOS RONDÔNIA - BORRACHARIA ===
+  { name: 'Borracharia Waviva', category: 'Borracharia', city: 'Porto Velho, RO', phone: '(69) 99218-0715', service: 'Porto Velho e Região' },
+  { name: 'Borracharia Marechal', category: 'Borracharia', city: 'Porto Velho, RO', phone: '(69) 99987-0725', service: 'Porto Velho e Região' },
+  { name: 'Borracharia Pau Ferro', category: 'Borracharia', city: 'Porto Velho, RO', phone: '(69) 99209-7461', service: 'Porto Velho e Região' },
+  { name: 'Borracharia do Baixinho', category: 'Borracharia', city: 'Porto Velho, RO', phone: '(69) 99245-1288', service: 'Porto Velho e Região' },
+  { name: 'Lácio - Pneus & Borracharia', category: 'Borracharia', city: 'Ariquemes, RO', phone: '(69) 99277-6184' },
+  { name: 'Borracharia Móvel Ariquemes', category: 'Borracharia', city: 'Ariquemes, RO', phone: '(69) 99274-0169' },
+  { name: 'Borracharia do Goiano', category: 'Borracharia', city: 'Ariquemes, RO', phone: '(69) 98402-9931' },
+  { name: 'Borracharia 24 Horas BR-364', category: 'Borracharia', city: 'Ariquemes, RO', road: 'BR-364', phone: '(69) 99314-5582' },
+  { name: 'Borracharia Savana (BR-364)', category: 'Borracharia', city: 'Ouro Preto do Oeste, RO', road: 'BR-364', phone: '(69) 99249-8722' },
+  { name: 'Borracharia Avenida', category: 'Borracharia', city: 'Ouro Preto do Oeste, RO', phone: '(69) 99283-0274' },
+  { name: 'Jiscap OPO (Truck Center)', category: 'Borracharia', city: 'Ouro Preto do Oeste, RO', phone: '(69) 3461-2025', service: 'Truck Center' },
+  { name: 'Borracharia do Negão', category: 'Borracharia', city: 'Jaru, RO', phone: '(69) 99285-4120' },
+  { name: 'Borracharia Central Jaru', category: 'Borracharia', city: 'Jaru, RO', phone: '(69) 98436-7714' },
+  { name: 'Borracharia Santiago', category: 'Borracharia', city: 'Ji-Paraná, RO', phone: '(69) 99255-3489' },
+  { name: 'Borracharia Águia', category: 'Borracharia', city: 'Ji-Paraná, RO', phone: '(69) 99351-0208' },
+  { name: 'Borracharia Rondônia Pesados', category: 'Borracharia', city: 'Ji-Paraná, RO', phone: '(69) 99911-3040', service: 'Linha Pesada' },
+  { name: 'Borracharia Pai e Filha', category: 'Borracharia', city: 'Cacoal, RO', phone: '(69) 99906-3160' },
+  { name: 'Borracharia e Auto Center Cacoal', category: 'Borracharia', city: 'Cacoal, RO', phone: '(69) 98418-5022' },
+  { name: 'Borracharia Modelo', category: 'Borracharia', city: 'Rolim de Moura, RO', phone: '(69) 98433-6207' },
+  { name: 'Borracharia Roda Bem', category: 'Borracharia', city: 'Rolim de Moura, RO', phone: '(69) 99399-9575' },
+  { name: 'Rolim Rodas (Pneus Pesados)', category: 'Borracharia', city: 'Rolim de Moura, RO', phone: '(69) 98484-0511', service: 'Pneus Pesados' },
+  { name: 'Borracharia Trevo Pesados', category: 'Borracharia', city: 'Pimenta Bueno, RO', phone: '(69) 99201-8843', service: 'Linha Pesada' },
+  { name: 'Borracharia do Mineiro', category: 'Borracharia', city: 'Pimenta Bueno, RO', phone: '(69) 98466-1090' },
+  { name: 'Borracharia Móvel 24h Belutz', category: 'Borracharia', city: 'Vilhena, RO', phone: '(69) 99256-4762', service: '24h Móvel' },
+  { name: 'Borracharia Catarinense', category: 'Borracharia', city: 'Vilhena, RO', phone: '(69) 98455-9243' },
+  { name: 'Borracharia A J 24 horas', category: 'Borracharia', city: 'Vilhena, RO', phone: '(69) 99270-5458' },
+  { name: 'Borracharia do Pekeno (24h)', category: 'Borracharia', city: 'Guajará-Mirim, RO', phone: '(69) 99345-6731', service: '24h' },
+  { name: 'Borracharia Jardim (24h)', category: 'Borracharia', city: 'Guajará-Mirim, RO', phone: '(69) 98458-9809', service: '24h' },
+
+  // === NOVOS RONDÔNIA - MECÂNICA PESADA ===
+  { name: 'Milla Diesel', category: 'Mecânica Pesada', city: 'Porto Velho, RO', phone: '(69) 98405-4011' },
+  { name: 'MaQ & Truck Peças e Serviços', category: 'Mecânica Pesada', city: 'Porto Velho, RO', phone: '(69) 99944-5001' },
+  { name: 'Amaral Truck Center', category: 'Mecânica Pesada', city: 'Porto Velho, RO', phone: '(69) 3213-3685' },
+  { name: 'Central Diesel Oficina', category: 'Mecânica Pesada', city: 'Porto Velho, RO', phone: '(69) 99926-8925' },
+  { name: '364 Mecânica Pesada', category: 'Mecânica Pesada', city: 'Porto Velho, RO', phone: '(69) 99264-7874' },
+  { name: 'Mecânica Vargas (Socorro e Pesados)', category: 'Mecânica Pesada', city: 'Ariquemes, RO', phone: '(69) 99282-3551', service: 'Socorro e Pesados' },
+  { name: 'Ariquemes Diesel', category: 'Mecânica Pesada', city: 'Ariquemes, RO', phone: '(69) 3535-3022' },
+  { name: 'Oficina Mecânica Central Pesados', category: 'Mecânica Pesada', city: 'Ariquemes, RO', phone: '(69) 99311-4045' },
+  { name: 'Mecânica Diesel Ouro Preto', category: 'Mecânica Pesada', city: 'Ouro Preto do Oeste, RO', phone: '(69) 99214-7744' },
+  { name: 'Vanzin Diesel (Pesados)', category: 'Mecânica Pesada', city: 'Ouro Preto do Oeste, RO', phone: '(69) 3461-3010' },
+  { name: 'Mecânica do Baiano (Diesel)', category: 'Mecânica Pesada', city: 'Jaru, RO', phone: '(69) 99341-8012' },
+  { name: 'Jaru Eletrodiesel', category: 'Mecânica Pesada', city: 'Jaru, RO', phone: '(69) 3521-2555' },
+  { name: 'Central Diesel Truck', category: 'Mecânica Pesada', city: 'Ji-Paraná, RO', phone: '(69) 99235-8594' },
+  { name: 'Mecânica JS Diesel', category: 'Mecânica Pesada', city: 'Ji-Paraná, RO', phone: '(69) 99961-4120' },
+  { name: 'Rondônia Caminhões', category: 'Mecânica Pesada', city: 'Ji-Paraná, RO', phone: '(69) 3416-9000' },
+  { name: 'Cacoal Diesel Pesados', category: 'Mecânica Pesada', city: 'Cacoal, RO', phone: '(69) 3441-4512' },
+  { name: 'Mecânica Trevo Caminhões', category: 'Mecânica Pesada', city: 'Cacoal, RO', phone: '(69) 99288-1155' },
+  { name: 'Rolim Diesel Mecânica', category: 'Mecânica Pesada', city: 'Rolim de Moura, RO', phone: '(69) 3442-1822' },
+  { name: 'Mecânica do Gaúcho (Pesados)', category: 'Mecânica Pesada', city: 'Rolim de Moura, RO', phone: '(69) 99345-5022' },
+  { name: 'Pimenta Bueno Diesel', category: 'Mecânica Pesada', city: 'Pimenta Bueno, RO', phone: '(69) 3451-2299' },
+  { name: 'Mecânica Rondônia Cargas', category: 'Mecânica Pesada', city: 'Pimenta Bueno, RO', phone: '(69) 99211-6380' },
+  { name: 'Tecnodiesel Brasil', category: 'Mecânica Pesada', city: 'Vilhena, RO', phone: '(69) 99230-5429' },
+  { name: 'Euro Diesel Especializada', category: 'Mecânica Pesada', city: 'Vilhena, RO', phone: '(69) 98112-8233' },
+  { name: 'Rossano Diesel Performance', category: 'Mecânica Pesada', city: 'Vilhena, RO', phone: '(69) 3321-8081' },
+  { name: 'Vilhediesel', category: 'Mecânica Pesada', city: 'Vilhena, RO', phone: '(69) 99968-1256' },
+  { name: 'Mecânica Diesel Fronteira', category: 'Mecânica Pesada', city: 'Guajará-Mirim, RO', phone: '(69) 98411-9031' },
+  { name: 'Oficina do Bigode (Pesados)', category: 'Mecânica Pesada', city: 'Guajará-Mirim, RO', phone: '(69) 99355-1478' },
 ]
 
 export function BrlistaDirectory() {
@@ -185,7 +245,7 @@ export function BrlistaDirectory() {
             value={query}
             onChange={e=>{setQuery(e.target.value); setCurrentPage(1)}}
             onKeyDown={e=>{ if(e.key==='Enter'){ searchInputRef.current?.blur() } }}
-            placeholder="Buscar: catalao, araxa, goiania, sao paulo, santos..."
+            placeholder="Buscar: rondonia, porto velho, vilhena, ariquemes..."
             className="w-full rounded-full border border-white/10 bg-white/[0.06] py-4 pl-12 pr-4 text-sm outline-none focus:border-[#facc15]/40"
           />
         </div>
