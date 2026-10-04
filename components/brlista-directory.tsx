@@ -266,14 +266,12 @@ export function BrlistaDirectory() {
     setSubmissionState('opened')
   }
 
-  const normalize = (text: string) => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
-
   const filteredPlaces = useMemo(() => {
-    const normalizedQuery = normalize(query.trim())
+    const normalizedQuery = query.trim().toLocaleLowerCase('pt-BR')
     return places.filter((place) => {
       const matchesCategory = category === 'Todas' || place.category === category
       if (!normalizedQuery) return matchesCategory
-      const searchableText = normalize(`${place.name} ${place.category} ${place.city} ${place.road?? ''} ${place.service?? ''}`)
+      const searchableText = `${place.name} ${place.category} ${place.city} ${place.road?? ''}`.toLocaleLowerCase('pt-BR')
       return matchesCategory && searchableText.includes(normalizedQuery)
     })
   }, [category, query])
@@ -281,3 +279,8 @@ export function BrlistaDirectory() {
   const itemsPerPage = 10
   const totalPages = Math.ceil(filteredPlaces.length / itemsPerPage)
   const paginatedPlaces = filteredPlaces.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+
+  return (
+    <main className="min-h-screen bg-[#10110f] text-[#f6f4ed]">
+      <header className="border-b border-white/[0.08]">
+        <div className="mx-auto flex max-w-6xl i
