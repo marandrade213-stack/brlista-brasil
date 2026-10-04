@@ -1,28 +1,12 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from 'react'
-import {
-  Download,
-  MapPin,
-  MessageCircle,
-  Phone,
-  Search,
-  Wrench,
-} from 'lucide-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { Download, MapPin, MessageCircle, Phone, Search, Wrench } from 'lucide-react'
 
 const categories = ['Todas', 'Borracharia', 'Mecânica', 'Auto Elétrica', 'Mecânica Pesada', 'Guincho / Socorro', 'Lavador de Carreta'] as const
 type CategoryFilter = typeof categories[number]
 type Category = Exclude<CategoryFilter, 'Todas'> | 'Guincho' | 'Lava Jato'
-
-type Place = {
-  name: string
-  category: Category
-  city: string
-  road?: string
-  phone: string
-  service?: string
-  icon?: typeof Wrench
-}
+type Place = { name: string; category: Category; city: string; road?: string; phone: string; service?: string }
 
 const places: Place[] = [
   { name: 'GF Mecânica', category: 'Mecânica', city: 'Araguari', phone: '+55 34 99265-6094', service: 'Serviços mecânicos em geral' },
@@ -131,7 +115,15 @@ export function BrlistaDirectory() {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<CategoryFilter>('Todas')
   const [currentPage, setCurrentPage] = useState(1)
+  const [isInstalled, setIsInstalled] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    const standalone = window.matchMedia('(display-mode: standalone)').matches
+    // @ts-ignore
+    const iosStandalone = window.navigator.standalone === true
+    if (standalone || iosStandalone) setIsInstalled(true)
+  }, [])
 
   function formatPhoneForUrl(phone: string) {
     const digits = phone.replace(/\D/g, '')
@@ -144,7 +136,6 @@ export function BrlistaDirectory() {
     return phone
   }
 
-  // CORREÇÃO DO ACENTO - ISSO FAZ catalao achar Catalão
   const normalize = (t: string) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
 
   const filteredPlaces = useMemo(() => {
@@ -172,30 +163,24 @@ export function BrlistaDirectory() {
               <p className="text-xs opacity-60">{places.length} locais</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium text-black">
-            <Download size={16}/> App
-          </div>
+          {!isInstalled && (
+            <div className="flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium text-black">
+              <Download size={16}/> App
+            </div>
+          )}
         </div>
       </header>
 
       <div className="mx-auto max-w-6xl px-4 py-6">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 opacity-50" size={18}/>
-          <input
-            ref={searchInputRef}
-            value={query}
-            onChange={e=>{setQuery(e.target.value); setCurrentPage(1)}}
-            placeholder="Buscar: catalao, araxa, ze, sao paulo..."
-            className="w-full rounded-xl bg-white/[0.08] py-3 pl-10 pr-4 outline-none"
-          />
+          <input ref={searchInputRef} value={query} onChange={e=>{setQuery(e.target.value); setCurrentPage(1)}} placeholder="Buscar: catalao, araxa, goiania, sao paulo..." className="w-full rounded-xl bg-white/[0.08] py-3 pl-10 pr-4 outline-none" />
         </div>
-
         <div className="mt-4 flex flex-wrap gap-2">
           {categories.map(c=>(
             <button key={c} onClick={()=>{setCategory(c); setCurrentPage(1)}} className={`rounded-full px-4 py-2 text-sm ${category===c?'bg-[#d4ff00] text-black':'bg-white/[0.08]'}`}>{c}</button>
           ))}
         </div>
-
         <div className="mt-6 grid gap-3">
           {paginatedPlaces.map((p,i)=>(
             <div key={i} className="rounded-xl border border-white/[0.08] p-4">
@@ -214,7 +199,6 @@ export function BrlistaDirectory() {
           ))}
           {filteredPlaces.length===0 && <p className="py-10 text-center opacity-60">Nada encontrado pra "{query}"</p>}
         </div>
-
         {totalPages>1 && (
           <div className="mt-6 flex items-center justify-center gap-2">
             <button disabled={currentPage===1} onClick={()=>setCurrentPage(c=>c-1)} className="rounded-full bg-white/[0.08] px-4 py-2 disabled:opacity-30">Anterior</button>
