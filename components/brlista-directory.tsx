@@ -25,26 +25,27 @@ type Place = {
   road?: string
   phone: string
   service?: string
-  icon: typeof Wrench
+  icon?: typeof Wrench
 }
 
-const places: Place[] = [// Araguari MG - Mecânica, Auto Elétrica e Guinchos
+const places: Place[] = [
+  // Araguari MG - Mecânica, Auto Elétrica e Guinchos
   { name: 'GF Mecânica', category: 'Mecânica', city: 'Araguari', phone: '+55 34 99265-6094', service: 'Serviços mecânicos em geral' },
   { name: 'MR Auto Elétrica', category: 'Auto Elétrica', city: 'Araguari', phone: '+55 34 99796-9161', service: 'Socorro elétrico' },
   { name: 'Auto Mecânica Magayver', category: 'Mecânica', city: 'Araguari', phone: '+55 34 99186-6883', service: 'Mecânica geral' },
   { name: 'Auto Mecânica Juninho', category: 'Mecânica', city: 'Araguari', phone: '+55 34 99208-1333', service: 'Manutenção e consertos' },
-  { name: 'Mauá Guinchos', category: 'Guincho', city: 'Araguari', phone: '+55 34 98810-6577', service: 'Serviço de guincho e reboque' },
-  { name: 'Guincho Auto Socorro Baixinho', category: 'Guincho', city: 'Araguari', phone: '+55 34 99185-0890', service: 'Auto socorro e reboque' },
-  { name: 'Independência Serviço de Guincho', category: 'Guincho', city: 'Araguari', phone: '+55 34 98845-0049', service: 'Serviço de guincho 24h' },
+  { name: 'Mauá Guinchos', category: 'Guincho / Socorro', city: 'Araguari', phone: '+55 34 98810-6577', service: 'Serviço de guincho e reboque' },
+  { name: 'Guincho Auto Socorro Baixinho', category: 'Guincho / Socorro', city: 'Araguari', phone: '+55 34 99185-0890', service: 'Auto socorro e reboque' },
+  { name: 'Independência Serviço de Guincho', category: 'Guincho / Socorro', city: 'Araguari', phone: '+55 34 98845-0049', service: 'Serviço de guincho 24h' },
 
   // Araguari MG - Borracharias e Lava Jato
   { name: 'Borracharia Móvel Clevin', category: 'Borracharia', city: 'Araguari', phone: '+55 34 99714-8795', service: 'Atendimento móvel de borracharia' },
   { name: 'Borracharia Móvel Araguari Original', category: 'Borracharia', city: 'Araguari', phone: '+55 34 99709-0090', service: 'Socorro de pneus móvel' },
   { name: 'Borracharia do Bryan', category: 'Borracharia', city: 'Araguari', phone: '+55 34 99733-3410', service: 'Conserto de pneus e socorro' },
   { name: 'Borracharia do Ceará', category: 'Borracharia', city: 'Araguari', phone: '+55 34 98825-3999', service: 'Serviços de borracharia' },
-  { name: 'Lava Jato de Caminhões BR-050', category: 'Lava Jato', city: 'Araguari', road: 'BR-050', phone: '+55 34 3246-0709', service: 'Lavagem de carretas e caminhões' },
-  { name: 'Lava Jato Carrerinha', category: 'Lava Jato', city: 'Araguari', phone: '+55 34 99197-2181', service: 'Lavagem técnica de veículos pesados' },
-  { name: 'Machado Lavajato', category: 'Lava Jato', city: 'Araguari', phone: '+55 34 3242-0131', service: 'Lava jato especializado' },
+  { name: 'Lava Jato de Caminhões BR-050', category: 'Lavador de Carreta', city: 'Araguari', road: 'BR-050', phone: '+55 34 3246-0709', service: 'Lavagem de carretas e caminhões' },
+  { name: 'Lava Jato Carrerinha', category: 'Lavador de Carreta', city: 'Araguari', phone: '+55 34 99197-2181', service: 'Lavagem técnica de veículos pesados' },
+  { name: 'Machado Lavajato', category: 'Lavador de Carreta', city: 'Araguari', phone: '+55 34 3242-0131', service: 'Lava jato especializado' },
 
   // Uberaba MG - Borracharias
   { name: 'Nunes Borracharia Móvel', category: 'Borracharia', city: 'Uberaba', phone: '+55 34 99630-7576', service: 'Borracharia móvel socorro' },
@@ -57,84 +58,84 @@ const places: Place[] = [// Araguari MG - Mecânica, Auto Elétrica e Guinchos
   { name: 'Auto Mecânica Chumbrega', category: 'Mecânica', city: 'Uberaba', phone: '+55 34 99105-0053', service: 'Oficina mecânica' },
   { name: 'Auto Elétrica Robinho', category: 'Auto Elétrica', city: 'Uberaba', phone: '+55 34 99196-1502', service: 'Serviços elétricos automotivos' },
   { name: 'M Tec Mecatrônica', category: 'Mecânica', city: 'Uberaba', phone: '+55 34 99912-3020', service: 'Mecatrônica e injeção' },
-  { name: 'Mecânica Diesel Ribeiro', category: 'Mecânica', city: 'Uberaba', phone: '+55 34 99636-8153', service: 'Mecânica diesel pesada' },
-  { name: 'JK Auto Socorro', category: 'Guincho', city: 'Uberaba', phone: '+55 34 99952-2007', service: 'Guincho e resgate' },
-  { name: 'Auto Socorro Danilo', category: 'Guincho', city: 'Uberaba', phone: '+55 34 99723-9633', service: 'Socorro e reboque' },
-  { name: 'Guincho Equipe Auto Socorro', category: 'Guincho', city: 'Uberaba', phone: '+55 34 99888-1746', service: 'Equipe de guincho e suporte' },
-  { name: 'Borracharia São João', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 99627-2006', icon: Wrench },
-  { name: 'Borracharia Móvel Pit Stop', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 99934-9057', icon: Wrench },
-  { name: 'Borracharia Araguaia', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 99972-5734', icon: Wrench },
-  { name: 'Borracharia Móvel 050', category: 'Borracharia', city: 'Catalão, GO', road: 'BR-050', phone: '(64) 99286-7163', icon: Wrench },
-  { name: 'Borracharia do Juninho', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 99225-3950', icon: Wrench },
-  { name: 'Borracharia Móvel Odilon', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 99607-4577', icon: Wrench },
-  { name: 'Borracharia Móvel do Paulo 24 Horas', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 98114-0934', icon: Wrench },
-  { name: 'Borracharia Skinão Loja 01', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 98409-7360', icon: Wrench },
-  { name: 'Borracharia do Jairinho', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 98124-5270', icon: Wrench },
-  { name: 'Borracharia do Elsinho', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 99964-8809', icon: Wrench },
-  { name: 'Borracharia J&S', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 99986-8444', icon: Wrench },
-  { name: 'Pit Stop Borrachas e Ferramentas', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 99922-5835', icon: Wrench },
-  { name: 'Borracharia e Soldas JK', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 99695-1006', icon: Wrench },
-  { name: 'Seu Borracha | Borracharia Móvel Uberlândia', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 99646-8666', icon: Wrench },
-  { name: 'Borracharia Móvel do Wesley (Veículos em geral)', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 99791-3031', icon: Wrench },
-  { name: 'Borracharia Móvel 24 Horas GM', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 99245-8786', icon: Wrench },
-  { name: 'Borracharia Móvel Martins 24 Hrs', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 99140-8254', icon: Wrench },
-  { name: 'Borracharia Móvel Rapidão (Unidade 1)', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 99874-9766', icon: Wrench },
-  { name: 'Borracharia Móvel 24h JR', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 99885-1986', icon: Wrench },
-  { name: 'Borracharia Móvel 24H Sammuel', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 99724-1320', icon: Wrench },
-  { name: 'Borracharia Móvel Magrão', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 99637-1380', icon: Wrench },
-  { name: 'Borracharia Móvel do RAFFA', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 99316-4535', icon: Wrench },
-  { name: 'Borracharia Kometa Móvel', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 98837-4438', icon: Wrench },
-  { name: 'Euro Car Jardim Guanabara', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 98635-9905', icon: Wrench },
-  { name: 'Curinga dos Pneus', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 3291-7090', icon: Wrench },
-  { name: 'Borracharia do Boca 24 Horas', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 3274-2323', icon: Wrench },
-  { name: 'Borracharia 24 Horas Móvel Dia e Noite', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 99331-1571', icon: Wrench },
-  { name: 'Borracharia J.A. V', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 98234-3162', icon: Wrench },
-  { name: 'Borracharia Pitstop 24HR', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 99294-5939', icon: Wrench },
-  { name: 'Borracharia J.A. III', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 98234-3162', icon: Wrench },
-  { name: '2 Irmãos Auto Elétrica e Mecânica', category: 'Mecânica', city: 'Goiânia, GO', phone: '(62) 99820-8546', icon: Wrench },
-  { name: 'Mecânica e Elétrica Índio (Socorro 24h Goiânia)', category: 'Mecânica', city: 'Goiânia, GO', phone: '(62) 99863-0815', icon: Wrench },
-  { name: 'Gel Mecânico 24hs', category: 'Mecânica', city: 'Goiânia, GO', phone: '(62) 98141-4277', icon: Wrench },
-  { name: 'Auto Mecânica 24 Horas Divair', category: 'Mecânica', city: 'Goiânia, GO', phone: '(62) 98574-2567', icon: Wrench },
-  { name: 'Auto Elétrica Móvel 24hs (Carro e Caminhões)', category: 'Auto Elétrica', city: 'Goiânia, GO', phone: '(62) 99904-9641', icon: Wrench },
-  { name: 'Mecânico de Caminhão 24 Horas', category: 'Mecânica Pesada', city: 'Goiânia, GO', phone: '(62) 99929-1447', icon: Wrench },
-  { name: 'Socorro Mecânico de Embreagem de Caminhão 24 Horas', category: 'Mecânica Pesada', city: 'Goiânia, GO', phone: '(62) 99969-8702', icon: Wrench },
-  { name: 'Mecânico de Automóveis e Caminhões (Assistência na Estrada 24h)', category: 'Mecânica Pesada', city: 'Goiânia, GO', phone: '(62) 99316-3637', icon: Wrench },
-  { name: 'Auto Elétrica Porto de Santos', category: 'Auto Elétrica', city: 'Santos - SP', road: 'Av. Conselheiro Nébias, 120', phone: '(13) 3221-1001', icon: Wrench },
-  { name: 'Borracharia do Valongo', category: 'Borracharia', city: 'Santos - SP', road: 'Rua do Terceiro, 45', phone: '(13) 99712-3456', icon: Wrench },
-  { name: 'Santos Truck Repair', category: 'Mecânica Pesada', city: 'Santos - SP', road: 'Av. Engenheiro Augusto Barata, s/n', phone: '(13) 3232-4000', icon: Wrench },
-  { name: 'Lava Rápido e Ducha Carretas Alemoa', category: 'Lavador de Carreta', city: 'Santos - SP', road: 'Marginal da Anchieta, Km 64', phone: '(13) 3296-1500', icon: Wrench },
-  { name: 'Guincho Litoral 24 Horas', category: 'Guincho / Socorro', city: 'Santos - SP', road: 'Atendimento Anchieta/Imigrantes', phone: '(13) 99123-8899', icon: Wrench },
-  { name: 'Mecânica Diesel Margem Direita', category: 'Mecânica Pesada', city: 'Santos - SP', road: 'Av. Bandeirantes, 800', phone: '(13) 3219-5500', icon: Wrench },
-  { name: 'Auto Elétrica e Baterias Alemoa', category: 'Auto Elétrica', city: 'Santos - SP', road: 'Rua Amador Bueno, 310', phone: '(13) 3223-9090', icon: Wrench },
-  { name: 'Borracharia Ponta da Praia', category: 'Borracharia', city: 'Santos - SP', road: 'Av. Mário Covas, 1500', phone: '(13) 98844-1122', icon: Wrench },
-  { name: 'Wash Truck Porto', category: 'Lavador de Carreta', city: 'Santos - SP', road: 'Av. Ismael Coelho Souza, s/n', phone: '(13) 3299-7070', icon: Wrench },
-  { name: 'Socorro de Pesados Anchieta', category: 'Guincho / Socorro', city: 'Santos - SP', road: 'Rod. Anchieta, Km 60', phone: '(13) 99655-4321', icon: Wrench },
-  { name: 'Centro Automotivo Cais do Porto', category: 'Mecânica Pesada', city: 'Santos - SP', road: 'Rua Xavier da Silveira, 88', phone: '(13) 3234-1122', icon: Wrench },
-  { name: 'Elétrica e Eletrônica Diesel Santos', category: 'Auto Elétrica', city: 'Santos - SP', road: 'Av. Martins Fontes, 1020', phone: '(13) 3291-3344', icon: Wrench },
-  { name: 'Borracharia 24h Saboó', category: 'Borracharia', city: 'Santos - SP', road: 'Av. Marginal Direita, 250', phone: '(13) 99788-6655', icon: Wrench },
-  { name: 'Borracharia Bahia (Móvel e Fixa - Socorro de Caminhão)', category: 'Borracharia', city: 'São Paulo, SP', phone: '(11) 96854-7941', service: 'Socorro de caminhão / Móvel e Fixa', icon: Wrench },
-  { name: 'Borracharia Móvel 24h (Socorro de Caminhão)', category: 'Borracharia', city: 'São Paulo, SP', phone: '(11) 98035-7540', service: 'Atendimento 24h / Socorro móvel', icon: Wrench },
-  { name: 'G2S Borracharia Móvel', category: 'Borracharia', city: 'São Paulo, SP', phone: '(11) 93200-6357', service: 'Borracharia móvel', icon: Wrench },
-  { name: 'Borracharia Móvel Alyson', category: 'Borracharia', city: 'São Paulo, SP', phone: '(11) 95219-7977', service: 'Atendimento 24h / Móvel', icon: Wrench },
-  { name: 'Borracharia Móvel Du Gui', category: 'Borracharia', city: 'São Paulo, SP', phone: '(11) 94147-9003', service: 'Socorro 24 Horas', icon: Wrench },
-  { name: 'Borracharia Negrão Azevedo', category: 'Borracharia', city: 'Ribeirão Preto, SP', phone: '(16) 99103-5393', service: 'Borracharia', icon: Wrench },
-  { name: 'Borracharia 24 Horas', category: 'Borracharia', city: 'Ribeirão Preto, SP', phone: '(16) 99155-8692', service: 'Atendimento 24h', icon: Wrench },
-  { name: 'Borracharia do Bruninho', category: 'Borracharia', city: 'Ribeirão Preto, SP', phone: '(16) 99400-1329', service: 'Borracharia', icon: Wrench },
-  { name: 'IMPAR Borracharia Móvel', category: 'Borracharia', city: 'Ribeirão Preto, SP', phone: '(16) 98199-5756', service: 'Socorro móvel', icon: Wrench },
-  { name: 'Borracharia Ponto do Pneu', category: 'Borracharia', city: 'Ribeirão Preto, SP', phone: '(16) 99422-7029', service: 'Borracharia', icon: Wrench },
-  { name: 'JP Borracharia Móvel 24 Horas', category: 'Borracharia', city: 'Araxá, MG', phone: '(34) 99828-6914', service: '24h / Móvel', icon: Wrench },
-  { name: 'BORRACHARIA MÓVEL EXPRESS', category: 'Borracharia', city: 'Araxá, MG', phone: '(34) 99812-1032', service: 'Móvel', icon: Wrench },
-  { name: 'Borracharia Móvel e Fixa do Tiago', category: 'Borracharia', city: 'Araxá, MG', phone: '(34) 99817-3240', service: 'Móvel', icon: Wrench },
-  { name: 'Tiãozinho Borracharia Móvel', category: 'Borracharia', city: 'Araxá, MG', phone: '(34) 99878-2758', service: 'Móvel', icon: Wrench },
-  { name: 'Borracharia móvel 2 irmãos', category: 'Borracharia', city: 'Araxá, MG', phone: '(34) 99872-6635', service: 'Móvel', icon: Wrench },
-  { name: 'Borracharia Barreiro', category: 'Borracharia', city: 'Araxá, MG', phone: '(34) 99985-5652', icon: Wrench },
-  { name: 'Mecânico Araxá MG', category: 'Mecânica', city: 'Araxá, MG', phone: '(34) 99254-1478', icon: Wrench },
-  { name: 'S.O.S CAMINHONEIRO OFICINA MOVEL', category: 'Mecânica', city: 'Araxá, MG', phone: '(34) 98422-9597', service: 'Móvel / Linha Pesada', icon: Wrench },
-  { name: 'Tecno Diesel RP Auto Mecânica', category: 'Mecânica', city: 'Araxá, MG', phone: '(34) 98843-5441', service: 'Linha Pesada', icon: Wrench },
-  { name: 'Flavio Mecanica Diesel', category: 'Mecânica', city: 'Araxá, MG', phone: '(34) 98810-5079', service: 'Linha Pesada', icon: Wrench },
-  { name: 'Sandal Diesel Araxá', category: 'Mecânica', city: 'Araxá, MG', phone: '(34) 3662-6620', service: 'Linha Pesada', icon: Wrench },
-  { name: 'PHDiesel araxa', category: 'Mecânica', city: 'Araxá, MG', phone: '(34) 99231-6669', service: 'Linha Pesada', icon: Wrench },
-  { name: 'T - Car Diesel', category: 'Mecânica', city: 'Araxá, MG', phone: '(34) 99773-9133', service: 'Linha Pesada', icon: Wrench },
+  { name: 'Mecânica Diesel Ribeiro', category: 'Mecânica Pesada', city: 'Uberaba', phone: '+55 34 99636-8153', service: 'Mecânica diesel pesada' },
+  { name: 'JK Auto Socorro', category: 'Guincho / Socorro', city: 'Uberaba', phone: '+55 34 99952-2007', service: 'Guincho e resgate' },
+  { name: 'Auto Socorro Danilo', category: 'Guincho / Socorro', city: 'Uberaba', phone: '+55 34 99723-9633', service: 'Socorro e reboque' },
+  { name: 'Guincho Equipe Auto Socorro', category: 'Guincho / Socorro', city: 'Uberaba', phone: '+55 34 99888-1746', service: 'Equipe de guincho e suporte' },
+  { name: 'Borracharia São João', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 99627-2006' },
+  { name: 'Borracharia Móvel Pit Stop', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 99934-9057' },
+  { name: 'Borracharia Araguaia', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 99972-5734' },
+  { name: 'Borracharia Móvel 050', category: 'Borracharia', city: 'Catalão, GO', road: 'BR-050', phone: '(64) 99286-7163' },
+  { name: 'Borracharia do Juninho', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 99225-3950' },
+  { name: 'Borracharia Móvel Odilon', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 99607-4577' },
+  { name: 'Borracharia Móvel do Paulo 24 Horas', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 98114-0934' },
+  { name: 'Borracharia Skinão Loja 01', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 98409-7360' },
+  { name: 'Borracharia do Jairinho', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 98124-5270' },
+  { name: 'Borracharia do Elsinho', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 99964-8809' },
+  { name: 'Borracharia J&S', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 99986-8444' },
+  { name: 'Pit Stop Borrachas e Ferramentas', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 99922-5835' },
+  { name: 'Borracharia e Soldas JK', category: 'Borracharia', city: 'Catalão, GO', phone: '(64) 99695-1006' },
+  { name: 'Seu Borracha | Borracharia Móvel Uberlândia', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 99646-8666' },
+  { name: 'Borracharia Móvel do Wesley (Veículos em geral)', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 99791-3031' },
+  { name: 'Borracharia Móvel 24 Horas GM', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 99245-8786' },
+  { name: 'Borracharia Móvel Martins 24 Hrs', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 99140-8254' },
+  { name: 'Borracharia Móvel Rapidão (Unidade 1)', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 99874-9766' },
+  { name: 'Borracharia Móvel 24h JR', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 99885-1986' },
+  { name: 'Borracharia Móvel 24H Sammuel', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 99724-1320' },
+  { name: 'Borracharia Móvel Magrão', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 99637-1380' },
+  { name: 'Borracharia Móvel do RAFFA', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 99316-4535' },
+  { name: 'Borracharia Kometa Móvel', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 98837-4438' },
+  { name: 'Euro Car Jardim Guanabara', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 98635-9905' },
+  { name: 'Curinga dos Pneus', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 3291-7090' },
+  { name: 'Borracharia do Boca 24 Horas', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 3274-2323' },
+  { name: 'Borracharia 24 Horas Móvel Dia e Noite', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 99331-1571' },
+  { name: 'Borracharia J.A. V', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 98234-3162' },
+  { name: 'Borracharia Pitstop 24HR', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 99294-5939' },
+  { name: 'Borracharia J.A. III', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 98234-3162' },
+  { name: '2 Irmãos Auto Elétrica e Mecânica', category: 'Mecânica', city: 'Goiânia, GO', phone: '(62) 99820-8546' },
+  { name: 'Mecânica e Elétrica Índio (Socorro 24h Goiânia)', category: 'Mecânica', city: 'Goiânia, GO', phone: '(62) 99863-0815' },
+  { name: 'Gel Mecânico 24hs', category: 'Mecânica', city: 'Goiânia, GO', phone: '(62) 98141-4277' },
+  { name: 'Auto Mecânica 24 Horas Divair', category: 'Mecânica', city: 'Goiânia, GO', phone: '(62) 98574-2567' },
+  { name: 'Auto Elétrica Móvel 24hs (Carro e Caminhões)', category: 'Auto Elétrica', city: 'Goiânia, GO', phone: '(62) 99904-9641' },
+  { name: 'Mecânico de Caminhão 24 Horas', category: 'Mecânica Pesada', city: 'Goiânia, GO', phone: '(62) 99929-1447' },
+  { name: 'Socorro Mecânico de Embreagem de Caminhão 24 Horas', category: 'Mecânica Pesada', city: 'Goiânia, GO', phone: '(62) 99969-8702' },
+  { name: 'Mecânico de Automóveis e Caminhões (Assistência na Estrada 24h)', category: 'Mecânica Pesada', city: 'Goiânia, GO', phone: '(62) 99316-3637' },
+  { name: 'Auto Elétrica Porto de Santos', category: 'Auto Elétrica', city: 'Santos - SP', road: 'Av. Conselheiro Nébias, 120', phone: '(13) 3221-1001' },
+  { name: 'Borracharia do Valongo', category: 'Borracharia', city: 'Santos - SP', road: 'Rua do Terceiro, 45', phone: '(13) 99712-3456' },
+  { name: 'Santos Truck Repair', category: 'Mecânica Pesada', city: 'Santos - SP', road: 'Av. Engenheiro Augusto Barata, s/n', phone: '(13) 3232-4000' },
+  { name: 'Lava Rápido e Ducha Carretas Alemoa', category: 'Lavador de Carreta', city: 'Santos - SP', road: 'Marginal da Anchieta, Km 64', phone: '(13) 3296-1500' },
+  { name: 'Guincho Litoral 24 Horas', category: 'Guincho / Socorro', city: 'Santos - SP', road: 'Atendimento Anchieta/Imigrantes', phone: '(13) 99123-8899' },
+  { name: 'Mecânica Diesel Margem Direita', category: 'Mecânica Pesada', city: 'Santos - SP', road: 'Av. Bandeirantes, 800', phone: '(13) 3219-5500' },
+  { name: 'Auto Elétrica e Baterias Alemoa', category: 'Auto Elétrica', city: 'Santos - SP', road: 'Rua Amador Bueno, 310', phone: '(13) 3223-9090' },
+  { name: 'Borracharia Ponta da Praia', category: 'Borracharia', city: 'Santos - SP', road: 'Av. Mário Covas, 1500', phone: '(13) 98844-1122' },
+  { name: 'Wash Truck Porto', category: 'Lavador de Carreta', city: 'Santos - SP', road: 'Av. Ismael Coelho Souza, s/n', phone: '(13) 3299-7070' },
+  { name: 'Socorro de Pesados Anchieta', category: 'Guincho / Socorro', city: 'Santos - SP', road: 'Rod. Anchieta, Km 60', phone: '(13) 99655-4321' },
+  { name: 'Centro Automotivo Cais do Porto', category: 'Mecânica Pesada', city: 'Santos - SP', road: 'Rua Xavier da Silveira, 88', phone: '(13) 3234-1122' },
+  { name: 'Elétrica e Eletrônica Diesel Santos', category: 'Auto Elétrica', city: 'Santos - SP', road: 'Av. Martins Fontes, 1020', phone: '(13) 3291-3344' },
+  { name: 'Borracharia 24h Saboó', category: 'Borracharia', city: 'Santos - SP', road: 'Av. Marginal Direita, 250', phone: '(13) 99788-6655' },
+  { name: 'Borracharia Bahia (Móvel e Fixa - Socorro de Caminhão)', category: 'Borracharia', city: 'São Paulo, SP', phone: '(11) 96854-7941', service: 'Socorro de caminhão / Móvel e Fixa' },
+  { name: 'Borracharia Móvel 24h (Socorro de Caminhão)', category: 'Borracharia', city: 'São Paulo, SP', phone: '(11) 98035-7540', service: 'Atendimento 24h / Socorro móvel' },
+  { name: 'G2S Borracharia Móvel', category: 'Borracharia', city: 'São Paulo, SP', phone: '(11) 93200-6357', service: 'Borracharia móvel' },
+  { name: 'Borracharia Móvel Alyson', category: 'Borracharia', city: 'São Paulo, SP', phone: '(11) 95219-7977', service: 'Atendimento 24h / Móvel' },
+  { name: 'Borracharia Móvel Du Gui', category: 'Borracharia', city: 'São Paulo, SP', phone: '(11) 94147-9003', service: 'Socorro 24 Horas' },
+  { name: 'Borracharia Negrão Azevedo', category: 'Borracharia', city: 'Ribeirão Preto, SP', phone: '(16) 99103-5393', service: 'Borracharia' },
+  { name: 'Borracharia 24 Horas', category: 'Borracharia', city: 'Ribeirão Preto, SP', phone: '(16) 99155-8692', service: 'Atendimento 24h' },
+  { name: 'Borracharia do Bruninho', category: 'Borracharia', city: 'Ribeirão Preto, SP', phone: '(16) 99400-1329', service: 'Borracharia' },
+  { name: 'IMPAR Borracharia Móvel', category: 'Borracharia', city: 'Ribeirão Preto, SP', phone: '(16) 98199-5756', service: 'Socorro móvel' },
+  { name: 'Borracharia Ponto do Pneu', category: 'Borracharia', city: 'Ribeirão Preto, SP', phone: '(16) 99422-7029', service: 'Borracharia' },
+  { name: 'JP Borracharia Móvel 24 Horas', category: 'Borracharia', city: 'Araxá, MG', phone: '(34) 99828-6914', service: '24h / Móvel' },
+  { name: 'BORRACHARIA MÓVEL EXPRESS', category: 'Borracharia', city: 'Araxá, MG', phone: '(34) 99812-1032', service: 'Móvel' },
+  { name: 'Borracharia Móvel e Fixa do Tiago', category: 'Borracharia', city: 'Araxá, MG', phone: '(34) 99817-3240', service: 'Móvel' },
+  { name: 'Tiãozinho Borracharia Móvel', category: 'Borracharia', city: 'Araxá, MG', phone: '(34) 99878-2758', service: 'Móvel' },
+  { name: 'Borracharia móvel 2 irmãos', category: 'Borracharia', city: 'Araxá, MG', phone: '(34) 99872-6635', service: 'Móvel' },
+  { name: 'Borracharia Barreiro', category: 'Borracharia', city: 'Araxá, MG', phone: '(34) 99985-5652' },
+  { name: 'Mecânico Araxá MG', category: 'Mecânica', city: 'Araxá, MG', phone: '(34) 99254-1478' },
+  { name: 'S.O.S CAMINHONEIRO OFICINA MOVEL', category: 'Mecânica', city: 'Araxá, MG', phone: '(34) 98422-9597', service: 'Móvel / Linha Pesada' },
+  { name: 'Tecno Diesel RP Auto Mecânica', category: 'Mecânica Pesada', city: 'Araxá, MG', phone: '(34) 98843-5441', service: 'Linha Pesada' },
+  { name: 'Flavio Mecanica Diesel', category: 'Mecânica Pesada', city: 'Araxá, MG', phone: '(34) 98810-5079', service: 'Linha Pesada' },
+  { name: 'Sandal Diesel Araxá', category: 'Mecânica Pesada', city: 'Araxá, MG', phone: '(34) 3662-6620', service: 'Linha Pesada' },
+  { name: 'PHDiesel araxa', category: 'Mecânica Pesada', city: 'Araxá, MG', phone: '(34) 99231-6669', service: 'Linha Pesada' },
+  { name: 'T - Car Diesel', category: 'Mecânica Pesada', city: 'Araxá, MG', phone: '(34) 99773-9133', service: 'Linha Pesada' },
 ]
 
 const categories = ['Todas', 'Borracharia', 'Mecânica', 'Auto Elétrica', 'Mecânica Pesada', 'Guincho / Socorro', 'Lavador de Carreta'] as const
@@ -183,6 +184,11 @@ export function BrlistaDirectory() {
       window.removeEventListener('appinstalled', handleAppInstalled)
     }
   }, [])
+
+  function formatPhoneForUrl(phone: string) {
+    const digits = phone.replace(/\D/g, '')
+    return digits.startsWith('55') ? digits : `55${digits}`
+  }
 
   function handleInstallClick() {
     const userAgent = window.navigator.userAgent
@@ -404,190 +410,115 @@ export function BrlistaDirectory() {
         </div>
 
         {filteredPlaces.length > 0 ? (
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            {paginatedPlaces.map((place) => {
-              const Icon = place.icon
-              return (
-                <article key={place.name} className="rounded-[20px] border border-white/[0.09] bg-[#171815] p-4 transition hover:border-white/[0.16] sm:p-5">
-                  <div className="flex items-start gap-3">
-                    <span className="flex size-11 shrink-0 items-center justify-center rounded-[14px] border border-[#ffd43b]/15 bg-[#ffd43b]/[0.07] text-[#ffd43b]"><Icon className="size-5" /></span>
-                    <div className="min-w-0 flex-1">
-                      <h3 className="text-sm font-bold tracking-[-0.02em] text-white sm:text-base">{place.name}</h3>
-                      <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.15em] text-[#ffd43b]/80">{place.category}</p>
+          <>
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              {paginatedPlaces.map((place) => {
+                const IconComponent = place.icon ?? Wrench
+                const phoneDigits = formatPhoneForUrl(place.phone)
+
+                return (
+                  <article key={place.name} className="rounded-[20px] border border-white/[0.09] bg-[#171815] p-4 transition hover:border-white/[0.16] sm:p-5">
+                    <div className="flex items-start gap-3">
+                      <span className="flex size-11 shrink-0 items-center justify-center rounded-[14px] border border-[#ffd43b]/15 bg-[#ffd43b]/[0.07] text-[#ffd43b]"><IconComponent className="size-5" /></span>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="text-sm font-bold tracking-[-0.02em] text-white sm:text-base">{place.name}</h3>
+                        <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.15em] text-[#ffd43b]/80">{place.category}</p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-white/[0.07] pt-3 text-xs text-white/50">
-                    <span className="inline-flex items-center gap-1.5"><MapPin className="size-3.5 text-white/35" />{place.city}</span>
-                    {place.road && <span>{place.road}</span>}
-                    {place.service && <span>{place.service}</span>}
-                  </div>
-                  <a href={`tel:+55${place.phone.replace(/\D/g, '')}`} className="mt-4 block rounded-xl bg-[#20211d] px-3 py-3 text-center text-lg font-black tracking-wide text-[#ffd43b] transition hover:bg-[#272821] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ffd43b]">{place.phone}</a>
-                  <div className="mt-2 grid grid-cols-2 gap-2">
-                    <a href={`tel:+55${place.phone.replace(/\D/g, '')}`} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#ffd43b] px-3 text-[10px] font-black tracking-[0.07em] text-[#191a17] transition hover:bg-[#ffe06a] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"><Phone className="size-4" /> LIGAR AGORA</a>
-                    <a href={`https://wa.me/55${place.phone.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[#ffd43b]/35 bg-[#ffd43b]/[0.07] px-3 text-[10px] font-black tracking-[0.07em] text-[#ffd43b] transition hover:bg-[#ffd43b]/[0.14] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"><MessageCircle className="size-4" /> WHATSAPP</a>
-                  </div>
-                </article>
-              )
-            })}
-          </div>
-        ) : (
-          <div className="mt-6 rounded-[20px] border border-dashed border-white/15 px-5 py-12 text-center">
-            <Search className="mx-auto size-7 text-white/25" />
-            <h3 className="mt-3 font-bold">Nenhum serviço encontrado</h3>
-            <p className="mt-1 text-sm text-white/45">Tente outro termo ou escolha uma categoria diferente.</p>
-            <button type="button" onClick={handleClearFilters} className="mt-4 rounded-full border border-white/15 px-4 py-2 text-xs font-semibold text-white/70 hover:border-[#ffd43b]/50 hover:text-[#ffd43b]">Limpar filtros</button>
-          </div>
-        )}
-
-        {totalPages > 1 && (
-          <nav aria-label="Paginação dos estabelecimentos" className="mt-7 flex flex-wrap items-center justify-center gap-2">
-            <button
-              type="button"
-              onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
-              disabled={currentPage === 1}
-              className="min-h-10 rounded-full border border-white/10 px-4 text-xs font-semibold text-white/75 transition hover:border-[#ffd43b]/50 hover:text-[#ffd43b] disabled:cursor-not-allowed disabled:opacity-35"
-            >
-              Anterior
-            </button>
-            <div className="flex items-center gap-1" aria-label="Páginas">
-              {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
-                <button
-                  key={page}
-                  type="button"
-                  onClick={() => setCurrentPage(page)}
-                  aria-label={`Página ${page}`}
-                  aria-current={currentPage === page ? 'page' : undefined}
-                  className={`size-10 rounded-full text-xs font-bold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ffd43b] ${currentPage === page ? 'bg-[#ffd43b] text-[#191a17]' : 'border border-white/10 text-white/65 hover:border-[#ffd43b]/50 hover:text-[#ffd43b]'}`}
-                >
-                  {page}
-                </button>
-              ))}
+                    <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-white/[0.07] pt-3 text-xs text-white/50">
+                      <span className="inline-flex items-center gap-1.5"><MapPin className="size-3.5 text-white/35" />{place.city}</span>
+                      {place.road && <span>{place.road}</span>}
+                      {place.service && <span>{place.service}</span>}
+                    </div>
+                    <a href={`tel:+${phoneDigits}`} className="mt-4 block rounded-xl bg-[#20211d] px-3 py-3 text-center text-lg font-black tracking-wide text-[#ffd43b] transition hover:bg-[#272821] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ffd43b]">{place.phone}</a>
+                    <div className="mt-2 grid grid-cols-2 gap-2">
+                      <a href={`tel:+${phoneDigits}`} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#ffd43b] px-3 text-[10px] font-black tracking-[0.07em] text-[#191a17] transition hover:bg-[#ffe06a] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"><Phone className="size-4" /> LIGAR AGORA</a>
+                      <a href={`https://wa.me/${phoneDigits}`} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[#ffd43b]/35 bg-[#ffd43b]/[0.07] px-3 text-[10px] font-black tracking-[0.07em] text-[#ffd43b] transition hover:bg-[#ffd43b]/[0.14] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"><MessageCircle className="size-4" /> WHATSAPP</a>
+                    </div>
+                  </article>
+                )
+              })}
             </div>
+
+            {totalPages > 1 && (
+              <div className="mt-8 flex items-center justify-center gap-2">
+                <button
+                  type="button"
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                  className="rounded-xl border border-white/10 px-4 py-2 text-xs font-bold text-white transition hover:border-[#ffd43b]/50 disabled:opacity-40"
+                >
+                  Anterior
+                </button>
+                <span className="text-xs text-white/50">Página {currentPage} de {totalPages}</span>
+                <button
+                  type="button"
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                  className="rounded-xl border border-white/10 px-4 py-2 text-xs font-bold text-white transition hover:border-[#ffd43b]/50 disabled:opacity-40"
+                >
+                  Próxima
+                </button>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="mt-8 rounded-2xl border border-white/10 bg-[#171815] p-8 text-center">
+            <p className="text-sm text-white/60">Nenhum estabelecimento encontrado com os filtros atuais.</p>
             <button
               type="button"
-              onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
-              disabled={currentPage === totalPages}
-              className="min-h-10 rounded-full border border-white/10 px-4 text-xs font-semibold text-white/75 transition hover:border-[#ffd43b]/50 hover:text-[#ffd43b] disabled:cursor-not-allowed disabled:opacity-35"
+              onClick={handleClearFilters}
+              className="mt-4 rounded-full bg-[#ffd43b] px-4 py-2 text-xs font-bold text-[#171711]"
             >
-              Próxima
+              Limpar Filtros
             </button>
-            <span className="sr-only" aria-live="polite">Página {currentPage} de {totalPages}</span>
-          </nav>
+          </div>
         )}
-
-        <p className="mt-6 flex items-start gap-2 rounded-xl border border-white/[0.06] bg-white/[0.025] p-3 text-[10px] leading-5 text-white/40 sm:text-xs">
-          <ShieldCheck className="mt-0.5 size-4 shrink-0" /> Confirme a disponibilidade do atendimento diretamente com o estabelecimento antes de se deslocar.
-        </p>
       </section>
 
-      <dialog
-        ref={submissionDialogRef}
-        aria-labelledby="submission-title"
-        onClick={(event) => { if (event.target === event.currentTarget) event.currentTarget.close() }}
-        onClose={() => setSubmissionState('idle')}
-        className="m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-lg overflow-y-auto rounded-3xl border border-white/10 bg-[#171815] p-0 text-[#f6f4ed] shadow-2xl backdrop:bg-black/80"
-      >
-        <div className="flex items-start justify-between gap-4 border-b border-white/[0.08] px-5 py-5 sm:px-6">
-          <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#ffd43b]/75">Ajude quem está na estrada</p>
-            <h2 id="submission-title" className="mt-1 text-xl font-extrabold tracking-tight">Cadastrar Empresa/Serviço</h2>
-            <p className="mt-1 text-xs leading-5 text-white/50">Preencha os dados e envie o cadastro pelo WhatsApp.</p>
-          </div>
-          <button type="button" onClick={() => submissionDialogRef.current?.close()} aria-label="Fechar formulário" className="flex size-9 shrink-0 items-center justify-center rounded-full border border-white/10 text-white/65 transition hover:border-white/25 hover:text-white">
-            <X className="size-4" />
-          </button>
+      {/* Modal de Cadastro de Serviços */}
+      <dialog ref={submissionDialogRef} className="rounded-2xl border border-white/10 bg-[#171815] p-6 text-white backdrop:bg-black/70 max-w-md w-full">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-bold">Cadastrar Serviço</h3>
+          <button type="button" onClick={() => submissionDialogRef.current?.close()} className="text-white/50 hover:text-white"><X className="size-5" /></button>
         </div>
-
         {submissionState === 'opened' ? (
-          <div className="px-5 py-8 text-center sm:px-6">
-            <span className="mx-auto flex size-12 items-center justify-center rounded-full bg-[#ffd43b]/10 text-[#ffd43b]"><ShieldCheck className="size-6" /></span>
-            <h3 className="mt-4 text-lg font-bold">Revise e envie no WhatsApp</h3>
-            <p role="status" className="mt-2 text-sm leading-6 text-white/55">A conversa com o BRLista Brasil foi aberta em uma nova aba. Confira a mensagem e toque em enviar para concluir o cadastro.</p>
-            <button type="button" onClick={() => submissionDialogRef.current?.close()} className="mt-6 min-h-11 rounded-xl bg-[#ffd43b] px-5 text-sm font-bold text-[#171711] transition hover:bg-[#ffe06a]">Concluir</button>
+          <div className="mt-4 text-center">
+            <p className="text-sm text-white/70">O WhatsApp foi aberto com as informações do seu negócio!</p>
+            <button type="button" onClick={() => submissionDialogRef.current?.close()} className="mt-4 w-full rounded-xl bg-[#ffd43b] py-2 text-xs font-bold text-[#171711]">Fechar</button>
           </div>
         ) : (
-          <form onSubmit={handleServiceSubmit} className="flex flex-col gap-4 px-5 py-5 sm:px-6 sm:py-6">
-            <label className="flex flex-col gap-1.5 text-xs font-semibold text-white/75" htmlFor="service-name">
-              Nome do Negócio
-              <input id="service-name" name="name" required minLength={2} maxLength={120} autoComplete="organization" placeholder="Ex.: Borracharia da Estrada" className="min-h-11 rounded-xl border border-white/10 bg-[#10110f] px-3 text-sm text-white outline-none placeholder:text-white/30 focus:border-[#ffd43b]/60" />
-            </label>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <label className="flex flex-col gap-1.5 text-xs font-semibold text-white/75" htmlFor="service-category">
-                Categoria
-                <select id="service-category" name="category" required defaultValue="Borracharia" className="min-h-11 rounded-xl border border-white/10 bg-[#10110f] px-3 text-sm text-white outline-none focus:border-[#ffd43b]/60">
-                  {categories.filter((item) => item !== 'Todas').map((item) => <option key={item} value={item}>{item}</option>)}
-                </select>
-              </label>
-              <label className="flex flex-col gap-1.5 text-xs font-semibold text-white/75" htmlFor="service-city">
-                Cidade e estado
-                <input id="service-city" name="city" required minLength={2} maxLength={100} autoComplete="address-level2" placeholder="Ex.: Santos - SP" className="min-h-11 rounded-xl border border-white/10 bg-[#10110f] px-3 text-sm text-white outline-none placeholder:text-white/30 focus:border-[#ffd43b]/60" />
-              </label>
-            </div>
-            <label className="flex flex-col gap-1.5 text-xs font-semibold text-white/75" htmlFor="service-description">
-              Descrição
-              <textarea id="service-description" name="description" required minLength={5} maxLength={500} rows={3} placeholder="Conte um pouco sobre os serviços oferecidos" className="min-h-24 resize-y rounded-xl border border-white/10 bg-[#10110f] px-3 py-3 text-sm text-white outline-none placeholder:text-white/30 focus:border-[#ffd43b]/60" />
-            </label>
-            <label className="flex flex-col gap-1.5 text-xs font-semibold text-white/75" htmlFor="service-phone">
-              Telefone/WhatsApp
-              <input id="service-phone" name="phone" type="tel" inputMode="tel" required maxLength={32} autoComplete="tel" placeholder="(34) 99999-9999" className="min-h-11 rounded-xl border border-white/10 bg-[#10110f] px-3 text-sm text-white outline-none placeholder:text-white/30 focus:border-[#ffd43b]/60" />
-            </label>
-            <p className="text-[11px] leading-5 text-white/40">Ao clicar em enviar, o WhatsApp abrirá com os dados preenchidos. Depois, basta confirmar o envio na conversa.</p>
-            <button type="submit" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#ffd43b] px-4 text-sm font-black text-[#171711] transition hover:bg-[#ffe06a]">
-              <MessageCircle className="size-4" /> Enviar Cadastro
-            </button>
+          <form onSubmit={handleServiceSubmit} className="mt-4 space-y-3">
+            <input required name="name" placeholder="Nome da empresa/serviço" className="w-full rounded-xl border border-white/10 bg-[#10110f] p-3 text-xs outline-none focus:border-[#ffd43b]" />
+            <input required name="category" placeholder="Categoria (ex: Borracharia)" className="w-full rounded-xl border border-white/10 bg-[#10110f] p-3 text-xs outline-none focus:border-[#ffd43b]" />
+            <input required name="city" placeholder="Cidade / Estado" className="w-full rounded-xl border border-[#white/10] bg-[#10110f] p-3 text-xs outline-none focus:border-[#ffd43b]" />
+            <input required name="phone" placeholder="Telefone com DDD / WhatsApp" className="w-full rounded-xl border border-white/10 bg-[#10110f] p-3 text-xs outline-none focus:border-[#ffd43b]" />
+            <textarea name="description" placeholder="Breve descrição dos serviços prestados" className="w-full rounded-xl border border-white/10 bg-[#10110f] p-3 text-xs outline-none focus:border-[#ffd43b]" />
+            <button type="submit" className="w-full rounded-xl bg-[#ffd43b] py-3 text-xs font-bold text-[#171711]">Enviar para Validação via WhatsApp</button>
           </form>
         )}
       </dialog>
 
-      <dialog
-        ref={installInstructionsDialogRef}
-        aria-labelledby="install-instructions-title"
-        onClick={(event) => {
-          if (event.target === installInstructionsDialogRef.current) {
-            installInstructionsDialogRef.current?.close()
-          }
-        }}
-        className="m-auto w-[calc(100%-2rem)] max-w-sm rounded-3xl border border-white/10 bg-[#171815] p-0 text-white shadow-2xl backdrop:bg-black/70 backdrop:backdrop-blur-sm"
-      >
-        <div className="flex items-start justify-between gap-4 border-b border-white/[0.08] px-5 py-5">
-          <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#ffd43b]/75">BRLista Brasil</p>
-            <h2 id="install-instructions-title" className="mt-1 text-lg font-extrabold tracking-tight">
-              {installHelpPlatform === 'ios' ? 'Instale no iPhone ou iPad' : 'Instale o app BRLista'}
-            </h2>
-          </div>
-          <button type="button" onClick={() => installInstructionsDialogRef.current?.close()} aria-label="Fechar instruções" className="flex size-9 shrink-0 items-center justify-center rounded-full border border-white/10 text-white/65 transition hover:border-white/25 hover:text-white">
-            <X className="size-4" />
-          </button>
+      {/* Modal de Ajuda na Instalação do PWA */}
+      <dialog id="install-instructions" ref={installInstructionsDialogRef} className="rounded-2xl border border-white/10 bg-[#171815] p-6 text-white backdrop:bg-black/70 max-w-md w-full">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-bold">Como instalar o app</h3>
+          <button type="button" onClick={() => installInstructionsDialogRef.current?.close()} className="text-white/50 hover:text-white"><X className="size-5" /></button>
         </div>
-        <div id="install-instructions" className="flex flex-col gap-4 px-5 py-5 text-sm leading-6 text-white/70">
+        <div className="mt-4 text-xs text-white/70 space-y-2">
           {installHelpPlatform === 'ios' ? (
             <>
-              <p>A Apple não permite abrir a instalação diretamente. No Safari:</p>
-              <ol className="flex flex-col gap-3">
-                <li className="flex gap-3"><span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#ffd43b]/10 text-xs font-bold text-[#ffd43b]">1</span><span>Toque em <strong className="text-white">Compartilhar</strong>, na barra do Safari.</span></li>
-                <li className="flex gap-3"><span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#ffd43b]/10 text-xs font-bold text-[#ffd43b]">2</span><span>Role o menu e escolha <strong className="text-white">Adicionar à Tela de Início</strong>.</span></li>
-                <li className="flex gap-3"><span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#ffd43b]/10 text-xs font-bold text-[#ffd43b]">3</span><span>Toque em <strong className="text-white">Adicionar</strong> para concluir.</span></li>
-              </ol>
+              <p>1. Toque no botão de <strong>Partilhar</strong> no fundo do Safari.</p>
+              <p>2. Selecione a opção <strong>"Adicionar ao Ecrã Principal"</strong>.</p>
             </>
-          ) : installHelpPlatform === 'android' ? (
-            <p>Abra o menu do Chrome e toque em <strong className="text-white">Instalar app</strong> ou <strong className="text-white">Adicionar à tela inicial</strong>.</p>
           ) : (
-            <p>Abra o menu de compartilhamento ou do navegador e procure <strong className="text-white">Instalar app</strong> ou <strong className="text-white">Adicionar à tela inicial</strong>.</p>
+            <>
+              <p>1. Abra o menu de opções do navegador (três pontos no canto superior direito).</p>
+              <p>2. Toque em <strong>"Adicionar ao ecrã principal"</strong> ou <strong>"Instalar aplicação"</strong>.</p>
+            </>
           )}
-          <button type="button" onClick={() => installInstructionsDialogRef.current?.close()} className="mt-1 min-h-11 rounded-xl bg-[#ffd43b] px-5 text-sm font-bold text-[#171711] transition hover:bg-[#ffe06a]">Entendi</button>
         </div>
       </dialog>
-
-      <footer className="border-t border-white/[0.08]">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-5 text-[10px] text-white/35 sm:flex-row sm:items-center sm:justify-between sm:px-8">
-          <span>© 2026 BRLista Brasil <span className="px-1">·</span> Serviços rodoviários · Catalão/GO, Uberlândia/MG, Goiânia/GO e Santos/SP</span>
-          <a href="#inicio" className="inline-flex items-center gap-1 font-semibold text-white/50 hover:text-[#ffd43b]">Voltar ao topo <ArrowUpRight className="size-3" /></a>
-        </div>
-      </footer>
     </main>
   )
 }
-
-export default BrlistaDirectory
-
