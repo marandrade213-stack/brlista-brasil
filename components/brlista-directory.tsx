@@ -1,13 +1,14 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Download, MapPin, MessageCircle, Phone, Search, Wrench } from 'lucide-react'
+import { Download, MapPin, MessageCircle, Phone, Search, Wrench, Plus, ArrowUpRight, HeartPulse } from 'lucide-react'
 
 const categories = ['Todas', 'Borracharia', 'Mecânica', 'Auto Elétrica', 'Mecânica Pesada', 'Guincho / Socorro', 'Lavador de Carreta'] as const
 type CategoryFilter = typeof categories[number]
 type Category = Exclude<CategoryFilter, 'Todas'> | 'Guincho' | 'Lava Jato'
 type Place = { name: string; category: Category; city: string; road?: string; phone: string; service?: string }
 
+// SUA LISTA ORIGINAL COMPLETA - NÃO MUDEI NENHUM NÚMERO
 const places: Place[] = [
   { name: 'GF Mecânica', category: 'Mecânica', city: 'Araguari', phone: '+55 34 99265-6094', service: 'Serviços mecânicos em geral' },
   { name: 'MR Auto Elétrica', category: 'Auto Elétrica', city: 'Araguari', phone: '+55 34 99796-9161', service: 'Socorro elétrico' },
@@ -152,45 +153,78 @@ export function BrlistaDirectory() {
   const totalPages = Math.ceil(filteredPlaces.length / itemsPerPage)
   const paginatedPlaces = filteredPlaces.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
 
+  const whatsappCadastro = `https://wa.me/5534992656094?text=${encodeURIComponent('Olá, quero cadastrar minha empresa/serviço no BRLista Brasil')}`
+
   return (
-    <main className="min-h-screen bg-[#10110f] text-[#f6f4ed]">
-      <header className="border-b border-white/[0.08]">
+    <main className="min-h-screen bg-[#11110f] text-[#f6f4ed]">
+      {/* HEADER AMARELO DO PRINT - COM BOTÃO CADASTRAR */}
+      <header className="sticky top-0 z-20 border-b border-white/[0.08] bg-[#11110f]">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#d4ff00] text-black"><Wrench size={20}/></div>
-            <div>
-              <h1 className="font-bold leading-none">BRLista Brasil</h1>
-              <p className="text-xs opacity-60">{places.length} locais</p>
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#facc15] text-black"><Wrench size={22}/></div>
+            <div className="leading-none">
+              <p className="text-[18px] font-black leading-none">BRLISTA</p>
+              <p className="text-[18px] font-black leading-none text-[#facc15]">BRASIL</p>
+              <p className="mt-1 text-[9px] tracking-[0.2em] text-white/50">SEU APOIO NA ESTRADA</p>
             </div>
           </div>
-          {!isInstalled && (
-            <div className="flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium text-black">
-              <Download size={16}/> App
-            </div>
-          )}
+          <a href={whatsappCadastro} target="_blank" className="flex items-center gap-2 rounded-full bg-[#facc15] px-5 py-3 text-[11px] font-black leading-none text-black">
+            <Plus size={14} /> Cadastrar<br/>Empresa/Serviço
+          </a>
         </div>
       </header>
 
       <div className="mx-auto max-w-6xl px-4 py-6">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 opacity-50" size={18}/>
+        <div className="inline-flex items-center gap-2 rounded-full border border-[#facc15]/30 px-4 py-1.5 text-[10px] tracking-[0.2em] text-[#facc15]">
+          <span className="h-2 w-2 rounded-full bg-[#facc15]"></span> GUIA DE SERVIÇOS RODOVIÁRIOS
+        </div>
+
+        <h1 className="mt-6 text-[44px] font-black leading-[0.9]">
+          A estrada não<br/>espera.<br/>
+          <span className="text-[#facc15]">Encontre ajuda.</span>
+        </h1>
+
+        <p className="mt-4 max-w-[360px] text-[14px] leading-relaxed text-white/60">
+          Encontre borracharias, mecânicos, guinchos e socorro rodoviário 24h nas principais rodovias e cidades do Brasil.
+        </p>
+
+        {/* BUSCA CORRIGIDA - SEM ACENTO + TECLADO FECHA */}
+        <div className="relative mt-8">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#facc15]" size={18}/>
           <input
             ref={searchInputRef}
             value={query}
             onChange={e=>{setQuery(e.target.value); setCurrentPage(1)}}
             onKeyDown={e=>{ if(e.key==='Enter'){ searchInputRef.current?.blur() } }}
             placeholder="Buscar: catalao, araxa, goiania, sao paulo..."
-            className="w-full rounded-xl bg-white/[0.08] py-3 pl-10 pr-4 outline-none"
+            className="w-full rounded-full border border-white/10 bg-white/[0.06] py-4 pl-12 pr-4 text-sm outline-none focus:border-[#facc15]/40"
           />
         </div>
+
+        <div className="mt-6 grid grid-cols-2 gap-3">
+          <div className="rounded-[20px] border border-[#facc15]/20 bg-[#facc15]/[0.05] p-4">
+            <div className="flex justify-between"><div className="flex h-10 w-10 items-center justify-center rounded-full bg-black text-[#facc15]"><Wrench size={18}/></div><ArrowUpRight size={16} className="opacity-40"/></div>
+            <p className="mt-3 text-[13px] font-black leading-tight text-[#facc15]">SERVIÇOS<br/>NA ESTRADA</p>
+            <p className="mt-1 text-[11px] text-white/50">Catalão, Uberlândia, Goiânia e Santos</p>
+          </div>
+          <div className="rounded-[20px] border border-[#facc15]/20 bg-[#facc15]/[0.05] p-4">
+            <div className="flex justify-between"><div className="flex h-10 w-10 items-center justify-center rounded-full bg-black text-[#facc15]"><HeartPulse size={18}/></div><ArrowUpRight size={16} className="opacity-40"/></div>
+            <p className="mt-3 text-[13px] font-black leading-tight text-[#facc15]">VIDA<br/>NA BR</p>
+            <p className="mt-1 text-[11px] text-white/50">Dicas para uma viagem segura</p>
+          </div>
+        </div>
+
+        <p className="mt-10 text-[10px] tracking-[0.35em] text-[#facc15]">DIRETÓRIO DE APOIO • {filteredPlaces.length} LOCAIS</p>
+
         <div className="mt-4 flex flex-wrap gap-2">
           {categories.map(c=>(
-            <button key={c} onClick={()=>{setCategory(c); setCurrentPage(1)}} className={`rounded-full px-4 py-2 text-sm ${category===c?'bg-[#d4ff00] text-black':'bg-white/[0.08]'}`}>{c}</button>
+            <button key={c} onClick={()=>{setCategory(c); setCurrentPage(1)}} className={`rounded-full px-4 py-2 text-xs font-bold border ${category===c?'bg-[#facc15] text-black border-[#facc15]':'bg-white/5 text-white/60 border-white/10'}`}>{c}</button>
           ))}
         </div>
-        <div className="mt-6 grid gap-3">
+
+        <div className="mt-6 grid gap-3 pb-28">
           {paginatedPlaces.map((p,i)=>(
-            <div key={i} className="rounded-xl border border-white/[0.08] p-4">
+            <div key={i} className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-4">
               <div className="flex items-start justify-between">
                 <div>
                   <h3 className="font-semibold">{p.name}</h3>
@@ -206,14 +240,19 @@ export function BrlistaDirectory() {
           ))}
           {filteredPlaces.length===0 && <p className="py-10 text-center opacity-60">Nada encontrado pra "{query}"</p>}
         </div>
+
         {totalPages>1 && (
-          <div className="mt-6 flex items-center justify-center gap-2">
+          <div className="mt-6 flex items-center justify-center gap-2 pb-10">
             <button disabled={currentPage===1} onClick={()=>setCurrentPage(c=>c-1)} className="rounded-full bg-white/[0.08] px-4 py-2 disabled:opacity-30">Anterior</button>
             <span className="text-sm opacity-60">{currentPage} / {totalPages}</span>
             <button disabled={currentPage===totalPages} onClick={()=>setCurrentPage(c=>c+1)} className="rounded-full bg-white/[0.08] px-4 py-2 disabled:opacity-30">Próximo</button>
           </div>
         )}
       </div>
+
+      <a href={whatsappCadastro} target="_blank" className="fixed bottom-4 left-4 right-4 z-30 rounded-full bg-[#facc15] py-4 text-center text-sm font-black text-black md:hidden">
+        + CADASTRE SUA EMPRESA AQUI
+      </a>
     </main>
   )
 }
