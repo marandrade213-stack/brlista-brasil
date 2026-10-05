@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState } from 'react'
 import { MapPin, MessageCircle, Phone, Search, Wrench, Plus } from 'lucide-react'
 
-const categories = ['Todas', 'Borracharia', 'Mecânica', 'Auto Elétrica', 'Mecânica Pesada', 'Guincho / Socorro', 'Lavador de Carreta'] as const
+const categories = ['Todas', 'Borracharia', 'Mecânica', 'Auto Elétrica', 'Mecânica Pesada', 'Guincho / Socorro', 'Lavador de Carreta','Chaveiro'] as const
 type CategoryFilter = typeof categories[number]
 type Place = { name: string; category: string; city: string; road?: string; phone: string; service?: string }
 
@@ -59,7 +59,7 @@ const places: Place[] = [
   { name: 'Borracharia Kometa Móvel', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 98837-4438' },
   { name: 'Euro Car Jardim Guanabara', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 98635-9905' },
   { name: 'Curinga dos Pneus', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 3291-7090' },
-  { name: 'Borracharia do Boca 24 Horas', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 3274-2323' },
+  { name: 'Borracharia do Boca 24 Horas', category: 'Boracharia', city: 'Goiânia, GO', phone: '(62) 3274-2323' },
   { name: 'Borracharia 24 Horas Móvel Dia e Noite', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 99331-1571' },
   { name: 'Borracharia J.A. V', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 98234-3162' },
   { name: 'Borracharia Pitstop 24HR', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 99294-5939' },
@@ -322,8 +322,23 @@ const places: Place[] = [
   { name: 'Arteris Litoral Sul Guincho Pesado', category: 'Guincho / Socorro', city: 'Curitiba, PR', phone: '0800 725 1771' },
   { name: 'Arteris Planalto Sul Guincho', category: 'Guincho / Socorro', city: 'Curitiba, PR', phone: '0800 717 116' },
   { name: 'CCR ViaCosteira Guincho', category: 'Guincho / Socorro', city: 'Criciúma, SC', phone: '0800 255 5550' },
-]
-
+  { name: 'Chaveiro 24 Horas - Noite e Dia', category: 'Chaveiro', city: 'Catalão, GO', phone: '+55 64 99654-7756', service: 'Abertura de caminhões, chaves codificadas e canivetes 24h' },
+  { name: 'Chaveiro Móvel Ágape', category: 'Chaveiro', city: 'Catalão, GO', phone: '+55 64 99284-5014', service: 'Atendimento móvel, abertura automotiva e reparos emergenciais' },
+  { name: 'Chaveiro Móvel Novo Mundo Express', category: 'Chaveiro', city: 'Uberlândia, MG', phone: '+55 34 99880-2636', service: 'Socorro veicular 24h, confecção de chaves e troca de segredos' },
+  { name: 'Chaveiro Miguel Móvel 24 Horas', category: 'Chaveiro', city: 'Uberlândia, MG', phone: '+55 34 99124-4513', service: 'Atendimento móvel emergencial e resposta imediata' },
+  { name: 'AB Center Chaveiro (24 hrs)', category: 'Chaveiro', city: 'Uberaba, MG', phone: '+55 34 98805-1677', service: 'Plantão de abertura de automóveis e cópias gerais 24h' },
+  { name: 'Líder Chaveiro (Plantão 24 Horas)', category: 'Chaveiro', city: 'Uberaba, MG', phone: '+55 34 99118-2833', service: 'Atendimento móvel rodoviário e plantão emergencial' },
+  { name: 'Alves e Costa Chaveiro 24H', category: 'Chaveiro', city: 'Uberaba, MG', phone: '+55 34 99923-1800', service: 'Abertura de veículos, chaves canivete e codificadas' },
+  { name: 'Chaveiro Dis Tranka Pesados', category: 'Chaveiro', city: 'Araguari, MG', phone: '+55 34 99988-0602', service: 'Confecção de chaves codificadas e plantão automotivo' },
+  { name: 'Mestre das Chaves 24h', category: 'Chaveiro', city: 'Araguari, MG', phone: '+55 34 99830-3923', service: 'Socorro e abertura rápida de veículos em geral 24h' },
+  { name: 'Chaveiro Alvorada 24hs', category: 'Chaveiro', city: 'Rondonópolis, MT', phone: '+55 66 99611-9412', service: 'Controle de alarmes pesados, chaves e atendimento a domicílio' },
+  { name: 'Nelsinho Chaveiro 24h', category: 'Chaveiro', city: 'Rondonópolis, MT', phone: '+55 66 99904-2277', service: 'Abertura emergencial e chaveiro profissional de plantão' },
+  { name: 'Chaveiro Prime Pesados (Plantão)', category: 'Chaveiro', city: 'Rondonópolis, MT', phone: '+55 66 99617-5411', service: 'Especialista em aberturas de carros e caminhões na BR-364/163' },
+  { name: 'Chaveiro 24 Horas - Marcus Chaveiro', category: 'Chaveiro', city: 'Caçapava, SP', phone: '+55 12 99771-8638', service: 'Abertura e confecção de chaves para caminhões na BR-116 Dutra 24h' },
+  { name: 'A Solução Chaveiro (Plantão 24h)', category: 'Chaveiro', city: 'Jacareí, SP', phone: '+55 12 97405-9545', service: 'Serviços automotivos e chaves codificadas próximo à Dutra e D. Pedro' },
+  { name: 'Chaveiro Guatupê 24 horas', category: 'Chaveiro', city: 'São José dos Pinhais, PR', phone: '+55 41 99664-2016', service: 'Abertura de veículos e cópias de chaves codificadas na BR-376' },
+  { name: 'Chaveiro da Félix 24h', category: 'Chaveiro', city: 'Pelotas, RS', phone: '+55 53 98131-6653', service: 'Abertura automotiva e chaves codificadas na BR-116 e BR-392' },
+  { name: 'Clínica das Chaves Codificadas 24h', category: 'Chaveiro', city: 'Pelotas, RS', phone: '+55 53 99926-2693', service: 'Socorro e abertura automotiva com veículo de assistência móvel' },
 export function BrlistaDirectory() {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<CategoryFilter>('Todas')
