@@ -5,8 +5,7 @@ import { MapPin, MessageCircle, Phone, Search, Wrench, Plus } from 'lucide-react
 
 const categories = ['Todas', 'Borracharia', 'Mecânica', 'Auto Elétrica', 'Mecânica Pesada', 'Guincho / Socorro', 'Lavador de Carreta'] as const
 type CategoryFilter = typeof categories[number]
-type Category = Exclude<CategoryFilter, 'Todas'> | 'Guincho' | 'Lava Jato'
-type Place = { name: string; category: Category; city: string; road?: string; phone: string; service?: string }
+type Place = { name: string; category: string; city: string; road?: string; phone: string; service?: string }
 
 const places: Place[] = [
   { name: 'GF Mecânica', category: 'Mecânica', city: 'Araguari', phone: '+55 34 99265-6094', service: 'Serviços mecânicos em geral' },
@@ -273,7 +272,7 @@ const places: Place[] = [
   { name: 'Conserta Carros', category: 'Borracharia', city: 'São Paulo, SP', phone: '(11) 4172-0984' },
   { name: 'Borracharia Juracar', category: 'Borracharia', city: 'São Paulo, SP', phone: '(11) 98423-5612' },
   { name: 'Borracharia', category: 'Borracharia', city: 'São Paulo, SP', phone: '(11) 96835-8169' },
-] { name: 'Borracharia JK 3 Barras', category: 'Borracharia', city: 'Cristalina, GO', phone: '+55 61 98662-0652' },
+  { name: 'Borracharia JK 3 Barras', category: 'Borracharia', city: 'Cristalina, GO', phone: '+55 61 98662-0652' },
   { name: 'Borracharia Triângulo Ipameri', category: 'Borracharia', city: 'Ipameri, GO', phone: '+55 64 99299-2140' },
   { name: 'LIHAN Borracharia Móvel', category: 'Borracharia', city: 'Catalão, GO', phone: '+55 64 98154-8109' },
   { name: 'Borracharia do Baiano', category: 'Borracharia', city: 'Catalão, GO', phone: '+55 64 99961-3430' },
@@ -323,6 +322,7 @@ const places: Place[] = [
   { name: 'Arteris Litoral Sul Guincho Pesado', category: 'Guincho / Socorro', city: 'Curitiba, PR', phone: '0800 725 1771' },
   { name: 'Arteris Planalto Sul Guincho', category: 'Guincho / Socorro', city: 'Curitiba, PR', phone: '0800 717 116' },
   { name: 'CCR ViaCosteira Guincho', category: 'Guincho / Socorro', city: 'Criciúma, SC', phone: '0800 255 5550' },
+]
 
 export function BrlistaDirectory() {
   const [query, setQuery] = useState('')
@@ -356,7 +356,6 @@ export function BrlistaDirectory() {
   const itemsPerPage = 10
   const totalPages = Math.ceil(filteredPlaces.length / itemsPerPage)
   const paginatedPlaces = filteredPlaces.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-
   const whatsappCadastro = `https://wa.me/5534988171945?text=${encodeURIComponent('Olá, quero cadastrar minha empresa/serviço no BRLista Brasil')}`
 
   return (
@@ -376,41 +375,22 @@ export function BrlistaDirectory() {
           </a>
         </div>
       </header>
-
       <div className="mx-auto max-w-6xl px-4 py-6">
         <div className="inline-flex items-center gap-2 rounded-full border border-[#facc15]/30 px-4 py-1.5 text-[10px] tracking-[0.2em] text-[#facc15]">
           <span className="h-2 w-2 rounded-full bg-[#facc15]"></span> GUIA DE SERVIÇOS RODOVIÁRIOS
         </div>
-
-        <h1 className="mt-6 text-[44px] font-black leading-[0.9]">
-          A estrada não<br/>espera.<br/>
-          <span className="text-[#facc15]">Encontre ajuda.</span>
-        </h1>
-
-        <p className="mt-4 max-w-[360px] text-[14px] leading-relaxed text-white/60">
-          Encontre borracharias, mecânicos, guinchos e socorro rodoviário 24h nas principais rodovias e cidades do Brasil.
-        </p>
-
+        <h1 className="mt-6 text-[44px] font-black leading-[0.9]">A estrada não<br/>espera.<br/><span className="text-[#facc15]">Encontre ajuda.</span></h1>
+        <p className="mt-4 max-w-[360px] text-[14px] leading-relaxed text-white/60">Encontre borracharias, mecânicos, guinchos e socorro rodoviário 24h nas principais rodovias e cidades do Brasil.</p>
         <div className="relative mt-8">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#facc15]" size={18}/>
-          <input
-            ref={searchInputRef}
-            value={query}
-            onChange={e=>{setQuery(e.target.value); setCurrentPage(1)}}
-            onKeyDown={e=>{ if(e.key==='Enter'){ searchInputRef.current?.blur() } }}
-            placeholder="Buscar: rondonia, porto velho, vilhena, ariquemes..."
-            className="w-full rounded-full border border-white/10 bg-white/[0.06] py-4 pl-12 pr-4 text-sm outline-none focus:border-[#facc15]/40"
-          />
+          <input ref={searchInputRef} value={query} onChange={e=>{setQuery(e.target.value); setCurrentPage(1)}} placeholder="Buscar: rondonia, porto velho, vilhena, ariquemes..." className="w-full rounded-full border border-white/10 bg-white/[0.06] py-4 pl-12 pr-4 text-sm outline-none focus:border-[#facc15]/40" />
         </div>
-
         <p className="mt-10 text-[10px] tracking-[0.35em] text-[#facc15]">DIRETÓRIO DE APOIO • {filteredPlaces.length} LOCAIS</p>
-
         <div className="mt-4 flex flex-wrap gap-2">
           {categories.map(c=>(
             <button key={c} onClick={()=>{setCategory(c); setCurrentPage(1)}} className={`rounded-full px-4 py-2 text-xs font-bold border ${category===c?'bg-[#facc15] text-black border-[#facc15]':'bg-white/5 text-white/60 border-white/10'}`}>{c}</button>
           ))}
         </div>
-
         <div className="mt-6 grid gap-3 pb-10">
           {paginatedPlaces.map((p,i)=>(
             <div key={i} className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-4">
@@ -427,9 +407,7 @@ export function BrlistaDirectory() {
               </div>
             </div>
           ))}
-          {filteredPlaces.length===0 && <p className="py-10 text-center opacity-60">Nada encontrado pra "{query}"</p>}
         </div>
-
         {totalPages>1 && (
           <div className="mt-6 flex items-center justify-center gap-2 pb-10">
             <button disabled={currentPage===1} onClick={()=>setCurrentPage(c=>c-1)} className="rounded-full bg-white/[0.08] px-4 py-2 disabled:opacity-30">Anterior</button>
