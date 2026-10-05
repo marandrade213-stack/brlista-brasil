@@ -59,7 +59,7 @@ const places: Place[] = [
   { name: 'Borracharia Kometa Móvel', category: 'Borracharia', city: 'Uberlândia, MG', phone: '(34) 98837-4438' },
   { name: 'Euro Car Jardim Guanabara', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 98635-9905' },
   { name: 'Curinga dos Pneus', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 3291-7090' },
-  { name: 'Borracharia do Boca 24 Horas', category: 'Boracharia', city: 'Goiânia, GO', phone: '(62) 3274-2323' },
+  { name: 'Borracharia do Boca 24 Horas', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 3274-2323' },
   { name: 'Borracharia 24 Horas Móvel Dia e Noite', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 99331-1571' },
   { name: 'Borracharia J.A. V', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 98234-3162' },
   { name: 'Borracharia Pitstop 24HR', category: 'Borracharia', city: 'Goiânia, GO', phone: '(62) 99294-5939' },
@@ -339,6 +339,8 @@ const places: Place[] = [
   { name: 'Chaveiro Guatupê 24 horas', category: 'Chaveiro', city: 'São José dos Pinhais, PR', phone: '+55 41 99664-2016', service: 'Abertura de veículos e cópias de chaves codificadas na BR-376' },
   { name: 'Chaveiro da Félix 24h', category: 'Chaveiro', city: 'Pelotas, RS', phone: '+55 53 98131-6653', service: 'Abertura automotiva e chaves codificadas na BR-116 e BR-392' },
   { name: 'Clínica das Chaves Codificadas 24h', category: 'Chaveiro', city: 'Pelotas, RS', phone: '+55 53 99926-2693', service: 'Socorro e abertura automotiva com veículo de assistência móvel' },
+];
+
 export function BrlistaDirectory() {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<CategoryFilter>('Todas')
