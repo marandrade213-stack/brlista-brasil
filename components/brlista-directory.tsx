@@ -556,17 +556,20 @@ export function BrlistaDirectory() {
     return phone
   }
 
-  const normalize = (t: string) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+  const normalize = (t: string) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim()
+const getUf = (city: string) => (city.match(/,\s*([A-Z]{2})$/i) || city.match(/-\s*([A-Z]{2})$/i) || [])[1]?.toUpperCase() || ""
+const mapaEstados: any = {'ac':'AC','acre':'AC','ro':'RO','rondonia':'RO','go':'GO','goias':'GO','mg':'MG','mt':'MT','sp':'SP','ce':'CE','ceara':'CE'}
 
-  const filteredPlaces = useMemo(() => {
-    const q = normalize(query.trim())
-    return places.filter((p) => {
-      const ok = category === 'Todas' || p.category === category
-      if (!q) return ok
-      const txt = normalize(`${p.name} ${p.category} ${p.city} ${p.road?? ''} ${p.service?? ''}`)
-      return ok && txt.includes(q)
-    })
-  }, [category, query])
+const filteredPlaces = useMemo(() => {
+  const q = normalize(query.trim())
+  return places.filter((p) => {
+    const ok = category === 'Todas' || p.category === category
+    if (!q) return ok
+    if (mapaEstados[q]) return ok && getUf(p.city) === mapaEstados[q]
+    const txt = normalize(`${p.name} ${p.category} ${p.city} ${p.road?? ''} ${p.service?? ''}`)
+    return ok && txt.includes(q)
+  })
+}, [category, query])
 
   const itemsPerPage = 10
   const totalPages = Math.ceil(filteredPlaces.length / itemsPerPage)
@@ -598,7 +601,7 @@ export function BrlistaDirectory() {
         <p className="mt-4 max-w-[360px] text-[14px] leading-relaxed text-white/60">Encontre borracharias, mecânicos, guinchos e socorro rodoviário 24h nas principais rodovias e cidades do Brasil.</p>
         <div className="relative mt-8">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#facc15]" size={18}/>
-          <input ref={searchInputRef} value={query} onChange={e=>{setQuery(e.target.value); setCurrentPage(1)}} placeholder="Buscar: rondonia, porto velho, vilhena, ariquemes..." className="w-full rounded-full border border-white/10 bg-white/[0.06] py-4 pl-12 pr-4 text-sm outline-none focus:border-[#facc15]/40" />
+          <input ref={searchInputRef} value={query} enterKeyHint="search" onKeyDown={(e)=>{ if(e.key==='Enter'){ searchInputRef.current?.blur() }}} onChange={e=>{setQuery(e.target.value); setCurrentPage(1)}} placeholder="Buscar: rondonia, porto velho, vilhena, ariquemes..." className="w-full rounded-full border border-white/10 bg-white/[0.06] py-4 pl-12 pr-4 text-sm outline-none focus:border-[#facc15]/40" />
         </div>
         <p className="mt-10 text-[10px] tracking-[0.35em] text-[#facc15]">DIRETÓRIO DE APOIO • {filteredPlaces.length} LOCAIS</p>
         <div className="mt-4 flex flex-wrap gap-2">
