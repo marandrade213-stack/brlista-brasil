@@ -58,15 +58,12 @@ export function BrlistaDirectory() {
   const filteredPlaces = useMemo(() => {
     const q = normalize(query.trim())
     const lista = (places as any[]) || []
-
-    // ACHA A UF MESMO SE DIGITAR INCOMPLETO (piau, ceara, maran)
     let ufAlvo: string | null = mapaEstados[q] || null
     if (!ufAlvo && q.length >= 2) {
       const achado = Object.keys(mapaEstados).find(k => k.startsWith(q))
       if (achado) ufAlvo = mapaEstados[achado]
     }
 
-    // DEDUPLICA CORRETO: telefone + categoria + CIDADE (pra não apagar Picos e Floriano com mesmo telefone)
     const unicos = new Map()
     lista.forEach(p => {
       const tel = String(p.telefone || p.phone || p.whatsapp || '').replace(/\D/g, '')
@@ -79,23 +76,27 @@ export function BrlistaDirectory() {
 
     return listaUnica.filter((p) => {
       const catText = normalize(p.categoria || p.category || '')
+      const servicoText = normalize(p.servico || p.service || '')
       const selectedCatNorm = normalize(category)
-      let okCat = category === 'Todas'? true :
-                  category === 'Lava Jato'? (catText.includes('lava') || catText.includes('jato')) :
-                  catText.includes(selectedCatNorm)
+
+      // FIX DEFINITIVO: Lava Jato = Lavador de Carreta = mesma coisa
+      let okCat = true
+      if (category!== 'Todas') {
+        if (selectedCatNorm.includes('lava') || selectedCatNorm.includes('lavador') || selectedCatNorm.includes('jato')) {
+          okCat = catText.includes('lava') || catText.includes('jato') || catText.includes('lavador') || catText.includes('lavagem') || servicoText.includes('lavador') || servicoText.includes('lava')
+        } else {
+          okCat = catText.includes(selectedCatNorm) || servicoText.includes(selectedCatNorm)
+        }
+      }
       if (!okCat) return false
       if (!q) return true
 
       const cidadeText = p.cidade || p.city || ''
       const ufDoLocal = getUf(cidadeText)
-
-      if (ufAlvo) {
-        return ufDoLocal === ufAlvo
-      }
+      if (ufAlvo) return ufDoLocal === ufAlvo
 
       const nomeText = p.nome || p.name || ''
       const estradaText = p.rodovia || p.road || ''
-      const servicoText = p.servico || p.service || ''
       const txt = normalize(`${nomeText} ${cidadeText} ${estradaText} ${servicoText} ${catText}`)
       return txt.includes(q)
     })
@@ -130,40 +131,18 @@ export function BrlistaDirectory() {
         <div className="inline-flex items-center gap-2 rounded-full border border-[#facc15]/30 px-4 py-1.5 text-[10px] tracking-[0.2em] text-[#facc15]">
           <span className="h-2 w-2 rounded-full bg-[#facc15]"></span> GUIA DE SERVIÇOS RODOVIÁRIOS
         </div>
-
-        <h1 className="mt-6 text-[44px] font-black leading-[0.9]">
-          A estrada não<br />espera.<br /><span className="text-[#facc15]">Encontre ajuda.</span>
-        </h1>
-        <p className="mt-4 max-w-[360px] text-[14px] leading-relaxed text-white/60">
-          Encontre borracharias, mecânicos, guinchos e socorro rodoviário 24h nas principais rodovias e cidades do Brasil.
-        </p>
-
+        <h1 className="mt-6 text-[44px] font-black leading-[0.9]">A estrada não<br />espera.<br /><span className="text-[#facc15]">Encontre ajuda.</span></h1>
+        <p className="mt-4 max-w-[360px] text-[14px] leading-relaxed text-white/60">Encontre borracharias, mecânicos, guinchos e socorro rodoviário 24h nas principais rodovias e cidades do Brasil.</p>
         <div className="relative mt-8">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#facc15]" size={18} />
-          <input
-            ref={searchInputRef}
-            value={query}
-            enterKeyHint="search"
-            onKeyDown={(e) => { if (e.key === 'Enter') searchInputRef.current?.blur() }}
-            onChange={(e) => { setQuery(e.target.value); setCurrentPage(1) }}
-            placeholder="Buscar: piauí, bom jesus, teresina, BR-135..."
-            className="w-full rounded-full border border-white/10 bg-white/[0.06] py-4 pl-12 pr-4 text-sm outline-none focus:border-[#facc15]/40"
-          />
+          <input ref={searchInputRef} value={query} enterKeyHint="search" onKeyDown={(e) => { if (e.key === 'Enter') searchInputRef.current?.blur() }} onChange={(e) => { setQuery(e.target.value); setCurrentPage(1) }} placeholder="Buscar: piauí, bom jesus, teresina, BR-135..." className="w-full rounded-full border border-white/10 bg-white/[0.06] py-4 pl-12 pr-4 text-sm outline-none focus:border-[#facc15]/40" />
         </div>
-
-        <p className="mt-10 text-[10px] tracking-[0.35em] text-[#facc15]">
-          DIRETÓRIO DE APOIO • {filteredPlaces.length} LOCAIS ÚNICOS
-        </p>
-
+        <p className="mt-10 text-[10px] tracking-[0.35em] text-[#facc15]">DIRETÓRIO DE APOIO • {filteredPlaces.length} LOCAIS ÚNICOS</p>
         <div className="mt-4 flex flex-wrap gap-2">
-          {((categories as string[]) || ['Todas', 'Borracharia', 'Mecânica', 'Guincho', 'Auto Elétrica']).map((c) => (
-            <button key={c} onClick={() => { setCategory(c); setCurrentPage(1) }}
-              className={`rounded-full px-4 py-2 text-xs font-bold border ${category === c? 'bg-[#facc15] text-black border-[#facc15]' : 'bg-white/5 text-white/60 border-white/10'}`}>
-              {c}
-            </button>
+          {((categories as string[]) || ['Todas', 'Borracharia', 'Mecânica', 'Guincho', 'Auto Elétrica', 'Lavador de Carreta']).map((c) => (
+            <button key={c} onClick={() => { setCategory(c); setCurrentPage(1) }} className={`rounded-full px-4 py-2 text-xs font-bold border ${category === c? 'bg-[#facc15] text-black border-[#facc15]' : 'bg-white/5 text-white/60 border-white/10'}`}>{c}</button>
           ))}
         </div>
-
         <div className="mt-6 grid gap-3 pb-6">
           {paginatedPlaces.length > 0? (
             paginatedPlaces.map((p, i) => {
@@ -181,46 +160,19 @@ export function BrlistaDirectory() {
                       <p className="flex items-center gap-1 text-sm opacity-70"><MapPin size={12} /> {cidade} {rodovia? `- ${rodovia}` : ''}</p>
                       <p className="mt-1 text-xs opacity-60">{categoria} {servico? `- ${servico}` : ''}</p>
                     </div>
-                    {telefone && (
-                      <a href={`https://wa.me/${formatPhoneForUrl(telefone)}`} target="_blank" className="rounded-full bg-green-500 p-2 text-black"><MessageCircle size={18} /></a>
-                    )}
+                    {telefone && (<a href={`https://wa.me/${formatPhoneForUrl(telefone)}`} target="_blank" className="rounded-full bg-green-500 p-2 text-black"><MessageCircle size={18} /></a>)}
                   </div>
-                  {telefone && (
-                    <div className="mt-3 flex gap-2">
-                      <a href={`tel:${formatPhoneForUrl(telefone)}`} className="flex items-center gap-1 rounded-full bg-white px-3 py-1 text-sm text-black">
-                        <Phone size={14} /> {formatPhoneForDisplay(telefone)}
-                      </a>
-                    </div>
-                  )}
+                  {telefone && (<div className="mt-3 flex gap-2"><a href={`tel:${formatPhoneForUrl(telefone)}`} className="flex items-center gap-1 rounded-full bg-white px-3 py-1 text-sm text-black"><Phone size={14} /> {formatPhoneForDisplay(telefone)}</a></div>)}
                 </div>
               )
             })
-          ) : (
-            <div className="py-10 text-center text-sm text-white/40 border border-dashed border-white/10 rounded-xl">
-              Nenhum local encontrado para a pesquisa.
-            </div>
-          )}
+          ) : (<div className="py-10 text-center text-sm text-white/40 border border-dashed border-white/10 rounded-xl">Nenhum local encontrado para a pesquisa.</div>)}
         </div>
-
         {totalPages > 1 && (
           <div className="flex items-center justify-between pb-28 pt-4">
-            <button
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-              className="flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm disabled:opacity-30"
-            >
-              <ChevronLeft size={16} /> Anterior
-            </button>
-            <span className="text-xs text-white/50">
-              Página {currentPage} de {totalPages}
-            </span>
-            <button
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-              className="flex items-center gap-2 rounded-full bg-[#facc15] px-4 py-2 text-sm font-bold text-black disabled:opacity-30"
-            >
-              Próxima <ChevronRight size={16} />
-            </button>
+            <button disabled={currentPage === 1} onClick={() => setCurrentPage(p => Math.max(1, p - 1))} className="flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm disabled:opacity-30"><ChevronLeft size={16} /> Anterior</button>
+            <span className="text-xs text-white/50">Página {currentPage} de {totalPages}</span>
+            <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} className="flex items-center gap-2 rounded-full bg-[#facc15] px-4 py-2 text-sm font-bold text-black disabled:opacity-30">Próxima <ChevronRight size={16} /></button>
           </div>
         )}
         {totalPages <= 1 && <div className="pb-28" />}
