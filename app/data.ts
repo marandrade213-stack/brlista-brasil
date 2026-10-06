@@ -679,7 +679,8 @@ export const places = [
 { nome: "Lava Jato Pronto Car", cidade: "Fortaleza, CE", rodovia: "R. Homem de Melo, 100 - Messejana", telefone: "85988714359", categoria: "Lava Jato", servico: "Lava Jato" },
 { nome: "Lava Jato Rodoviária", cidade: "Fortaleza, CE", rodovia: "R. João Araripe, 545 - Vila União", telefone: "85989343526", categoria: "Lava Jato", servico: "Lava Jato" },
 { nome: "Lava Jato Monte Sião", cidade: "Iguatu, CE", rodovia: "R. João Vicente Alves, 873", telefone: "88981594709", categoria: "Lava Jato", servico: "Lava Jato" },
-{ nome: "Iram Reboque e Borracharia Móvel 24h", cidade: "Fortaleza, CE", rodovia: "Atendimento móvel em rodovias - Região Metropolitana", telefone: "85999455205", categoria: "Borracharia", servico: "Reboque e Borracharia Móvel 24h" }
+{ nome: "Iram Reboque e Borracharia Móvel 24h", cidade: "Fortaleza, CE", rodovia: "Atendimento móvel em rodovias - Região Metropolitana", telefone: "85999455205", categoria: "Borracharia", servico: "Reboque e Borracharia Móvel 24h" },
+];
 export type CategoryFilter = 'Todas' | 'Borracharia' | 'Mecânica' | 'Guincho' | 'Auto Elétrica' | 'Chaveiro' | 'Guincho / Socorro' | 'Lavador de Carreta';
 export const categories: CategoryFilter[] = [
   'Todas',
