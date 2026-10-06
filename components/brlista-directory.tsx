@@ -23,36 +23,10 @@ export function BrlistaDirectory() {
   }
 
   const normalize = (t: any) => String(t || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim()
-  const getUf = (city: any) => (String(city || '').match(/,\s*([A-Z]{2})$/i) || String(city || '').match(/-\s*([A-Z]{2})$/i) || [])[1]?.toUpperCase() || ""
+  const getUf = (city: any) => (String(city || '').match(/,\s*([A-Z]{2})$/i) || String(city || '').match(/-\s*([A-Z]{2})$/i) || [])[1]?.toUpperCase() || "")
 
   const mapaEstados: Record<string, string> = {
-    'ac': 'AC', 'acre': 'AC',
-    'al': 'AL', 'alagoas': 'AL',
-    'ap': 'AP', 'amapa': 'AP',
-    'am': 'AM', 'amazonas': 'AM',
-    'ba': 'BA', 'bahia': 'BA',
-    'ce': 'CE', 'ceara': 'CE', 'cear': 'CE',
-    'df': 'DF', 'distrito federal': 'DF', 'brasilia': 'DF',
-    'es': 'ES', 'espirito santo': 'ES',
-    'go': 'GO', 'goias': 'GO',
-    'ma': 'MA', 'maranhao': 'MA', 'maran': 'MA',
-    'mt': 'MT', 'mato grosso': 'MT',
-    'ms': 'MS', 'mato grosso do sul': 'MS',
-    'mg': 'MG', 'minas gerais': 'MG',
-    'pa': 'PA', 'para': 'PA',
-    'pb': 'PB', 'paraiba': 'PB',
-    'pr': 'PR', 'parana': 'PR',
-    'pe': 'PE', 'pernambuco': 'PE',
-    'pi': 'PI', 'piau': 'PI', 'piaui': 'PI',
-    'rj': 'RJ', 'rio de janeiro': 'RJ',
-    'rn': 'RN', 'rio grande do norte': 'RN',
-    'rs': 'RS', 'rio grande do sul': 'RS',
-    'ro': 'RO', 'rondonia': 'RO',
-    'rr': 'RR', 'roraima': 'RR',
-    'sc': 'SC', 'santa catarina': 'SC',
-    'sp': 'SP', 'sao paulo': 'SP',
-    'se': 'SE', 'sergipe': 'SE',
-    'to': 'TO', 'tocantins': 'TO'
+    'ac': 'AC', 'acre': 'AC','al': 'AL', 'alagoas': 'AL','ap': 'AP', 'amapa': 'AP','am': 'AM', 'amazonas': 'AM','ba': 'BA', 'bahia': 'BA','ce': 'CE', 'ceara': 'CE', 'cear': 'CE','df': 'DF', 'distrito federal': 'DF', 'brasilia': 'DF','es': 'ES', 'espirito santo': 'ES','go': 'GO', 'goias': 'GO','ma': 'MA', 'maranhao': 'MA', 'maran': 'MA','mt': 'MT', 'mato grosso': 'MT','ms': 'MS', 'mato grosso do sul': 'MS','mg': 'MG', 'minas gerais': 'MG','pa': 'PA', 'para': 'PA','pb': 'PB', 'paraiba': 'PB','pr': 'PR', 'parana': 'PR','pe': 'PE', 'pernambuco': 'PE','pi': 'PI', 'piau': 'PI', 'piaui': 'PI','rj': 'RJ', 'rio de janeiro': 'RJ','rn': 'RN', 'rio grande do norte': 'RN','rs': 'RS', 'rio grande do sul': 'RS','ro': 'RO', 'rondonia': 'RO','rr': 'RR', 'roraima': 'RR','sc': 'SC', 'santa catarina': 'SC','sp': 'SP', 'sao paulo': 'SP','se': 'SE', 'sergipe': 'SE','to': 'TO', 'tocantins': 'TO'
   }
 
   const filteredPlaces = useMemo(() => {
@@ -63,7 +37,6 @@ export function BrlistaDirectory() {
       const achado = Object.keys(mapaEstados).find(k => k.startsWith(q))
       if (achado) ufAlvo = mapaEstados[achado]
     }
-
     const unicos = new Map()
     lista.forEach(p => {
       const tel = String(p.telefone || p.phone || p.whatsapp || '').replace(/\D/g, '')
@@ -73,13 +46,10 @@ export function BrlistaDirectory() {
       if (!unicos.has(chave)) unicos.set(chave, p)
     })
     const listaUnica = Array.from(unicos.values())
-
     return listaUnica.filter((p) => {
       const catText = normalize(p.categoria || p.category || '')
       const servicoText = normalize(p.servico || p.service || '')
       const selectedCatNorm = normalize(category)
-
-      // FIX DEFINITIVO: Lava Jato = Lavador de Carreta = mesma coisa
       let okCat = true
       if (category!== 'Todas') {
         if (selectedCatNorm.includes('lava') || selectedCatNorm.includes('lavador') || selectedCatNorm.includes('jato')) {
@@ -90,11 +60,9 @@ export function BrlistaDirectory() {
       }
       if (!okCat) return false
       if (!q) return true
-
       const cidadeText = p.cidade || p.city || ''
       const ufDoLocal = getUf(cidadeText)
       if (ufAlvo) return ufDoLocal === ufAlvo
-
       const nomeText = p.nome || p.name || ''
       const estradaText = p.rodovia || p.road || ''
       const txt = normalize(`${nomeText} ${cidadeText} ${estradaText} ${servicoText} ${catText}`)
@@ -112,25 +80,14 @@ export function BrlistaDirectory() {
       <header className="sticky top-0 z-20 border-b border-white/[0.08] bg-[#11110f]">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#facc15] text-black">
-              <Wrench size={22} />
-            </div>
-            <div className="leading-none">
-              <p className="text-[18px] font-black leading-none">BRLISTA</p>
-              <p className="text-[18px] font-black leading-none text-[#facc15]">BRASIL</p>
-              <p className="mt-1 text-[9px] tracking-[0.2em] text-white/50">SEU APOIO NA ESTRADA</p>
-            </div>
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#facc15] text-black"><Wrench size={22} /></div>
+            <div className="leading-none"><p className="text-[18px] font-black leading-none">BRLISTA</p><p className="text-[18px] font-black leading-none text-[#facc15]">BRASIL</p><p className="mt-1 text-[9px] tracking-[0.2em] text-white/50">SEU APOIO NA ESTRADA</p></div>
           </div>
-          <a href={whatsappCadastro} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 rounded-full bg-[#facc15] px-5 py-3 text-[11px] font-black leading-none text-black">
-            <Plus size={14} /> Cadastrar<br />Empresa
-          </a>
+          <a href={whatsappCadastro} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 rounded-full bg-[#facc15] px-5 py-3 text-[11px] font-black leading-none text-black"><Plus size={14} /> Cadastrar<br />Empresa</a>
         </div>
       </header>
-
       <div className="mx-auto max-w-6xl px-4 py-6">
-        <div className="inline-flex items-center gap-2 rounded-full border border-[#facc15]/30 px-4 py-1.5 text-[10px] tracking-[0.2em] text-[#facc15]">
-          <span className="h-2 w-2 rounded-full bg-[#facc15]"></span> GUIA DE SERVIÇOS RODOVIÁRIOS
-        </div>
+        <div className="inline-flex items-center gap-2 rounded-full border border-[#facc15]/30 px-4 py-1.5 text-[10px] tracking-[0.2em] text-[#facc15]"><span className="h-2 w-2 rounded-full bg-[#facc15]"></span> GUIA DE SERVIÇOS RODOVIÁRIOS</div>
         <h1 className="mt-6 text-[44px] font-black leading-[0.9]">A estrada não<br />espera.<br /><span className="text-[#facc15]">Encontre ajuda.</span></h1>
         <p className="mt-4 max-w-[360px] text-[14px] leading-relaxed text-white/60">Encontre borracharias, mecânicos, guinchos e socorro rodoviário 24h nas principais rodovias e cidades do Brasil.</p>
         <div className="relative mt-8">
@@ -148,21 +105,23 @@ export function BrlistaDirectory() {
             paginatedPlaces.map((p, i) => {
               const nome = p.nome || p.name || 'Serviço Rodoviário'
               const cidade = p.cidade || p.city || ''
-              const rodovia = p.rodovia || p.road || ''
               const categoria = p.categoria || p.category || ''
               const servico = p.servico || p.service || ''
               const telefone = p.whatsapp || p.telefone || p.phone || ''
               return (
-                <div key={i} className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-4">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="font-semibold">{nome}</h3>
-                      <p className="flex items-center gap-1 text-sm opacity-70"><MapPin size={12} /> {cidade} {rodovia? `- ${rodovia}` : ''}</p>
+                <div key={i} className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-4 overflow-hidden">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-semibold leading-tight">{nome}</h3>
+                      <div className="mt-1 flex items-start gap-1.5">
+                        <MapPin size={12} className="mt-[3px] shrink-0 opacity-70" />
+                        <span className="text-[13px] leading-[1.3] opacity-70 break-words line-clamp-3">{cidade}</span>
+                      </div>
                       <p className="mt-1 text-xs opacity-60">{categoria} {servico? `- ${servico}` : ''}</p>
                     </div>
-                    {telefone && (<a href={`https://wa.me/${formatPhoneForUrl(telefone)}`} target="_blank" className="rounded-full bg-green-500 p-2 text-black"><MessageCircle size={18} /></a>)}
+                    {telefone && (<a href={`https://wa.me/${formatPhoneForUrl(telefone)}`} target="_blank" className="shrink-0 rounded-full bg-green-500 p-2.5 text-black"><MessageCircle size={18} /></a>)}
                   </div>
-                  {telefone && (<div className="mt-3 flex gap-2"><a href={`tel:${formatPhoneForUrl(telefone)}`} className="flex items-center gap-1 rounded-full bg-white px-3 py-1 text-sm text-black"><Phone size={14} /> {formatPhoneForDisplay(telefone)}</a></div>)}
+                  {telefone && (<div className="mt-3 flex gap-2"><a href={`tel:${formatPhoneForUrl(telefone)}`} className="flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-sm font-medium text-black"><Phone size={14} /> {formatPhoneForDisplay(telefone)}</a></div>)}
                 </div>
               )
             })
