@@ -608,5 +608,7 @@ export const categories: CategoryFilter[] = [
   'Mecânica',
   'Guincho',
   'Auto Elétrica',
-  'Chaveiro'
+  'Chaveiro',
+  'Guincho / Socorro',
+  'Lavador de Carreta'
 ];
