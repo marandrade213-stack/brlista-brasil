@@ -680,6 +680,35 @@ export const places = [
 { nome: "Lava Jato Rodoviária", cidade: "Fortaleza, CE", rodovia: "R. João Araripe, 545 - Vila União", telefone: "85989343526", categoria: "Lava Jato", servico: "Lava Jato" },
 { nome: "Lava Jato Monte Sião", cidade: "Iguatu, CE", rodovia: "R. João Vicente Alves, 873", telefone: "88981594709", categoria: "Lava Jato", servico: "Lava Jato" },
 { nome: "Iram Reboque e Borracharia Móvel 24h", cidade: "Fortaleza, CE", rodovia: "Atendimento móvel em rodovias - Região Metropolitana", telefone: "85999455205", categoria: "Borracharia", servico: "Reboque e Borracharia Móvel 24h" },
+// ===== PIAUÍ - CIRCUITO BR-316 / BR-407 - PICOS =====
+{ nome: "Demir Pneus & Borracharia", cidade: "Picos, PI", rodovia: "BR-316", categoria: "Borracharia", servico: "Pesados na BR", telefone: "89994030409", whatsapp: "89994030409" },
+{ nome: "Mavel Pneus e Recapagem", cidade: "Picos, PI", rodovia: "BR-316", categoria: "Borracharia", servico: "Autorizada Michelin", telefone: "89999832526", whatsapp: "89999832526" },
+{ nome: "Borracharia Jaguar Santos", cidade: "Picos, PI", rodovia: "BR-316", categoria: "Borracharia", servico: "Reparos e Pneus", telefone: "89988212531", whatsapp: "89988212531" },
+{ nome: "Gomma Pneus Picos", cidade: "Picos, PI", rodovia: "BR-316", categoria: "Borracharia", servico: "Distribuidor / Troca de Pneus", telefone: "89999902966", whatsapp: "89999902966" },
+{ nome: "E.L. Motores Diesel", cidade: "Picos, PI", rodovia: "BR-316", categoria: "Mecânica", servico: "Mecânica Diesel e Bombas", telefone: "89999880007", whatsapp: "89999880007" },
+
+// ===== PIAUÍ - CIRCUITO BR-230 - FLORIANO =====
+{ nome: "Borracharia 24h - Posto Cacique", cidade: "Floriano, PI", rodovia: "BR-230", categoria: "Borracharia", servico: "Socorro Móvel Pesado 24h", telefone: "89994348286", whatsapp: "89994348286" },
+{ nome: "Oficina Colônia Diesel", cidade: "Floriano, PI", rodovia: "BR-230", categoria: "Mecânica", servico: "Mecânica Especializada e Injeção", telefone: "89999852013", whatsapp: "89999852013" },
+{ nome: "Floriano Diesel", cidade: "Floriano, PI", rodovia: "BR-230", categoria: "Mecânica", servico: "Manutenção Corretiva e Preventiva", telefone: "89999766472", whatsapp: "89999766472" },
+{ nome: "Davi Diesel", cidade: "Floriano, PI", rodovia: "BR-230", categoria: "Mecânica", servico: "Especialista em Bombas e Bicos Injetores", telefone: "89994192821", whatsapp: "89994192821" },
+{ nome: "Espaço Diesel", cidade: "Floriano, PI", rodovia: "BR-230", categoria: "Mecânica", servico: "Reparo de Sistema de Injeção Pesada", telefone: "89994335109", whatsapp: "89994335109" },
+{ nome: "Reboque Ramos Auto Socorro", cidade: "Floriano, PI", rodovia: "BR-230", categoria: "Guincho", servico: "Guincho Pesado 24h", telefone: "89994519616", whatsapp: "89994519616" },
+
+// ===== PIAUÍ - CIRCUITO BR-135 - BOM JESUS / MATOPIBA =====
+{ nome: "Borracharia e Mecânica Posto Café 02", cidade: "Bom Jesus, PI", rodovia: "BR-135", categoria: "Borracharia", servico: "24 Horas - Pátio para bitrem", telefone: "88996830351", whatsapp: "88996830351" },
+{ nome: "Borracharia do Chicoim", cidade: "Bom Jesus, PI", rodovia: "BR-135", categoria: "Borracharia", servico: "Atendimento Móvel e Vulcanização", telefone: "89981513388", whatsapp: "89981513388" },
+{ nome: "Auto Elétrica CARRETEIRO", cidade: "Bom Jesus, PI", rodovia: "BR-135", categoria: "Auto Elétrica", servico: "Elétrica, Alternadores e Partida - Pesados", telefone: "8935622724", whatsapp: "8935622724" },
+{ nome: "Bj Centrocar", cidade: "Bom Jesus, PI", rodovia: "BR-135", categoria: "Borracharia", servico: "Distribuidor Bridgestone/Firestone", telefone: "8935621897", whatsapp: "8935621897" },
+{ nome: "ReparaCar", cidade: "Bom Jesus, PI", rodovia: "BR-135", categoria: "Guincho", servico: "Socorro, Guincho e Mecânica", telefone: "89981339444", whatsapp: "89981339444" },
+
+// ===== PIAUÍ - TERESINA E SUL =====
+{ nome: "Bruno Borracharia Móvel 24 Horas", cidade: "Teresina, PI", rodovia: "BR-316", categoria: "Borracharia", servico: "Plantão 24h Móvel", telefone: "86995096887", whatsapp: "86995096887" },
+{ nome: "Lojão do Borracheiro", cidade: "Teresina, PI", rodovia: "BR-316", categoria: "Borracharia", servico: "Pneus e Serviços Linha Pesada", telefone: "86998440679", whatsapp: "86998440679" },
+{ nome: "Borracharia Móvel Sul", cidade: "Uruçuí, PI", rodovia: "PI-247", categoria: "Borracharia", servico: "Atendimento Móvel Sul do PI", telefone: "89994554916", whatsapp: "89994554916" },
+{ nome: "Chaveiro AutoCar 24h", cidade: "Teresina, PI", rodovia: "BR-343", categoria: "Chaveiro", servico: "Abertura de Cabines de Caminhão", telefone: "86988610298", whatsapp: "86988610298" },
+{ nome: "Max Chaveiro 24h", cidade: "Teresina, PI", rodovia: "BR-343", categoria: "Chaveiro", servico: "Aberturas e Chaves Codificadas", telefone: "86988632929", whatsapp: "86988632929" },
+{ nome: "Chaveiro Marinho 24h", cidade: "Teresina, PI", rodovia: "BR-343", categoria: "Chaveiro", servico: "Plantão Automotivo", telefone: "86998382892", whatsapp: "86998382892" },
 ];
 export type CategoryFilter = 'Todas' | 'Borracharia' | 'Mecânica' | 'Guincho' | 'Auto Elétrica' | 'Chaveiro' | 'Guincho / Socorro' | 'Lavador de Carreta';
 export const categories: CategoryFilter[] = [
