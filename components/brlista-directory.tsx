@@ -56,8 +56,9 @@ export function BrlistaDirectory() {
 
       let okCat = true
       if (category!== 'Todas') {
-        if (selectedCatNorm.includes('lava') || selectedCatNorm.includes('lavador') || selectedCatNorm.includes('jato')) {
-          okCat = catText.includes('lava') || catText.includes('jato') || catText.includes('lavador') || catText.includes('lavagem') || servicoText.includes('lavador') || servicoText.includes('lava')
+        // FIX LAVA JATO: entende tudo como a mesma categoria
+        if (selectedCatNorm.includes('lava') || selectedCatNorm.includes('jato') || selectedCatNorm.includes('lavador') || selectedCatNorm.includes('ducha')) {
+          okCat = catText.includes('lava') || catText.includes('jato') || catText.includes('lavador') || catText.includes('ducha') || catText.includes('lavagem') || servicoText.includes('lava') || servicoText.includes('ducha')
         } else {
           okCat = catText.includes(selectedCatNorm) || servicoText.includes(selectedCatNorm)
         }
@@ -72,7 +73,6 @@ export function BrlistaDirectory() {
       const nomeText = p.nome || p.name || ''
       const estradaText = p.rodovia || p.road || ''
 
-      // FIX SANTOS: não procura no nome da rua se você digitou só "santos"
       const isBuscaRodovia = q.startsWith('br-') || q.startsWith('br ') || q.startsWith('rod') || q.startsWith('km') || /\d/.test(q)
       const cidadeNome = normalize(cidadeText.split(',')[0].split('-')[0])
 
@@ -82,7 +82,6 @@ export function BrlistaDirectory() {
       if (isBuscaRodovia && normalize(estradaText).includes(q)) return true
       if (isBuscaRodovia && normalize(cidadeText).includes(q)) return true
 
-      // Para buscas normais, procura só em cidade+nome+categoria (não na avenida)
       return false
     })
   }, [category, query])
@@ -91,6 +90,9 @@ export function BrlistaDirectory() {
   const totalPages = Math.ceil(filteredPlaces.length / itemsPerPage) || 1
   const paginatedPlaces = filteredPlaces.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
   const whatsappCadastro = `https://wa.me/5534988171945?text=${encodeURIComponent('Olá, quero cadastrar minha empresa/serviço no BRLista Brasil')}`
+
+  // Fallback agora é Lava Jato, não Lavador de Carreta
+  const categoriasExibidas = (categories as string[]) || ['Todas', 'Borracharia', 'Mecânica', 'Guincho', 'Auto Elétrica', 'Chaveiro', 'Guincho / Socorro', 'Lava Jato']
 
   return (
     <main className="min-h-screen bg-[#11110f] text-[#f6f4ed]">
@@ -113,7 +115,7 @@ export function BrlistaDirectory() {
         </div>
         <p className="mt-10 text-[10px] tracking-[0.35em] text-[#facc15]">DIRETÓRIO DE APOIO • {filteredPlaces.length} LOCAIS ÚNICOS</p>
         <div className="mt-4 flex flex-wrap gap-2">
-          {((categories as string[]) || ['Todas', 'Borracharia', 'Mecânica', 'Guincho', 'Auto Elétrica', 'Lavador de Carreta']).map((c) => (
+          {categoriasExibidas.map((c) => (
             <button key={c} onClick={() => { setCategory(c); setCurrentPage(1) }} className={`rounded-full px-4 py-2 text-xs font-bold border ${category === c? 'bg-[#facc15] text-black border-[#facc15]' : 'bg-white/5 text-white/60 border-white/10'}`}>{c}</button>
           ))}
         </div>
