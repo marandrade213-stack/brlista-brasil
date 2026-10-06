@@ -733,4 +733,4 @@ const places: Place[] = [
       </div>
     </main>
   )
-}  
+}
