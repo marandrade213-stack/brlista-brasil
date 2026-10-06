@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useMemo, useRef } from 'react'
-import { Search, MapPin, Phone, MessageCircle, Plus, Wrench } from 'lucide-react'
+import { Search, MapPin, Phone, MessageCircle, Plus, Wrench, ChevronLeft, ChevronRight } from 'lucide-react'
 import { places, categories } from '@/app/data'
 
 export function BrlistaDirectory() {
@@ -25,14 +25,34 @@ export function BrlistaDirectory() {
   const normalize = (t: any) => String(t || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim()
   const getUf = (city: any) => (String(city || '').match(/,\s*([A-Z]{2})$/i) || String(city || '').match(/-\s*([A-Z]{2})$/i) || [])[1]?.toUpperCase() || ""
 
-  // mapa nome -> sigla
   const mapaEstados: Record<string, string> = {
     'ac': 'AC', 'acre': 'AC',
-    'ro': 'RO', 'rondonia': 'RO',
-    'go': 'GO', 'goias': 'GO',
-    'mg': 'MG', 'mt': 'MT', 'sp': 'SP', 
+    'al': 'AL', 'alagoas': 'AL',
+    'ap': 'AP', 'amapa': 'AP',
+    'am': 'AM', 'amazonas': 'AM',
+    'ba': 'BA', 'bahia': 'BA',
     'ce': 'CE', 'ceara': 'CE',
-    'rr': 'RR', 'roraima': 'RR'
+    'df': 'DF', 'distrito federal': 'DF', 'brasilia': 'DF',
+    'es': 'ES', 'espirito santo': 'ES',
+    'go': 'GO', 'goias': 'GO',
+    'ma': 'MA', 'maranhao': 'MA',
+    'mt': 'MT', 'mato grosso': 'MT',
+    'ms': 'MS', 'mato grosso do sul': 'MS',
+    'mg': 'MG', 'minas gerais': 'MG',
+    'pa': 'PA', 'para': 'PA',
+    'pb': 'PB', 'paraiba': 'PB',
+    'pr': 'PR', 'parana': 'PR',
+    'pe': 'PE', 'pernambuco': 'PE',
+    'pi': 'PI', 'piaui': 'PI',
+    'rj': 'RJ', 'rio de janeiro': 'RJ',
+    'rn': 'RN', 'rio grande do norte': 'RN',
+    'rs': 'RS', 'rio grande do sul': 'RS',
+    'ro': 'RO', 'rondonia': 'RO',
+    'rr': 'RR', 'roraima': 'RR',
+    'sc': 'SC', 'santa catarina': 'SC',
+    'sp': 'SP', 'sao paulo': 'SP',
+    'se': 'SE', 'sergipe': 'SE',
+    'to': 'TO', 'tocantins': 'TO'
   }
 
   const filteredPlaces = useMemo(() => {
@@ -40,7 +60,17 @@ export function BrlistaDirectory() {
     const lista = (places as any[]) || []
     const ufAlvo = mapaEstados[q] || null
 
-    return lista.filter((p) => {
+    // DEDUPLICA INTELIGENTE: mesmo telefone + mesma categoria = repetido. Mesmo telefone + categoria diferente = mantém
+    const unicos = new Map()
+    lista.forEach(p => {
+      const tel = String(p.telefone || p.phone || p.whatsapp || '').replace(/\D/g, '')
+      const cat = normalize(p.categoria || p.category || '')
+      const chave = tel ? `${tel}-${cat}` : `${p.nome}-${p.cidade}-${cat}-${Math.random()}`
+      if (!unicos.has(chave)) unicos.set(chave, p)
+    })
+    const listaUnica = Array.from(unicos.values())
+
+    return listaUnica.filter((p) => {
       const catText = normalize(p.categoria || p.category || '')
       const selectedCatNorm = normalize(category)
       let okCat = category === 'Todas' ? true : 
@@ -52,12 +82,10 @@ export function BrlistaDirectory() {
       const cidadeText = p.cidade || p.city || ''
       const ufDoLocal = getUf(cidadeText)
 
-      // CASO 1: Digitou UF ou nome de estado -> filtra só por UF
       if (ufAlvo) {
         return ufDoLocal === ufAlvo
       }
 
-      // CASO 2: Digitou cidade, rodovia, serviço
       const nomeText = p.nome || p.name || ''
       const estradaText = p.rodovia || p.road || ''
       const servicoText = p.servico || p.service || ''
@@ -66,7 +94,7 @@ export function BrlistaDirectory() {
     })
   }, [category, query])
 
-  const itemsPerPage = 10
+  const itemsPerPage = 20
   const totalPages = Math.ceil(filteredPlaces.length / itemsPerPage) || 1
   const paginatedPlaces = filteredPlaces.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
   const whatsappCadastro = `https://wa.me/5534988171945?text=${encodeURIComponent('Olá, quero cadastrar minha empresa/serviço no BRLista Brasil')}`
@@ -111,13 +139,13 @@ export function BrlistaDirectory() {
             enterKeyHint="search"
             onKeyDown={(e) => { if (e.key === 'Enter') searchInputRef.current?.blur() }}
             onChange={(e) => { setQuery(e.target.value); setCurrentPage(1) }}
-            placeholder="Buscar: rondonia, porto velho, vilhena, ariquemes..."
+            placeholder="Buscar: piauí, bom jesus, teresina, BR-135..."
             className="w-full rounded-full border border-white/10 bg-white/[0.06] py-4 pl-12 pr-4 text-sm outline-none focus:border-[#facc15]/40"
           />
         </div>
 
         <p className="mt-10 text-[10px] tracking-[0.35em] text-[#facc15]">
-          DIRETÓRIO DE APOIO • {filteredPlaces.length} LOCAIS
+          DIRETÓRIO DE APOIO • {filteredPlaces.length} LOCAIS ÚNICOS
         </p>
 
         <div className="mt-4 flex flex-wrap gap-2">
@@ -129,7 +157,7 @@ export function BrlistaDirectory() {
           ))}
         </div>
 
-        <div className="mt-6 grid gap-3 pb-10">
+        <div className="mt-6 grid gap-3 pb-6">
           {paginatedPlaces.length > 0 ? (
             paginatedPlaces.map((p, i) => {
               const nome = p.nome || p.name || 'Serviço Rodoviário'
@@ -166,7 +194,30 @@ export function BrlistaDirectory() {
             </div>
           )}
         </div>
+
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between pb-28 pt-4">
+            <button 
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              className="flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm disabled:opacity-30"
+            >
+              <ChevronLeft size={16} /> Anterior
+            </button>
+            <span className="text-xs text-white/50">
+              Página {currentPage} de {totalPages}
+            </span>
+            <button 
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              className="flex items-center gap-2 rounded-full bg-[#facc15] px-4 py-2 text-sm font-bold text-black disabled:opacity-30"
+            >
+              Próxima <ChevronRight size={16} />
+            </button>
+          </div>
+        )}
+        {totalPages <= 1 && <div className="pb-28" />}
       </div>
     </main>
   )
-}
+          }
