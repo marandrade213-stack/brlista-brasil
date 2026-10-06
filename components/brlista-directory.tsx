@@ -12,7 +12,7 @@ export function BrlistaDirectory() {
 
   function formatPhoneForUrl(phone: any) {
     const digits = String(phone || '').replace(/\D/g, '')
-    return digits.startsWith('55') ? digits : `55${digits}`
+    return digits.startsWith('55')? digits : `55${digits}`
   }
   function formatPhoneForDisplay(phone: any) {
     const str = String(phone || '')
@@ -31,11 +31,11 @@ export function BrlistaDirectory() {
     'ap': 'AP', 'amapa': 'AP',
     'am': 'AM', 'amazonas': 'AM',
     'ba': 'BA', 'bahia': 'BA',
-    'ce': 'CE', 'ceara': 'CE',
+    'ce': 'CE', 'ceara': 'CE', 'cear': 'CE',
     'df': 'DF', 'distrito federal': 'DF', 'brasilia': 'DF',
     'es': 'ES', 'espirito santo': 'ES',
     'go': 'GO', 'goias': 'GO',
-    'ma': 'MA', 'maranhao': 'MA',
+    'ma': 'MA', 'maranhao': 'MA', 'maran': 'MA',
     'mt': 'MT', 'mato grosso': 'MT',
     'ms': 'MS', 'mato grosso do sul': 'MS',
     'mg': 'MG', 'minas gerais': 'MG',
@@ -43,7 +43,7 @@ export function BrlistaDirectory() {
     'pb': 'PB', 'paraiba': 'PB',
     'pr': 'PR', 'parana': 'PR',
     'pe': 'PE', 'pernambuco': 'PE',
-    'pi': 'PI', 'piaui': 'PI',
+    'pi': 'PI', 'piau': 'PI', 'piaui': 'PI',
     'rj': 'RJ', 'rio de janeiro': 'RJ',
     'rn': 'RN', 'rio grande do norte': 'RN',
     'rs': 'RS', 'rio grande do sul': 'RS',
@@ -58,14 +58,21 @@ export function BrlistaDirectory() {
   const filteredPlaces = useMemo(() => {
     const q = normalize(query.trim())
     const lista = (places as any[]) || []
-    const ufAlvo = mapaEstados[q] || null
 
-    // DEDUPLICA INTELIGENTE: mesmo telefone + mesma categoria = repetido. Mesmo telefone + categoria diferente = mantém
+    // ACHA A UF MESMO SE DIGITAR INCOMPLETO (piau, ceara, maran)
+    let ufAlvo: string | null = mapaEstados[q] || null
+    if (!ufAlvo && q.length >= 2) {
+      const achado = Object.keys(mapaEstados).find(k => k.startsWith(q))
+      if (achado) ufAlvo = mapaEstados[achado]
+    }
+
+    // DEDUPLICA CORRETO: telefone + categoria + CIDADE (pra não apagar Picos e Floriano com mesmo telefone)
     const unicos = new Map()
     lista.forEach(p => {
       const tel = String(p.telefone || p.phone || p.whatsapp || '').replace(/\D/g, '')
       const cat = normalize(p.categoria || p.category || '')
-      const chave = tel ? `${tel}-${cat}` : `${p.nome}-${p.cidade}-${cat}-${Math.random()}`
+      const cidadeNorm = normalize(p.cidade || p.city || '')
+      const chave = tel? `${tel}-${cat}-${cidadeNorm}` : `${p.nome}-${p.cidade}-${cat}-${Math.random()}`
       if (!unicos.has(chave)) unicos.set(chave, p)
     })
     const listaUnica = Array.from(unicos.values())
@@ -73,8 +80,8 @@ export function BrlistaDirectory() {
     return listaUnica.filter((p) => {
       const catText = normalize(p.categoria || p.category || '')
       const selectedCatNorm = normalize(category)
-      let okCat = category === 'Todas' ? true : 
-                  category === 'Lava Jato' ? (catText.includes('lava') || catText.includes('jato')) :
+      let okCat = category === 'Todas'? true :
+                  category === 'Lava Jato'? (catText.includes('lava') || catText.includes('jato')) :
                   catText.includes(selectedCatNorm)
       if (!okCat) return false
       if (!q) return true
@@ -151,14 +158,14 @@ export function BrlistaDirectory() {
         <div className="mt-4 flex flex-wrap gap-2">
           {((categories as string[]) || ['Todas', 'Borracharia', 'Mecânica', 'Guincho', 'Auto Elétrica']).map((c) => (
             <button key={c} onClick={() => { setCategory(c); setCurrentPage(1) }}
-              className={`rounded-full px-4 py-2 text-xs font-bold border ${category === c ? 'bg-[#facc15] text-black border-[#facc15]' : 'bg-white/5 text-white/60 border-white/10'}`}>
+              className={`rounded-full px-4 py-2 text-xs font-bold border ${category === c? 'bg-[#facc15] text-black border-[#facc15]' : 'bg-white/5 text-white/60 border-white/10'}`}>
               {c}
             </button>
           ))}
         </div>
 
         <div className="mt-6 grid gap-3 pb-6">
-          {paginatedPlaces.length > 0 ? (
+          {paginatedPlaces.length > 0? (
             paginatedPlaces.map((p, i) => {
               const nome = p.nome || p.name || 'Serviço Rodoviário'
               const cidade = p.cidade || p.city || ''
@@ -171,8 +178,8 @@ export function BrlistaDirectory() {
                   <div className="flex items-start justify-between">
                     <div>
                       <h3 className="font-semibold">{nome}</h3>
-                      <p className="flex items-center gap-1 text-sm opacity-70"><MapPin size={12} /> {cidade} {rodovia ? `- ${rodovia}` : ''}</p>
-                      <p className="mt-1 text-xs opacity-60">{categoria} {servico ? `- ${servico}` : ''}</p>
+                      <p className="flex items-center gap-1 text-sm opacity-70"><MapPin size={12} /> {cidade} {rodovia? `- ${rodovia}` : ''}</p>
+                      <p className="mt-1 text-xs opacity-60">{categoria} {servico? `- ${servico}` : ''}</p>
                     </div>
                     {telefone && (
                       <a href={`https://wa.me/${formatPhoneForUrl(telefone)}`} target="_blank" className="rounded-full bg-green-500 p-2 text-black"><MessageCircle size={18} /></a>
@@ -197,7 +204,7 @@ export function BrlistaDirectory() {
 
         {totalPages > 1 && (
           <div className="flex items-center justify-between pb-28 pt-4">
-            <button 
+            <button
               disabled={currentPage === 1}
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               className="flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm disabled:opacity-30"
@@ -207,7 +214,7 @@ export function BrlistaDirectory() {
             <span className="text-xs text-white/50">
               Página {currentPage} de {totalPages}
             </span>
-            <button 
+            <button
               disabled={currentPage === totalPages}
               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
               className="flex items-center gap-2 rounded-full bg-[#facc15] px-4 py-2 text-sm font-bold text-black disabled:opacity-30"
@@ -220,4 +227,4 @@ export function BrlistaDirectory() {
       </div>
     </main>
   )
-          }
+}
