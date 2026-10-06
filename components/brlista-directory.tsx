@@ -3,29 +3,29 @@
 import React, { useState, useMemo, useRef } from 'react'
 import { Search, MapPin, Phone, MessageCircle, Plus, Wrench } from 'lucide-react'
 
-// Importação corrigida apontando para app/data.ts
-import { places, categories, CategoryFilter } from '@/app/data'
+import { places, categories } from '@/app/data'
 
 export function BrlistaDirectory() {
   const [query, setQuery] = useState('')
-  const [category, setCategory] = useState<CategoryFilter>('Todas')
+  const [category, setCategory] = useState<string>('Todas')
   const [currentPage, setCurrentPage] = useState(1)
   const searchInputRef = useRef<HTMLInputElement>(null)
 
-  function formatPhoneForUrl(phone: string = '') {
-    const digits = String(phone).replace(/\D/g, '')
+  function formatPhoneForUrl(phone: any) {
+    const digits = String(phone || '').replace(/\D/g, '')
     return digits.startsWith('55') ? digits : `55${digits}`
   }
 
-  function formatPhoneForDisplay(phone: string = '') {
-    const d = String(phone).replace(/\D/g, '').replace(/^55/, '')
+  function formatPhoneForDisplay(phone: any) {
+    const str = String(phone || '')
+    const d = str.replace(/\D/g, '').replace(/^55/, '')
     if (d.length === 11) return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`
     if (d.length === 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`
-    return String(phone)
+    return str
   }
 
-  const normalize = (t: string = '') => String(t).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim()
-  const getUf = (city: string = '') => (city.match(/,\s*([A-Z]{2})$/i) \vert{}\vert{} city.match(/-\s*([A-Z]{2})$/i) || [])[1]?.toUpperCase() || ""
+  const normalize = (t: any) => String(t || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim()
+  const getUf = (city: any) => (String(city || '').match(/,\s*([A-Z]{2})$/i) \vert{}\vert{} String(city \vert{}\vert{} '').match(/-\s*([A-Z]{2})$/i) || [])[1]?.toUpperCase() || ""
 
   const mapaEstados: Record<string, string> = {
     'ac': 'AC', 'acre': 'AC',
@@ -52,7 +52,6 @@ export function BrlistaDirectory() {
       }
 
       if (!okCat) return false
-
       if (!q) return true
 
       if (mapaEstados[q]) {
@@ -128,10 +127,10 @@ export function BrlistaDirectory() {
         </p>
 
         <div className="mt-4 flex flex-wrap gap-2">
-          {(categories as string[]).map((c) => (
+          {((categories as string[]) || ['Todas', 'Borracharia', 'Mecânica', 'Guincho', 'Auto Elétrica']).map((c) => (
             <button
               key={c}
-              onClick={() => { setCategory(c as CategoryFilter); setCurrentPage(1) }}
+              onClick={() => { setCategory(c); setCurrentPage(1) }}
               className={`rounded-full px-4 py-2 text-xs font-bold border ${category === c ? 'bg-[#facc15] text-black border-[#facc15]' : 'bg-white/5 text-white/60 border-white/10'}`}
             >
               {c}
@@ -142,12 +141,12 @@ export function BrlistaDirectory() {
         <div className="mt-6 grid gap-3 pb-10">
           {paginatedPlaces.length > 0 ? (
             paginatedPlaces.map((p, i) => {
-              const nome = p.nome || p.name
-              const cidade = p.cidade || p.city
-              const rodovia = p.rodovia || p.road
-              const categoria = p.categoria || p.category
-              const servico = p.servico || p.service
-              const telefone = p.whatsapp || p.telefone || p.phone
+              const nome = p.nome || p.name || 'Serviço Rodoviário'
+              const cidade = p.cidade || p.city || ''
+              const rodovia = p.rodovia || p.road || ''
+              const categoria = p.categoria || p.category || ''
+              const servico = p.servico || p.service || ''
+              const telefone = p.whatsapp || p.telefone || p.phone || ''
 
               return (
                 <div key={i} className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-4">
