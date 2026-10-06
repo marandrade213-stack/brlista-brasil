@@ -608,7 +608,7 @@ const places: Place[] = [
 { nome: "Borracharia HBS", cidade: "Imperatriz - MA", categoria: "borracharia", whatsapp: "99988238780" },
 { nome: "Borracharia Camboa", cidade: "São Luís - MA", categoria: "borracharia", whatsapp: "98984594257" },
 ];
-export function BrlistaDirectory() {
+{export function BrlistaDirectory() {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<CategoryFilter>('Todas')
   const [currentPage, setCurrentPage] = useState(1)
@@ -626,19 +626,47 @@ export function BrlistaDirectory() {
   }
 
   const normalize = (t: string) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim()
-const getUf = (city: string) => (city.match(/,\s*([A-Z]{2})$/i) || city.match(/-\s*([A-Z]{2})$/i) || [])[1]?.toUpperCase() || ""
-const mapaEstados: any = {'ac':'AC','acre':'AC','ro':'RO','rondonia':'RO','go':'GO','goias':'GO','mg':'MG','mt':'MT','sp':'SP','ce':'CE','ceara':'CE'}
+  const getUf = (city: string) => (city.match(/,\s*([A-Z]{2})$/i) || city.match(/-\s*([A-Z]{2})$/i) || [])[1]?.toUpperCase() || ""
+  const mapaEstados: any = {
+    'ac':'AC','acre':'AC',
+    'al':'AL','alagoas':'AL',
+    'ap':'AP','amapa':'AP',
+    'am':'AM','amazonas':'AM',
+    'ba':'BA','bahia':'BA',
+    'ce':'CE','ceara':'CE',
+    'df':'DF','distrito federal':'DF','brasilia':'DF',
+    'es':'ES','espirito santo':'ES',
+    'go':'GO','goias':'GO',
+    'ma':'MA','maranhao':'MA',
+    'mt':'MT','mato grosso':'MT',
+    'ms':'MS','mato grosso do sul':'MS',
+    'mg':'MG','minas gerais':'MG','minas':'MG',
+    'pa':'PA','para':'PA',
+    'pb':'PB','paraiba':'PB',
+    'pr':'PR','parana':'PR',
+    'pe':'PE','pernambuco':'PE',
+    'pi':'PI','piaui':'PI',
+    'rj':'RJ','rio de janeiro':'RJ','rio':'RJ',
+    'rn':'RN','rio grande do norte':'RN',
+    'rs':'RS','rio grande do sul':'RS',
+    'ro':'RO','rondonia':'RO',
+    'rr':'RR','roraima':'RR',
+    'sc':'SC','santa catarina':'SC',
+    'sp':'SP','sao paulo':'SP',
+    'se':'SE','sergipe':'SE',
+    'to':'TO','tocantins':'TO'
+  }
 
-const filteredPlaces = useMemo(() => {
-  const q = normalize(query.trim())
-  return places.filter((p) => {
-    const ok = category === 'Todas' || p.category === category
-    if (!q) return ok
-    if (mapaEstados[q]) return ok && getUf(p.city) === mapaEstados[q]
-    const txt = normalize(`${p.name} ${p.category} ${p.city} ${p.road?? ''} ${p.service?? ''}`)
-    return ok && txt.includes(q)
-  })
-}, [category, query])
+  const filteredPlaces = useMemo(() => {
+    const q = normalize(query.trim())
+    return places.filter((p) => {
+      const ok = category === 'Todas' || p.category === category
+      if (!q) return ok
+      if (mapaEstados[q]) return ok && getUf(p.city) === mapaEstados[q]
+      const txt = normalize(`${p.name} ${p.category} ${p.city} ${p.road?? ''} ${p.service?? ''}`)
+      return ok && txt.includes(q)
+    })
+  }, [category, query])
 
   const itemsPerPage = 10
   const totalPages = Math.ceil(filteredPlaces.length / itemsPerPage)
@@ -705,4 +733,4 @@ const filteredPlaces = useMemo(() => {
       </div>
     </main>
   )
-}
+                               }
