@@ -25,7 +25,7 @@ export function BrlistaDirectory() {
   }
 
   const normalize = (t: any) => String(t || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim()
-  const getUf = (city: any) => (String(city || '').match(/,\s*([A-Z]{2})$/i) \vert{}\vert{} String(city \vert{}\vert{} '').match(/-\s*([A-Z]{2})$/i) || [])[1]?.toUpperCase() || ""
+  const getUf = (city: any) => (String(city || '').match(/,\s*([A-Z]{2})$/i) || String(city || '').match(/-\s*([A-Z]{2})$/i) || [])[1]?.toUpperCase() || ""
 
   const mapaEstados: Record<string, string> = {
     'ac': 'AC', 'acre': 'AC',
