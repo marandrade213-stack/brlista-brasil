@@ -23,7 +23,7 @@ export function BrlistaDirectory() {
   }
 
   const normalize = (t: any) => String(t || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim()
-  const getUf = (city: any) => (String(city || '').match(/,\s*([A-Z]{2})$/i) || String(city || '').match(/-\s*([A-Z]{2})$/i) || [])[1]?.toUpperCase() || "")
+  const getUf = (city: any) => (String(city || '').match(/,\s*([A-Z]{2})$/i) || String(city || '').match(/-\s*([A-Z]{2})$/i) || [])[1]?.toUpperCase() || ""
 
   const mapaEstados: Record<string, string> = {
     'ac': 'AC', 'acre': 'AC','al': 'AL', 'alagoas': 'AL','ap': 'AP', 'amapa': 'AP','am': 'AM', 'amazonas': 'AM','ba': 'BA', 'bahia': 'BA','ce': 'CE', 'ceara': 'CE', 'cear': 'CE','df': 'DF', 'distrito federal': 'DF', 'brasilia': 'DF','es': 'ES', 'espirito santo': 'ES','go': 'GO', 'goias': 'GO','ma': 'MA', 'maranhao': 'MA', 'maran': 'MA','mt': 'MT', 'mato grosso': 'MT','ms': 'MS', 'mato grosso do sul': 'MS','mg': 'MG', 'minas gerais': 'MG','pa': 'PA', 'para': 'PA','pb': 'PB', 'paraiba': 'PB','pr': 'PR', 'parana': 'PR','pe': 'PE', 'pernambuco': 'PE','pi': 'PI', 'piau': 'PI', 'piaui': 'PI','rj': 'RJ', 'rio de janeiro': 'RJ','rn': 'RN', 'rio grande do norte': 'RN','rs': 'RS', 'rio grande do sul': 'RS','ro': 'RO', 'rondonia': 'RO','rr': 'RR', 'roraima': 'RR','sc': 'SC', 'santa catarina': 'SC','sp': 'SP', 'sao paulo': 'SP','se': 'SE', 'sergipe': 'SE','to': 'TO', 'tocantins': 'TO'
@@ -32,11 +32,13 @@ export function BrlistaDirectory() {
   const filteredPlaces = useMemo(() => {
     const q = normalize(query.trim())
     const lista = (places as any[]) || []
+
     let ufAlvo: string | null = mapaEstados[q] || null
     if (!ufAlvo && q.length >= 2) {
       const achado = Object.keys(mapaEstados).find(k => k.startsWith(q))
       if (achado) ufAlvo = mapaEstados[achado]
     }
+
     const unicos = new Map()
     lista.forEach(p => {
       const tel = String(p.telefone || p.phone || p.whatsapp || '').replace(/\D/g, '')
@@ -46,10 +48,12 @@ export function BrlistaDirectory() {
       if (!unicos.has(chave)) unicos.set(chave, p)
     })
     const listaUnica = Array.from(unicos.values())
+
     return listaUnica.filter((p) => {
       const catText = normalize(p.categoria || p.category || '')
       const servicoText = normalize(p.servico || p.service || '')
       const selectedCatNorm = normalize(category)
+
       let okCat = true
       if (category!== 'Todas') {
         if (selectedCatNorm.includes('lava') || selectedCatNorm.includes('lavador') || selectedCatNorm.includes('jato')) {
@@ -60,13 +64,26 @@ export function BrlistaDirectory() {
       }
       if (!okCat) return false
       if (!q) return true
+
       const cidadeText = p.cidade || p.city || ''
       const ufDoLocal = getUf(cidadeText)
       if (ufAlvo) return ufDoLocal === ufAlvo
+
       const nomeText = p.nome || p.name || ''
       const estradaText = p.rodovia || p.road || ''
-      const txt = normalize(`${nomeText} ${cidadeText} ${estradaText} ${servicoText} ${catText}`)
-      return txt.includes(q)
+
+      // FIX SANTOS: não procura no nome da rua se você digitou só "santos"
+      const isBuscaRodovia = q.startsWith('br-') || q.startsWith('br ') || q.startsWith('rod') || q.startsWith('km') || /\d/.test(q)
+      const cidadeNome = normalize(cidadeText.split(',')[0].split('-')[0])
+
+      if (cidadeNome.includes(q)) return true
+      if (normalize(nomeText).includes(q)) return true
+      if (catText.includes(q) || servicoText.includes(q)) return true
+      if (isBuscaRodovia && normalize(estradaText).includes(q)) return true
+      if (isBuscaRodovia && normalize(cidadeText).includes(q)) return true
+
+      // Para buscas normais, procura só em cidade+nome+categoria (não na avenida)
+      return false
     })
   }, [category, query])
 
@@ -115,7 +132,7 @@ export function BrlistaDirectory() {
                       <h3 className="font-semibold leading-tight">{nome}</h3>
                       <div className="mt-1 flex items-start gap-1.5">
                         <MapPin size={12} className="mt-[3px] shrink-0 opacity-70" />
-                        <span className="text-[13px] leading-[1.3] opacity-70 break-words line-clamp-3">{cidade}</span>
+                        <span className="text-[13px] leading-[1.3] opacity-70 break-words">{cidade}</span>
                       </div>
                       <p className="mt-1 text-xs opacity-60">{categoria} {servico? `- ${servico}` : ''}</p>
                     </div>
