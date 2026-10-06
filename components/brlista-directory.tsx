@@ -3,8 +3,8 @@
 import React, { useState, useMemo, useRef } from 'react'
 import { Search, MapPin, Phone, MessageCircle, Plus, Wrench } from 'lucide-react'
 
-// Importação dos dados e categorias do seu arquivo data.ts
-import { places, categories, CategoryFilter } from './data'
+// Importação corrigida apontando para app/data.ts
+import { places, categories, CategoryFilter } from '@/app/data'
 
 export function BrlistaDirectory() {
   const [query, setQuery] = useState('')
@@ -42,7 +42,6 @@ export function BrlistaDirectory() {
       const catText = normalize(p.categoria || p.category || '')
       const selectedCatNorm = normalize(category)
 
-      // Validação da categoria selecionada nos botões
       let okCat = false
       if (category === 'Todas') {
         okCat = true
@@ -54,10 +53,8 @@ export function BrlistaDirectory() {
 
       if (!okCat) return false
 
-      // Caso não haja termo de busca digitado
       if (!q) return true
 
-      // Busca por UF / Estado
       if (mapaEstados[q]) {
         const ufAlvo = mapaEstados[q]
         const cidadeText = p.cidade || p.city || ''
@@ -66,7 +63,6 @@ export function BrlistaDirectory() {
         return normalize(cidadeText).includes(q) || normalize(cidadeText).includes(ufAlvo.toLowerCase())
       }
 
-      // Busca por Nome, Cidade, Rodovia ou Serviço
       const nomeText = p.nome || p.name || ''
       const cidadeText = p.cidade || p.city || ''
       const estradaText = p.rodovia || p.road || ''
@@ -202,4 +198,4 @@ export function BrlistaDirectory() {
       </div>
     </main>
   )
-    }
+}
