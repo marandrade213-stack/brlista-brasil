@@ -598,4 +598,16 @@ export const places = [
 { nome: "Borracharia Muniz 24h", cidade: "Imperatriz - MA", categoria: "borracharia", whatsapp: "99991223900" },
 { nome: "Borracharia HBS", cidade: "Imperatriz - MA", categoria: "borracharia", whatsapp: "99988238780" },
 { nome: "Borracharia Camboa", cidade: "São Luís - MA", categoria: "borracharia", whatsapp: "98984594257" },
+];{ nome: "Borracharia Camboa", cidade: "São Luís - MA" }
+];
+
+export type CategoryFilter = 'Todas' | 'Borracharia' | 'Mecânica' | 'Guincho' | 'Auto Elétrica' | 'Chaveiro' | 'Guincho / Socorro' | 'Lavador de Carreta';
+
+export const categories: CategoryFilter[] = [
+  'Todas',
+  'Borracharia',
+  'Mecânica',
+  'Guincho',
+  'Auto Elétrica',
+  'Chaveiro'
 ];
