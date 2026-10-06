@@ -3,20 +3,8 @@
 import React, { useState, useMemo, useRef } from 'react'
 import { Search, MapPin, Phone, MessageCircle, Plus, Wrench } from 'lucide-react'
 
-export type CategoryFilter = 'Todas' | 'Borracharia' | 'Mecânica' | 'Guincho' | 'Auto Elétrica' | 'Posto'
-
-export interface Place {
-  name: string
-  category: string
-  city: string
-  phone: string
-  road?: string
-  service?: string
-}
-
-// Declaração dos arrays (ou importe-os do seu ficheiro de dados/API)
-const categories: CategoryFilter[] = ['Todas', 'Borracharia', 'Mecânica', 'Guincho', 'Auto Elétrica', 'Posto']
-const places: Place[] = []
+// Importação dos dados e categorias do seu arquivo data.ts
+import { places, categories, CategoryFilter } from './data'
 
 export function BrlistaDirectory() {
   const [query, setQuery] = useState('')
@@ -24,20 +12,20 @@ export function BrlistaDirectory() {
   const [currentPage, setCurrentPage] = useState(1)
   const searchInputRef = useRef<HTMLInputElement>(null)
 
-  function formatPhoneForUrl(phone: string) {
-    const digits = phone.replace(/\D/g, '')
+  function formatPhoneForUrl(phone: string = '') {
+    const digits = String(phone).replace(/\D/g, '')
     return digits.startsWith('55') ? digits : `55${digits}`
   }
 
-  function formatPhoneForDisplay(phone: string) {
-    const d = phone.replace(/\D/g, '').replace(/^55/, '')
+  function formatPhoneForDisplay(phone: string = '') {
+    const d = String(phone).replace(/\D/g, '').replace(/^55/, '')
     if (d.length === 11) return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`
     if (d.length === 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`
-    return phone
+    return String(phone)
   }
 
-  const normalize = (t: string) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim()
-  const getUf = (city: string) => (city.match(/,\s*([A-Z]{2})$/i) \vert{}\vert{} city.match(/-\s*([A-Z]{2})$/i) || [])[1]?.toUpperCase() || ""
+  const normalize = (t: string = '') => String(t).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim()
+  const getUf = (city: string = '') => (city.match(/,\s*([A-Z]{2})$/i) \vert{}\vert{} city.match(/-\s*([A-Z]{2})$/i) || [])[1]?.toUpperCase() || ""
 
   const mapaEstados: Record<string, string> = {
     'ac': 'AC', 'acre': 'AC',
@@ -48,23 +36,43 @@ export function BrlistaDirectory() {
 
   const filteredPlaces = useMemo(() => {
     const q = normalize(query.trim())
-    if (!q) {
-      return places.filter((p) => category === 'Todas' || p.category === category)
-    }
-    if (mapaEstados[q]) {
-      const ufAlvo = mapaEstados[q]
-      return places.filter((p) => {
-        const okCat = category === 'Todas' || p.category === category
-        if (!okCat) return false
-        const uf = getUf(p.city)
-        if (uf === ufAlvo) return true
-        return normalize(p.city).includes(q) || normalize(p.city).toLowerCase().includes(ufAlvo.toLowerCase())
-      })
-    }
-    return places.filter((p) => {
-      const okCat = category === 'Todas' || p.category === category
+    const lista = (places as any[]) || []
+
+    return lista.filter((p) => {
+      const catText = normalize(p.categoria || p.category || '')
+      const selectedCatNorm = normalize(category)
+
+      // Validação da categoria selecionada nos botões
+      let okCat = false
+      if (category === 'Todas') {
+        okCat = true
+      } else if (category === 'Lava Jato') {
+        okCat = catText.includes('lava') || catText.includes('jato')
+      } else {
+        okCat = catText.includes(selectedCatNorm)
+      }
+
       if (!okCat) return false
-      const txt = normalize(`${p.name} ${p.category} ${p.city} ${p.road ?? ''} ${p.service ?? ''}`)
+
+      // Caso não haja termo de busca digitado
+      if (!q) return true
+
+      // Busca por UF / Estado
+      if (mapaEstados[q]) {
+        const ufAlvo = mapaEstados[q]
+        const cidadeText = p.cidade || p.city || ''
+        const uf = getUf(cidadeText)
+        if (uf === ufAlvo) return true
+        return normalize(cidadeText).includes(q) || normalize(cidadeText).includes(ufAlvo.toLowerCase())
+      }
+
+      // Busca por Nome, Cidade, Rodovia ou Serviço
+      const nomeText = p.nome || p.name || ''
+      const cidadeText = p.cidade || p.city || ''
+      const estradaText = p.rodovia || p.road || ''
+      const servicoText = p.servico || p.service || ''
+      const txt = normalize(`${nomeText} ${catText} ${cidadeText} ${estradaText} ${servicoText}`)
+      
       return txt.includes(q)
     })
   }, [category, query])
@@ -124,10 +132,10 @@ export function BrlistaDirectory() {
         </p>
 
         <div className="mt-4 flex flex-wrap gap-2">
-          {categories.map((c) => (
+          {(categories as string[]).map((c) => (
             <button
               key={c}
-              onClick={() => { setCategory(c); setCurrentPage(1) }}
+              onClick={() => { setCategory(c as CategoryFilter); setCurrentPage(1) }}
               className={`rounded-full px-4 py-2 text-xs font-bold border ${category === c ? 'bg-[#facc15] text-black border-[#facc15]' : 'bg-white/5 text-white/60 border-white/10'}`}
             >
               {c}
@@ -137,29 +145,42 @@ export function BrlistaDirectory() {
 
         <div className="mt-6 grid gap-3 pb-10">
           {paginatedPlaces.length > 0 ? (
-            paginatedPlaces.map((p, i) => (
-              <div key={i} className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-4">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="font-semibold">{p.name}</h3>
-                    <p className="flex items-center gap-1 text-sm opacity-70">
-                      <MapPin size={12} /> {p.city} {p.road ? `- ${p.road}` : ''}
-                    </p>
-                    <p className="mt-1 text-xs opacity-60">
-                      {p.category} {p.service ? `- ${p.service}` : ''}
-                    </p>
+            paginatedPlaces.map((p, i) => {
+              const nome = p.nome || p.name
+              const cidade = p.cidade || p.city
+              const rodovia = p.rodovia || p.road
+              const categoria = p.categoria || p.category
+              const servico = p.servico || p.service
+              const telefone = p.whatsapp || p.telefone || p.phone
+
+              return (
+                <div key={i} className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-4">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h3 className="font-semibold">{nome}</h3>
+                      <p className="flex items-center gap-1 text-sm opacity-70">
+                        <MapPin size={12} /> {cidade} {rodovia ? `- ${rodovia}` : ''}
+                      </p>
+                      <p className="mt-1 text-xs opacity-60">
+                        {categoria} {servico ? `- ${servico}` : ''}
+                      </p>
+                    </div>
+                    {telefone && (
+                      <a href={`https://wa.me/${formatPhoneForUrl(telefone)}`} target="_blank" rel="noopener noreferrer" className="rounded-full bg-green-500 p-2 text-black">
+                        <MessageCircle size={18} />
+                      </a>
+                    )}
                   </div>
-                  <a href={`https://wa.me/${formatPhoneForUrl(p.phone)}`} target="_blank" rel="noopener noreferrer" className="rounded-full bg-green-500 p-2 text-black">
-                    <MessageCircle size={18} />
-                  </a>
+                  {telefone && (
+                    <div className="mt-3 flex gap-2">
+                      <a href={`tel:${formatPhoneForUrl(telefone)}`} className="flex items-center gap-1 rounded-full bg-white px-3 py-1 text-sm text-black">
+                        <Phone size={14} /> {formatPhoneForDisplay(telefone)}
+                      </a>
+                    </div>
+                  )}
                 </div>
-                <div className="mt-3 flex gap-2">
-                  <a href={`tel:${formatPhoneForUrl(p.phone)}`} className="flex items-center gap-1 rounded-full bg-white px-3 py-1 text-sm text-black">
-                    <Phone size={14} /> {formatPhoneForDisplay(p.phone)}
-                  </a>
-                </div>
-              </div>
-            ))
+              )
+            })
           ) : (
             <div className="py-10 text-center text-sm text-white/40 border border-dashed border-white/10 rounded-xl">
               Nenhum local encontrado para a pesquisa.
@@ -181,4 +202,4 @@ export function BrlistaDirectory() {
       </div>
     </main>
   )
-}
+    }
