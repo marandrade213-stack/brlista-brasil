@@ -2,7 +2,6 @@
 
 import React, { useState, useMemo, useRef } from 'react'
 import { Search, MapPin, Phone, MessageCircle, Plus, Wrench } from 'lucide-react'
-
 import { places, categories } from '@/app/data'
 
 export function BrlistaDirectory() {
@@ -15,7 +14,6 @@ export function BrlistaDirectory() {
     const digits = String(phone || '').replace(/\D/g, '')
     return digits.startsWith('55') ? digits : `55${digits}`
   }
-
   function formatPhoneForDisplay(phone: any) {
     const str = String(phone || '')
     const d = str.replace(/\D/g, '').replace(/^55/, '')
@@ -27,47 +25,43 @@ export function BrlistaDirectory() {
   const normalize = (t: any) => String(t || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim()
   const getUf = (city: any) => (String(city || '').match(/,\s*([A-Z]{2})$/i) || String(city || '').match(/-\s*([A-Z]{2})$/i) || [])[1]?.toUpperCase() || ""
 
+  // mapa nome -> sigla
   const mapaEstados: Record<string, string> = {
     'ac': 'AC', 'acre': 'AC',
-    'ro': 'RO', 'rondonia': 'RO', 'rondônia': 'RO',
-    'go': 'GO', 'goias': 'GO', 'goiás': 'GO',
-    'mg': 'MG', 'mt': 'MT', 'sp': 'SP', 'ce': 'CE', 'ceara': 'CE', 'ceará': 'CE'
+    'ro': 'RO', 'rondonia': 'RO',
+    'go': 'GO', 'goias': 'GO',
+    'mg': 'MG', 'mt': 'MT', 'sp': 'SP', 
+    'ce': 'CE', 'ceara': 'CE',
+    'rr': 'RR', 'roraima': 'RR'
   }
 
   const filteredPlaces = useMemo(() => {
     const q = normalize(query.trim())
     const lista = (places as any[]) || []
+    const ufAlvo = mapaEstados[q] || null
 
     return lista.filter((p) => {
       const catText = normalize(p.categoria || p.category || '')
       const selectedCatNorm = normalize(category)
-
-      let okCat = false
-      if (category === 'Todas') {
-        okCat = true
-      } else if (category === 'Lava Jato') {
-        okCat = catText.includes('lava') || catText.includes('jato')
-      } else {
-        okCat = catText.includes(selectedCatNorm)
-      }
-
+      let okCat = category === 'Todas' ? true : 
+                  category === 'Lava Jato' ? (catText.includes('lava') || catText.includes('jato')) :
+                  catText.includes(selectedCatNorm)
       if (!okCat) return false
       if (!q) return true
 
-      if (mapaEstados[q]) {
-        const ufAlvo = mapaEstados[q]
-        const cidadeText = p.cidade || p.city || ''
-        const uf = getUf(cidadeText)
-        if (uf === ufAlvo) return true
-        return normalize(cidadeText).includes(q) || normalize(cidadeText).includes(ufAlvo.toLowerCase())
+      const cidadeText = p.cidade || p.city || ''
+      const ufDoLocal = getUf(cidadeText)
+
+      // CASO 1: Digitou UF ou nome de estado -> filtra só por UF
+      if (ufAlvo) {
+        return ufDoLocal === ufAlvo
       }
 
+      // CASO 2: Digitou cidade, rodovia, serviço
       const nomeText = p.nome || p.name || ''
-      const cidadeText = p.cidade || p.city || ''
       const estradaText = p.rodovia || p.road || ''
       const servicoText = p.servico || p.service || ''
-      const txt = normalize(`${nomeText} ${catText} ${cidadeText} ${estradaText} ${servicoText}`)
-      
+      const txt = normalize(`${nomeText} ${cidadeText} ${estradaText} ${servicoText} ${catText}`)
       return txt.includes(q)
     })
   }, [category, query])
@@ -115,7 +109,7 @@ export function BrlistaDirectory() {
             ref={searchInputRef}
             value={query}
             enterKeyHint="search"
-            onKeyDown={(e) => { if (e.key === 'Enter') { searchInputRef.current?.blur() } }}
+            onKeyDown={(e) => { if (e.key === 'Enter') searchInputRef.current?.blur() }}
             onChange={(e) => { setQuery(e.target.value); setCurrentPage(1) }}
             placeholder="Buscar: rondonia, porto velho, vilhena, ariquemes..."
             className="w-full rounded-full border border-white/10 bg-white/[0.06] py-4 pl-12 pr-4 text-sm outline-none focus:border-[#facc15]/40"
@@ -128,11 +122,8 @@ export function BrlistaDirectory() {
 
         <div className="mt-4 flex flex-wrap gap-2">
           {((categories as string[]) || ['Todas', 'Borracharia', 'Mecânica', 'Guincho', 'Auto Elétrica']).map((c) => (
-            <button
-              key={c}
-              onClick={() => { setCategory(c); setCurrentPage(1) }}
-              className={`rounded-full px-4 py-2 text-xs font-bold border ${category === c ? 'bg-[#facc15] text-black border-[#facc15]' : 'bg-white/5 text-white/60 border-white/10'}`}
-            >
+            <button key={c} onClick={() => { setCategory(c); setCurrentPage(1) }}
+              className={`rounded-full px-4 py-2 text-xs font-bold border ${category === c ? 'bg-[#facc15] text-black border-[#facc15]' : 'bg-white/5 text-white/60 border-white/10'}`}>
               {c}
             </button>
           ))}
@@ -147,23 +138,16 @@ export function BrlistaDirectory() {
               const categoria = p.categoria || p.category || ''
               const servico = p.servico || p.service || ''
               const telefone = p.whatsapp || p.telefone || p.phone || ''
-
               return (
                 <div key={i} className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-4">
                   <div className="flex items-start justify-between">
                     <div>
                       <h3 className="font-semibold">{nome}</h3>
-                      <p className="flex items-center gap-1 text-sm opacity-70">
-                        <MapPin size={12} /> {cidade} {rodovia ? `- ${rodovia}` : ''}
-                      </p>
-                      <p className="mt-1 text-xs opacity-60">
-                        {categoria} {servico ? `- ${servico}` : ''}
-                      </p>
+                      <p className="flex items-center gap-1 text-sm opacity-70"><MapPin size={12} /> {cidade} {rodovia ? `- ${rodovia}` : ''}</p>
+                      <p className="mt-1 text-xs opacity-60">{categoria} {servico ? `- ${servico}` : ''}</p>
                     </div>
                     {telefone && (
-                      <a href={`https://wa.me/${formatPhoneForUrl(telefone)}`} target="_blank" rel="noopener noreferrer" className="rounded-full bg-green-500 p-2 text-black">
-                        <MessageCircle size={18} />
-                      </a>
+                      <a href={`https://wa.me/${formatPhoneForUrl(telefone)}`} target="_blank" className="rounded-full bg-green-500 p-2 text-black"><MessageCircle size={18} /></a>
                     )}
                   </div>
                   {telefone && (
@@ -182,19 +166,7 @@ export function BrlistaDirectory() {
             </div>
           )}
         </div>
-
-        {totalPages > 1 && (
-          <div className="mt-6 flex items-center justify-center gap-2 pb-10">
-            <button disabled={currentPage === 1} onClick={() => setCurrentPage((c) => c - 1)} className="rounded-full bg-white/[0.08] px-4 py-2 disabled:opacity-30">
-              Anterior
-            </button>
-            <span className="text-sm opacity-60">{currentPage} / {totalPages}</span>
-            <button disabled={currentPage === totalPages} onClick={() => setCurrentPage((c) => c + 1)} className="rounded-full bg-white/[0.08] px-4 py-2 disabled:opacity-30">
-              Próximo
-            </button>
-          </div>
-        )}
       </div>
     </main>
   )
-                }
+}
