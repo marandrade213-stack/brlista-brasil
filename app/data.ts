@@ -9,8 +9,6 @@ export const places = [
   { name: 'Giron Mecânica Multimarcas', category: 'Mecânica', city: 'Ribeirão Preto', phone: '(16) 3628-4770' },
   { name: 'Patrocar Auto Center', category: 'Mecânica', city: 'Ribeirão Preto', phone: '(16) 3977-5200' },
   { name: 'Oficina Mecânica James Multimarcas', category: 'Mecânica', city: 'Ribeirão Preto', phone: '(16) 97400-9439' },
-  
-  // RIBEIRÃO PRETO - CHAVEIRO
   { name: 'Chaveiro Beira Rio', category: 'Chaveiro', city: 'Ribeirão Preto', phone: '(16) 3610-5002' },
   { name: 'Chaveiro Kleber Décio 24 Horas', category: 'Chaveiro', city: 'Ribeirão Preto', phone: '(16) 99211-6969' },
   { name: 'Chaveiro Ribeirão 24 horas', category: 'Chaveiro', city: 'Ribeirão Preto', phone: '(16) 99298-6124' },
@@ -20,8 +18,6 @@ export const places = [
   { name: 'Chaveiro Douglas 24h', category: 'Chaveiro', city: 'Ribeirão Preto', phone: '(16) 99107-2974' },
   { name: 'Chaveiro Prof. Pardal 24 Horas', category: 'Chaveiro', city: 'Ribeirão Preto', phone: '(16) 3919-2118' },
   { name: 'Invictus Chaveiro', category: 'Chaveiro', city: 'Ribeirão Preto', phone: '(16) 99324-8976' },
-
-  // SERTÃOZINHO
   { name: 'Oficina Mecanica WS MOTORS', category: 'Mecânica', city: 'Sertãozinho', phone: '(16) 3524-4272' },
   { name: 'Auto Mecânica Dimas & Graciano', category: 'Mecânica', city: 'Sertãozinho', phone: '(16) 3041-7871' },
   { name: 'Abelcar Mecânica Automotiva', category: 'Mecânica', city: 'Sertãozinho', phone: '(16) 3945-1304' },
@@ -32,8 +28,6 @@ export const places = [
   { name: 'William Chaveiro 24hs', category: 'Chaveiro', city: 'Sertãozinho', phone: '(16) 98132-9235' },
   { name: 'Chaveiro Jeferson Santos 24 horas', category: 'Chaveiro', city: 'Sertãozinho', phone: '(16) 99419-6467' },
   { name: 'Chaveiro Sertãozinho 24hrs', category: 'Chaveiro', city: 'Sertãozinho', phone: '(16) 99187-0906' },
-
-  // CRAVINHOS / JARDINÓPOLIS / PONTAL / BRODOWSKI / DUMONT / BATATAIS
   { name: 'SR Centro Automotivo', category: 'Mecânica', city: 'Cravinhos', phone: '(16) 3951-5230' },
   { name: 'Auto Mecânica Diesel Marcel 24h', category: 'Mecânica', city: 'Cravinhos', phone: '(16) 99235-8122' },
   { name: 'Renato Chaveiro', category: 'Chaveiro', city: 'Cravinhos', phone: '(16) 99361-9114' },
