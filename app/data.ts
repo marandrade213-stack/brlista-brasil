@@ -50,7 +50,7 @@ export const places = [
   { name: 'Alexandre Chaveiro e Auto Vidros', category: 'Chaveiro', city: 'Brodowski', phone: '(16) 3664-2350' },
   { name: 'Fornitura Brodowski', category: 'Chaveiro', city: 'Brodowski', phone: '(16) 99257-1873' },
   { name: 'Chaveiro e Amolador Passos', category: 'Chaveiro', city: 'Brodowski', phone: '(16) 99463-4407' },
-  { name: "Chaveiro Dumont & D'Cristo", category: 'Chaveiro', city: 'Dumont', phone: '(16) 98188-8349' },
+  { name: 'Chaveiro Dumont & D'Cristo', category: 'Chaveiro', city: 'Dumont', phone: '(16) 98188-8349' },
   { name: 'Franjacar Oficina Mecânica', category: 'Mecânica', city: 'Batatais', phone: '(16) 99104-7643' },
   { name: 'Lauratto Auto Center', category: 'Mecânica', city: 'Batatais', phone: '(16) 3662-3366' },
   { name: 'Oficina Mecânica Gold Car', category: 'Mecânica', city: 'Batatais', phone: '(16) 99370-7818' },
