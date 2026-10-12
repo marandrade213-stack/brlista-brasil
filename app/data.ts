@@ -63,7 +63,6 @@ export const places = [
   { name: 'Chaveiro Ágape Batatais', category: 'Chaveiro', city: 'Batatais', phone: '(16) 98819-6751' },
   { name: 'Chaveiro Lorencini', category: 'Chaveiro', city: 'Batatais', phone: '(16) 99144-9772' },
   { name: 'Chaveiro Center Chaves', category: 'Chaveiro', city: 'Batatais', phone: '(16) 99134-4258' },
-];
   { name: 'GF Mecânica', category: 'Mecânica', city: 'Araguari', phone: '+55 34 99265-6094', service: 'Serviços mecânicos em geral' },
   { name: 'MR Auto Elétrica', category: 'Auto Elétrica', city: 'Araguari', phone: '+55 34 99796-9161', service: 'Socorro elétrico' },
   { name: 'Auto Mecânica Magayver', category: 'Mecânica', city: 'Araguari', phone: '+55 34 99186-6883', service: 'Mecânica geral' },
