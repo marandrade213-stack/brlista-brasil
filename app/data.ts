@@ -22,7 +22,7 @@ export const places = [
 { name: 'Chaveiro Carimbos e Xerox', category: 'Chaveiro', city: 'Jaboticabal-SP', phone: '(16) 3202-9291' },
 { name: 'Chaveiro Carlão', category: 'Chaveiro', city: 'Jaboticabal-SP', phone: '(16) 3202-3993' },
 { name: 'Chaveiro Paulo', category: 'Chaveiro', city: 'Jaboticabal-SP', phone: '(16) 3202-9291' },
-{ name: 'Chaveiro Centenário', category: 'Chaveiro', city: 'Jaboticabal-SP', phone: '(16) 3203-3259' }
+{ name: 'Chaveiro Centenário', category: 'Chaveiro', city: 'Jaboticabal-SP', phone: '(16) 3203-3259' },
 { name: 'Borracharia Roda+', category: 'Borracharia', city: 'Itapira-SP', phone: '(19) 99993-1240' },
 { name: 'Borracharia Gilberto', category: 'Borracharia', city: 'Itapira-SP', phone: '(19) 3863-1668' },
 { name: 'Borracharia Douglas', category: 'Borracharia', city: 'Itapira-SP', phone: '(19) 99514-4374' },
