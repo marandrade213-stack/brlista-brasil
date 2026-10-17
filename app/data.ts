@@ -1,4 +1,4 @@
-export const places =[
+export const places = [
 { name: 'Borracharia', category: 'Borracharia', city: 'Mogi Guaçu-SP', phone: '(19) 99692-1491' },
 { name: 'JM Mecânica e Borracharia', category: 'Borracharia', city: 'Mogi Guaçu-SP', phone: '(19) 99409-4443' },
 { name: 'Borracharia Do Trevo', category: 'Borracharia', city: 'Mogi Guaçu-SP', phone: '(19) 99717-6003' },
